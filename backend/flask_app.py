@@ -1351,6 +1351,7 @@ def house_telemetry_export():
 if __name__ == '__main__':
     # Use Waitress for Production-ready server (No Warnings)
     from waitress import serve
-    print("✅ Server Started on http://127.0.0.1:5001")
+    port = int(os.environ.get('PORT', 5001))
+    print(f"✅ Server Started on http://0.0.0.0:{port}")
     print("🚀 App is running in PRODUCTION mode.")
-    serve(app, host='0.0.0.0', port=5001)
+    serve(app, host='0.0.0.0', port=port)

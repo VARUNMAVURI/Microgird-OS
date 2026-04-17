@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microgrid OS | Future Energy</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Apply theme immediately to prevent flash
+        const savedTheme = localStorage.getItem('microgrid-theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+</head>
+
+<body>
+    {% block content %}{% endblock %}
+    {% block scripts %}{% endblock %}
+    <script>
+        // Theme switching logic removed as per user request
+
+        // Initialize button states on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('microgrid-theme') || 'light';
+            if (typeof toggleTheme === 'function') toggleTheme(savedTheme);
+        });
+
+        let currentEmailBtn = null;
+        let originalEmailBtnText = '';
+
+        function promptAndEmailTelemetryGlobal(e) {
+            if (e) e.preventDefault();
+            currentEmailBtn = e.currentTarget;
+            if (currentEmailBtn) {
+                originalEmailBtnText = currentEmailBtn.innerHTML;
+            }
+
+            document.getElementById('target-email-input').value = '';
+            document.getElementById('email-telemetry-modal').style.display = 'flex';
+            document.getElementById('target-email-input').focus();
+        }
+
+        function closeEmailModal() {
+            document.getElementById('email-telemetry-modal').style.display = 'none';
+        }
+
+        async function executeEmailSend() {
+            const emailAddress = document.getElementById('target-email-input').value.trim();
+            if (!emailAddress || !emailAddress.includes('@')) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            closeEmailModal();
+
+            if (currentEmailBtn) {
+                currentEmailBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                currentEmailBtn.style.pointerEvents = 'none';
+            }
+
+            try {
+                const res = await fetch('/api/email_telemetry', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email_address: emailAddress })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Failed to send email. Check connection.');
+            } finally {
+                if (currentEmailBtn) {
+                    currentEmailBtn.innerHTML = originalEmailBtnText;
+                    currentEmailBtn.style.pointerEvents = 'auto';
+                }
+            }
+        }
+    </script>
+
+    <!-- Email Telemetry Modal -->
+    <div id="email-telemetry-modal"
+        style="display:none; position:fixed; inset:0; z-index:10000; background: rgba(5,10,20,0.85); backdrop-filter: blur(10px); align-items:center; justify-content:center;">
+        <div
+            style="background: rgba(13,27,42,0.95); border: 1px solid var(--neon-blue); border-radius: 16px; padding: 40px; width: 90%; max-width: 450px; box-shadow: 0 0 40px rgba(0,229,255,0.15), inset 0 0 20px rgba(0,229,255,0.05); text-align: center; position: relative;">
+            <i class="fas fa-paper-plane"
+                style="font-size: 2.5rem; color: var(--neon-blue); margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--neon-blue));"></i>
+            <h2 style="margin: 0 0 10px 0; color: var(--text-primary); font-size: 1.5rem; letter-spacing: 1px;">Send
+                Telemetry Report</h2>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 25px;">Enter the target email
+                address to receive the secure export.</p>
+
+            <input type="email" id="target-email-input" placeholder="recipient@example.com"
+                style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.3); background: rgba(0,0,0,0.5); color: var(--neon-blue); font-family: var(--font-mono); font-size: 1rem; margin-bottom: 25px; outline: none; box-sizing: border-box;"
+                onfocus="this.style.boxShadow='0 0 15px rgba(0,229,255,0.2)'" onblur="this.style.boxShadow='none'">
+
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button onclick="closeEmailModal()" class="glass-btn"
+                    style="flex: 1; justify-content: center; padding: 12px; background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.1);">Cancel</button>
+                <button id="send-email-btn" onclick="executeEmailSend()" class="glass-btn btn-blue"
+                    style="flex: 1; justify-content: center; padding: 12px; font-weight: bold;"><i
+                        class="fas fa-check"></i> Send</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

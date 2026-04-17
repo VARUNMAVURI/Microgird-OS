@@ -1,0 +1,5 @@
+DEBUG: Exception in step: object of type 'NoneType' has no len()
+Traceback (most recent call last):
+  File "C:\Users\mvaru\OneDrive\Desktop\Batch_8\Main Project\MICROGRID_PROJECT_DRL\backend\simulation_engine.py", line 533, in step
+    next_load = self.df.iloc[self.current_step + 1]["load_kW"] if (self.current_step + 1) < len(self.df) else load
+TypeError: object of type 'NoneType' has no len()

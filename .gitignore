@@ -1,0 +1,28 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 🔐 Secrets
+backend/.env
+
+# 🗄️ MongoDB local database
+backend/database/mongodb_data/
+
+# 📂 Uploads (large files)
+backend/uploads/
+
+# Logs
+*.log

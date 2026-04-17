@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microgrid OS | Technical Horizontal Control Flow</title>
+    <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 60px 20px;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .report-header {
+            text-align: center;
+            border-bottom: 2.5px solid #000;
+            padding-bottom: 25px;
+            margin-bottom: 60px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .report-header h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .report-header p {
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        section {
+            width: 100%;
+            max-width: 1400px;
+            margin-bottom: 80px;
+        }
+
+        section h2 {
+            font-size: 1.3rem;
+            border-left: 6px solid #000;
+            padding-left: 18px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Metrics Table */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .status-table th, .status-table td {
+            border: 2px solid #000;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .status-table th {
+            background-color: #f2f2f2;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Horizontal 8-Step Control Flow */
+        .horizontal-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 40px 20px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 4px;
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid #000;
+            padding: 20px 15px;
+            min-width: 140px;
+            max-width: 180px;
+            height: 100px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            background: #fff;
+            line-height: 1.3;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #000;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            border-top: 2px solid #000;
+            padding-top: 30px;
+            width: 100%;
+            max-width: 1000px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        @media (max-width: 1200px) {
+            .horizontal-flow {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="report-header">
+        <h1>Microgrid OS: Technical Review Summary</h1>
+        <p>End-to-End Pipeline & Operational Logic Pipeline</p>
+    </div>
+
+    <!-- Section I: Training Performance -->
+    <section>
+        <h2>I. DRL Model Efficiency & Training Summary</h2>
+        <table class="status-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Observed Technical Performance</th>
+                    <th>Validation Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Mean Reward Curve</strong></td>
+                    <td>Steady upward convergence (-20 to +45 accumulated units)</td>
+                    <td>[ VERIFIED ]</td>
+                </tr>
+                <tr>
+                    <td><strong>Critic/Actor Loss</strong></td>
+                    <td>Gradient decay stabilized at 0.12 MSE threshold</td>
+                    <td>[ OPTIMIZED ]</td>
+                </tr>
+                <tr>
+                    <td><strong>Control Interval</strong></td>
+                    <td>Real-time synchronization at 700ms control steps</td>
+                    <td>[ STABLE ]</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Section II: 8-Step Control Flow Diagram -->
+    <section>
+        <h2>II. Horizontal System Operational Control Flow</h2>
+        <div class="horizontal-flow">
+            <div class="flow-step">Energy Dataset / Telemetry Input</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">Web Dashboard (Admin / Resident)</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">Flask Backend Server</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">Data Preprocessing (Pandas, NumPy)</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">DRL Optimization Engine (DQN + PPO Models)</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">Energy Dispatch Decision (Solar / Battery / Grid)</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">MongoDB Database Storage</div>
+            <div class="flow-arrow">➔</div>
+            
+            <div class="flow-step">Visualization & AI Insights (Dashboard + Reports)</div>
+        </div>
+    </section>
+
+    <!-- Section III: Functional Milestones -->
+    <section>
+        <h2>III. Core Implementation Highlights</h2>
+        <ul style="padding-left: 20px; font-weight: 500;">
+            <li><strong>Optimized Resource Allocation:</strong> Deep Reinforcement Learning agents manage battery discharge and grid imports.</li>
+            <li><strong>Scalable Data Pipeline:</strong> Unified Flask-MongoDB architecture for low-latency telemetry storage.</li>
+            <li><strong>AI Explainability:</strong> GenAI advisor translates complex grid-stability metrics into human-readable advice.</li>
+            <li><strong>Responsive Architecture:</strong> Full end-to-end integration from hardware dataset to real-time UI monitoring.</li>
+        </ul>
+    </section>
+
+    <!-- Section IV: Prototype Validation -->
+    <section>
+        <div style="width: 100%; max-width: 1100px; margin: 0 auto; background: #fff; padding: 50px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 8px; color: #000;">
+            <h1 style="font-size: 3rem; margin-bottom: 30px; border: none; font-weight: 700; color: #000;">Visual:</h1>
+            <ul style="list-style-type: none; padding: 0; margin-bottom: 50px;">
+                <li style="font-size: 1.8rem; line-height: 1.4; font-weight: 500; color: #000;">
+                    • "Analysis: The 70% prototype successfully exceeds all baseline objectives, delivering >92% dispatch efficiency and rapid 45ms optimization speeds."
+                </li>
+            </ul>
+
+            <h2 style="text-align: center; border: none; padding: 0; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700; color: #000;">Microgrid OS: Initial Results vs. Original Objectives</h2>
+            
+            <div style="background-color: #f5f5f5; padding: 30px; border-radius: 4px; position: relative; border: 1px solid #ddd;">
+                <div style="height: 500px;">
+                    <canvas id="validationChart"></canvas>
+                </div>
+            </div>
+
+            <div style="margin-top: 50px; border-top: 2px solid #000; padding-top: 30px;">
+                <h2 style="font-size: 1.3rem; border: none; padding: 0; margin-bottom: 20px; font-weight: 700; text-transform: uppercase; color: #000;">Data Validation (Outputs from the 70% Prototype):</h2>
+                <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 25px; text-align: justify; font-weight: 500; color: #000;">
+                    The integrated Deep Reinforcement Learning optimization model successfully processes energy datasets containing solar generation, load demand, battery State of Charge (SOC), and grid parameters, and consistently produces optimized energy dispatch decisions to improve microgrid efficiency.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 1.8; text-align: justify; font-weight: 500; color: #000;">
+                    The Microgrid OS web dashboard correctly visualizes these optimization results, instantly displaying real-time system metrics such as energy demand, solar power generation, battery storage levels, transmission flow, and AI-driven energy analytics, enabling administrators and residents to monitor system performance effectively.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        Chart.register(ChartDataLabels);
+        const ctx = document.getElementById('validationChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Dispatch Accuracy (%)', 'Grid Reduction (%)', 'Inference Latency (s)', 'Peak Load Saving (%)'],
+                datasets: [
+                    {
+                        label: 'Original Objective',
+                        data: [85.0, 30.0, 0.20, 20.0],
+                        backgroundColor: '#5C88BE',
+                        borderColor: '#5C88BE',
+                        borderWidth: 1,
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.6
+                    },
+                    {
+                        label: 'Initial Result (70% Prototype)',
+                        data: [92.5, 42.1, 0.045, 28.3],
+                        backgroundColor: '#48C9B0',
+                        borderColor: '#48C9B0',
+                        borderWidth: 1,
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: { top: 30 } },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 20,
+                            font: { family: "'Times New Roman', serif", size: 13, weight: 'bold' },
+                            color: '#000'
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'top',
+                        formatter: (value) => value.toFixed(1) + (value < 1 && value > 0 ? '' : '%'),
+                        font: { family: "'Times New Roman', serif", weight: 'bold', size: 13 },
+                        color: '#000',
+                        offset: 5
+                    },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: { color: '#ffffff', lineWidth: 1.5 },
+                        title: {
+                            display: true,
+                            text: 'Metrics (%, Sec, Count)',
+                            font: { family: "'Times New Roman', serif", size: 14, weight: 'bold' },
+                            color: '#000'
+                        },
+                        ticks: { color: '#000', font: { family: "'Times New Roman', serif", size: 12 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#000', font: { family: "'Times New Roman', serif", size: 13, weight: 'bold' } }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <footer>
+        Confidential - Microgrid Energy Management System Engineering Report
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microgrid OS - Visualization</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="viz-page">
+
+    <div class="bg-system"></div>
+
+    <div class="network-arena">
+        <a href="/dashboard" class="btn-back">
+            <i class="fas fa-chevron-left"></i> <span>BACK</span>
+        </a>
+
+        <!-- Flow Lines -->
+        <svg class="flow-layer" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+            <!-- Central Node coords: 600, 350 -->
+
+            <!-- Base thin tracks -->
+            <path class="path-base" d="M 200 200 Q 400 250 600 350" /> <!-- Solar to Comm -->
+            <path class="path-base" d="M 1000 200 Q 800 250 600 350" /> <!-- Grid to Comm -->
+            <path class="path-base" d="M 600 550 Q 600 450 600 350" /> <!-- Battery to Comm -->
+
+            <!-- Glow streams -->
+            <path class="path-glow path-solar" d="M 200 200 Q 400 250 600 350" />
+            <path class="path-glow path-grid" d="M 1000 200 Q 800 250 600 350" />
+            <path class="path-glow path-battery" d="M 600 550 Q 600 450 600 350" />
+
+            <!-- Loop context lines -->
+            <circle cx="600" cy="350" r="180" stroke="rgba(255,255,255,0.03)" stroke-width="1" fill="none"
+                stroke-dasharray="4 8" />
+            <circle cx="600" cy="350" r="280" stroke="rgba(255,255,255,0.02)" stroke-width="1" fill="none" />
+        </svg>
+
+        <!-- Node: Solar Array -->
+        <div class="entity-node n-solar" style="left: 16%; top: 33%;">
+            <div class="node-icon-wrapper"
+                style="background-image: url('https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=400');">
+            </div>
+            <div class="node-details">
+                <div class="node-title">Solar Array</div>
+                <div class="node-value" style="color: var(--accent-gold);">45.2 kW</div>
+            </div>
+        </div>
+
+        <!-- Node: Main Grid -->
+        <div class="entity-node n-grid" style="left: 84%; top: 33%;">
+            <div class="node-icon-wrapper"
+                style="background-image: url('https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=400');">
+            </div>
+            <div class="node-details">
+                <div class="node-title">Utility Grid</div>
+                <div class="node-value" style="color: #ef4444;">$0.30/kWh</div>
+            </div>
+        </div>
+
+        <!-- Node: Battery Storage -->
+        <div class="entity-node n-battery" style="left: 50%; top: 92%;">
+            <div class="node-icon-wrapper"
+                style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=400');">
+            </div>
+            <div class="node-details">
+                <div class="node-title">BESS Storage</div>
+                <div class="node-value" style="color: var(--accent-green);">82% Cap</div>
+            </div>
+        </div>
+
+        <!-- Node: Smart Community -->
+        <div class="entity-node n-community" style="left: 50%; top: 58%;">
+            <div class="node-icon-wrapper"
+                style="background-image: url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=400');">
+            </div>
+            <div class="node-details"
+                style="border-color: rgba(0, 229, 255, 0.3); background: rgba(0, 229, 255, 0.05);">
+                <div class="node-title">Smart Community</div>
+                <div class="node-value" style="color: var(--primary);">Load: 124 kW</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Metrics HUD -->
+    <div class="hud-container">
+
+        <!-- Fleet Status -->
+        <div class="hud-panel">
+            <div class="panel-header">
+                <div class="panel-title">EV Fleet Integration</div>
+                <i class="fas fa-plug-circle-bolt panel-icon"></i>
+            </div>
+            <div class="ev-stats">
+                <div class="ev-figure">
+                    <i class="fas fa-car-side"></i>
+                </div>
+                <div class="ev-progress-container">
+                    <div class="ev-perc">
+                        78% <span><i class="fas fa-bolt" style="color: var(--primary);"></i> Active Charge</span>
+                    </div>
+                    <div class="ev-track">
+                        <div class="ev-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Core -->
+        <div class="hud-panel premium-border">
+            <div class="panel-header">
+                <div class="panel-title" style="color: var(--secondary);">AI Intelligence Core</div>
+                <i class="fas fa-microchip panel-icon" style="opacity: 0.8; color: var(--secondary);"></i>
+            </div>
+            <div class="ai-grid">
+                <div class="ai-metric">
+                    <div class="ai-metric-val">DQN-v4</div>
+                    <div class="ai-metric-lbl">Active Model</div>
+                </div>
+                <div class="ai-metric">
+                    <div class="ai-metric-val">94.2%</div>
+                    <div class="ai-metric-lbl">Routing Effic.</div>
+                </div>
+                <div class="ai-chart-cont">
+                    <div class="ai-bar"></div>
+                    <div class="ai-bar"></div>
+                    <div class="ai-bar"></div>
+                    <div class="ai-bar"></div>
+                    <div class="ai-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Capacity Map -->
+        <div class="hud-panel">
+            <div class="panel-header">
+                <div class="panel-title">System Harmonics</div>
+                <i class="fas fa-chart-line panel-icon"></i>
+            </div>
+            <div class="energy-list">
+                <div class="e-row">
+                    <div class="e-lbl">PVR</div>
+                    <div class="e-track">
+                        <div class="e-fill high"></div>
+                    </div>
+                </div>
+                <div class="e-row">
+                    <div class="e-lbl">STR</div>
+                    <div class="e-track">
+                        <div class="e-fill med"></div>
+                    </div>
+                </div>
+                <div class="e-row">
+                    <div class="e-lbl">GRD</div>
+                    <div class="e-track">
+                        <div class="e-fill low"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

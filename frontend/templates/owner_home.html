@@ -1,0 +1,746 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="owner-dashboard">
+
+    <!-- ─── NAVBAR ─────────────────────────────────────────────── -->
+    <nav class="owner-nav">
+        <div class="owner-nav-left">
+            <i class="fas fa-bolt" style="color:var(--neon-yellow);margin-right:10px;font-size:1.3rem;"></i>
+            <span class="owner-nav-title">MICROGRID OS</span>
+            <span class="owner-nav-sub">Resident Energy Portal</span>
+        </div>
+        <div class="owner-nav-right">
+            <div class="owner-nav-user">
+                <i class="fas fa-home" style="color:var(--neon-yellow);margin-right:8px;"></i>
+                <span>{{ mobile or email }}</span>
+            </div>
+            <button onclick="window.location.href='/owner_setup'" class="owner-logout-btn" style="background:rgba(255,200,0,0.1); border-color:rgba(255,200,0,0.3); color:var(--neon-yellow); margin-right: 12px;">
+                <i class="fas fa-edit"></i> Change Meter
+            </button>
+            <button onclick="window.location.href='/switch_to_admin'" class="owner-logout-btn" style="background:rgba(0,229,255,0.12); border-color:rgba(0,229,255,0.3); color:var(--neon-blue); margin-right: 12px;">
+                <i class="fas fa-users-cog"></i> Switch Role
+            </button>
+            <button onclick="logout()" class="owner-logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- ─── DASHBOARD CONTENT (auto-loaded) ─────────── -->
+    <div id="dashboard_content" style="display:none; padding-top: 20px;">
+
+        <!-- Meter & Owner Info & Consumer Search -->
+        <div style="padding:0 28px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
+            <div style="display:flex; gap:20px; align-items:flex-end;">
+                <div>
+                    <h2 id="owner_name" style="color:var(--text-primary);margin:0;font-size:1.4rem;">House Owner</h2>
+                    <div style="font-size:0.85rem;color:var(--text-secondary);margin-top:4px;">
+                        <i class="fas fa-map-marker-alt" style="color:var(--neon-yellow);margin-right:6px;"></i>
+                        <span id="house_location">Location</span>
+                    </div>
+                </div>
+                <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary);padding-bottom:4px;">
+                    <i class="fas fa-hashtag" style="color:var(--neon-blue);margin-right:4px;"></i>
+                    Meter: <span id="active_meter" style="color:var(--neon-blue);font-weight:700;"></span>
+                </span>
+            </div>
+
+            <!-- Consumer ID Search -->
+            <div style="display:flex; gap:10px; align-items:center; background:rgba(255,255,255,0.03); padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
+                <i class="fas fa-search" style="color:var(--text-secondary); font-size:0.9rem;"></i>
+                <input type="text" id="consumer_id_input" placeholder="Enter Consumer Number" 
+                    style="background:transparent; border:none; outline:none; color:var(--text-primary); font-family:var(--font-mono); font-size:0.85rem; width:160px;"
+                    onkeypress="if(event.key==='Enter') loadDashboard()">
+                <button onclick="loadDashboard()" 
+                    style="background:var(--neon-blue); color:#000; border:none; padding:5px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; cursor:pointer; transition:all 0.2s;">
+                    LOAD
+                </button>
+                <button onclick="downloadTelemetry()" 
+                    style="background:rgba(255,165,0,0.15); color:var(--neon-yellow); border:1px solid rgba(255,165,0,0.3); padding:5px 12px; border-radius:6px; font-weight:700; font-size:0.75rem; cursor:pointer; transition:all 0.2s;">
+                    <i class="fas fa-download" style="margin-right:5px;"></i>TELEMETRY
+                </button>
+            </div>
+        </div>
+
+        <!-- ─── TOP METRIC CARDS ──────────────────────────────── -->
+        <div class="owner-metric-row">
+            <div class="owner-metric-card">
+                <div class="omc-icon" style="background:rgba(0,229,255,0.1);color:var(--neon-blue);">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="omc-body">
+                    <div class="omc-label">Today's Usage</div>
+                    <div class="omc-value" id="today_usage">—</div>
+                </div>
+                <div class="omc-badge" style="background:rgba(0,229,255,0.15);color:var(--neon-blue);">LIVE</div>
+            </div>
+            <div class="owner-metric-card">
+                <div class="omc-icon" style="background:rgba(255,200,0,0.1);color:var(--neon-yellow);">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="omc-body">
+                    <div class="omc-label">Solar Generated</div>
+                    <div class="omc-value" id="solar_generated">—</div>
+                </div>
+                <div class="omc-badge" style="background:rgba(255,200,0,0.15);color:var(--neon-yellow);">TODAY</div>
+            </div>
+            <div class="owner-metric-card">
+                <div class="omc-icon" style="background:rgba(57,255,20,0.1);color:#39ff14;">
+                    <i class="fas fa-piggy-bank"></i>
+                </div>
+                <div class="omc-body">
+                    <div class="omc-label">Money Saved</div>
+                    <div class="omc-value" id="money_saved">—</div>
+                </div>
+                <div class="omc-badge" style="background:rgba(57,255,20,0.15);color:#39ff14;">TODAY</div>
+            </div>
+            <div class="owner-metric-card">
+                <div class="omc-icon" style="background:rgba(255,80,80,0.1);color:#ff5a5a;">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <div class="omc-body">
+                    <div class="omc-label">Current Bill</div>
+                    <div class="omc-value" id="current_bill">—</div>
+                </div>
+                <div class="omc-badge" style="background:rgba(255,80,80,0.15);color:#ff5a5a;">MONTHLY</div>
+            </div>
+        </div>
+
+        <!-- ─── CHARTS ROW ───────────────────────────────────── -->
+        <div class="owner-charts-row">
+            <div class="owner-card" style="flex:1.4;">
+                <div class="owner-card-header">
+                    <i class="fas fa-chart-bar" style="color:var(--neon-blue);margin-right:8px;"></i>
+                    Electricity Usage
+                </div>
+                <div style="height:220px;position:relative;">
+                    <canvas id="usageChart"></canvas>
+                </div>
+            </div>
+            <div class="owner-card" style="flex:1;">
+                <div class="owner-card-header">
+                    <i class="fas fa-sun" style="color:var(--neon-yellow);margin-right:8px;"></i>
+                    Energy Source Mix
+                </div>
+                <div style="height:180px;position:relative;">
+                    <canvas id="solarChart"></canvas>
+                </div>
+                <div style="text-align:center;margin-top:8px;">
+                    <span style="font-size:1.8rem;font-weight:700;color:var(--neon-yellow);" id="solar_pct">—</span>
+                    <span style="font-size:0.8rem;color:var(--text-secondary);margin-left:4px;">Solar Share</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── NET METERING ─────────────────────────────────── -->
+        <div class="owner-card owner-net-metering">
+            <div class="owner-card-header">
+                <i class="fas fa-exchange-alt" style="color:#39ff14;margin-right:8px;"></i>
+                Grid Import / Export — Net Metering
+            </div>
+            <div class="owner-nm-row">
+                <div class="owner-nm-block" style="border-color:rgba(255,80,80,0.4);background:rgba(255,80,80,0.05);">
+                    <div class="nm-icon" style="color:#ff5a5a;"><i class="fas fa-arrow-circle-down"></i></div>
+                    <div class="nm-label">Grid Import</div>
+                    <div class="nm-value" style="color:#ff5a5a;" id="grid_import_kwh">—</div>
+                    <div class="nm-sub" id="grid_import_cost">—</div>
+                </div>
+                <div class="owner-nm-formula">
+                    <div style="font-size:2rem;">−</div>
+                    <div style="font-size:0.65rem;color:var(--text-secondary);letter-spacing:1px;margin-top:4px;">NET METERING</div>
+                </div>
+                <div class="owner-nm-block" style="border-color:rgba(57,255,20,0.4);background:rgba(57,255,20,0.05);">
+                    <div class="nm-icon" style="color:#39ff14;"><i class="fas fa-arrow-circle-up"></i></div>
+                    <div class="nm-label">Grid Export</div>
+                    <div class="nm-value" style="color:#39ff14;" id="grid_export_kwh">—</div>
+                    <div class="nm-sub" id="grid_export_credit">—</div>
+                </div>
+                <div class="owner-nm-formula" style="font-size:2rem;">=</div>
+                <div class="owner-nm-block" style="border-color:rgba(0,229,255,0.4);background:rgba(0,229,255,0.05);">
+                    <div class="nm-icon" style="color:var(--neon-blue);"><i class="fas fa-receipt"></i></div>
+                    <div class="nm-label">Final Bill</div>
+                    <div class="nm-value" style="color:var(--neon-blue);" id="grid_final_bill">—</div>
+                    <div class="nm-sub">After credit</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── PRICE PREDICTION ─────────────────────────────── -->
+        <div style="padding:0 28px;margin-top:16px;">
+            <div class="owner-card">
+                <div class="owner-card-header">
+                    <i class="fas fa-brain" style="color:#b48eff;margin-right:8px;"></i>
+                    Electricity Price Prediction — Next 24 Hours
+                    <span style="margin-left:auto;font-size:0.75rem;color:var(--text-secondary);font-weight:400;">AI · LSTM Model</span>
+                </div>
+                <div style="margin-bottom:14px;padding:10px 18px;border-radius:8px;background:rgba(57,255,20,0.08);border:1px solid rgba(57,255,20,0.2);display:inline-block;">
+                    <span style="font-size:0.75rem;color:var(--text-secondary);">💡 Best time to use appliances: </span>
+                    <span style="font-weight:700;color:#39ff14;" id="best_time">—</span>
+                    <span style="font-size:0.78rem;color:#39ff14;margin-left:4px;" id="best_price">—</span>
+                </div>
+                <div style="height:230px;position:relative;">
+                    <canvas id="priceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── BOTTOM ROW ───────────────────────────────────── -->
+        <div style="padding:0 28px;margin-top:16px;">
+            <div class="owner-bottom-row">
+
+                <!-- Bill Breakdown + AI Savings -->
+                <div class="owner-card">
+                    <div class="owner-card-header">
+                        <i class="fas fa-file-invoice-dollar" style="color:#ff5a5a;margin-right:8px;"></i>
+                        Electricity Bill
+                    </div>
+                    <div class="owner-bill-rows">
+                        <div class="obr">
+                            <span class="obr-label">Grid Import Cost</span>
+                            <span class="obr-val" style="color:#ff5a5a;" id="bill_import_cost">—</span>
+                        </div>
+                        <div class="obr">
+                            <span class="obr-label">Export Credit <small>(Net Metering)</small></span>
+                            <span class="obr-val" style="color:#39ff14;" id="bill_export_credit">—</span>
+                        </div>
+                        <div class="obr obr-total">
+                            <span class="obr-label">Final Bill</span>
+                            <span class="obr-val" style="color:var(--neon-blue);" id="bill_final">—</span>
+                        </div>
+                        <div class="obr" style="margin-top:8px;">
+                            <span class="obr-label" style="color:var(--text-secondary);">Due Date</span>
+                            <span class="obr-val" style="font-size:0.85rem;color:var(--text-secondary);" id="bill_due">—</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07);">
+                        <div style="font-size:0.72rem;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">⚡ AI Savings</div>
+                        <div class="obr"><span class="obr-label">Baseline Usage</span><span class="obr-val" id="sav_base">—</span></div>
+                        <div class="obr"><span class="obr-label">Optimized Usage</span><span class="obr-val" id="sav_opt">—</span></div>
+                        <div class="obr"><span class="obr-label">Electricity Saved</span><span class="obr-val" style="color:#39ff14;" id="sav_elec">—</span></div>
+                        <div class="obr"><span class="obr-label">Money Saved</span><span class="obr-val" style="color:#39ff14;" id="sav_money">—</span></div>
+                    </div>
+                    
+                    <button id="btn-download-bill" onclick="downloadBill()" 
+                        style="margin-top:16px; width:100%; background:rgba(57,255,20,0.15); color:#39ff14; border:1px solid rgba(57,255,20,0.3); padding:10px; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.2s; display:flex; justify-content:center; align-items:center; gap:8px;"
+                        onmouseover="this.style.background='rgba(57,255,20,0.25)'"
+                        onmouseout="this.style.background='rgba(57,255,20,0.15)'">
+                        <i class="fas fa-download"></i> DOWNLOAD AP BOARD BILL
+                    </button>
+                </div>
+
+                <!-- PM Surya Ghar Subsidy -->
+                <div class="owner-card" style="background:linear-gradient(135deg,rgba(255,165,0,0.06),rgba(255,200,60,0.03));">
+                    <div class="owner-card-header">
+                        <span style="font-size:1.2rem;margin-right:8px;">🇮🇳</span>
+                        PM Surya Ghar Subsidy
+                    </div>
+                    <div style="text-align:center;padding:8px 0 16px;">
+                        <div style="font-size:2.6rem;margin-bottom:4px;">☀️</div>
+                        <div style="font-size:0.78rem;color:var(--text-secondary);letter-spacing:1px;text-transform:uppercase;" id="sub_scheme">—</div>
+                    </div>
+                    <div class="owner-bill-rows">
+                        <div class="obr">
+                            <span class="obr-label">Installed Capacity</span>
+                            <span class="obr-val" style="color:var(--neon-yellow);" id="sub_capacity">—</span>
+                        </div>
+                        <div class="obr obr-total">
+                            <span class="obr-label">Government Subsidy</span>
+                            <span class="obr-val" style="color:var(--neon-yellow);font-size:1.3rem;" id="sub_amount">—</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:14px;padding:12px;border-radius:8px;background:rgba(255,200,0,0.05);border:1px solid rgba(255,200,0,0.15);font-size:0.79rem;color:var(--text-secondary);line-height:1.6;">
+                        <strong style="color:var(--neon-yellow);">Subsidy Tiers:</strong><br>
+                        Up to 2 kW → ₹30,000/kW<br>
+                        2–3 kW → ₹78,000 total<br>
+                        Above 3 kW → Capped at ₹78,000
+                    </div>
+                </div>
+
+                <!-- Predicted Last Month Analysis -->
+                <div class="owner-card" style="background:linear-gradient(135deg,rgba(0,229,255,0.06),rgba(0,180,255,0.03));">
+                    <div class="owner-card-header">
+                        <i class="fas fa-history" style="color:var(--neon-blue);margin-right:8px;"></i>
+                        Last Month Analysis (Predicted)
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:10px;">
+                        <div class="predicted-stat">
+                            <div class="stat-label">Usage</div>
+                            <div class="stat-val" id="pred_usage">—</div>
+                        </div>
+                        <div class="predicted-stat">
+                            <div class="stat-label">Solar</div>
+                            <div class="stat-val" id="pred_solar">—</div>
+                        </div>
+                        <div class="predicted-stat">
+                            <div class="stat-label">Savings</div>
+                            <div class="stat-val" id="pred_savings" style="color:#39ff14;">—</div>
+                        </div>
+                        <div class="predicted-stat">
+                            <div class="stat-label">Bill</div>
+                            <div class="stat-val" id="pred_bill" style="color:#ff5a5a;">—</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px; padding:10px; border-radius:8px; background:rgba(0,229,255,0.05); border:1px solid rgba(0,229,255,0.15); font-size:0.75rem; color:var(--text-secondary); line-height:1.4;">
+                        <i class="fas fa-magic" style="color:var(--neon-blue); margin-right:4px;"></i>
+                        Based on historical patterns and current infrastructure.
+                    </div>
+                </div>
+
+                <!-- Pay Bill -->
+                <div class="owner-card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;">
+                    <div style="font-size:3.5rem;">💳</div>
+                    <div>
+                        <div style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;">Pay Electricity Bill</div>
+                        <div style="font-size:0.8rem;color:var(--text-secondary);">Redirects to official APSPDCL payment portal</div>
+                    </div>
+                    <button onclick="payBill()" id="pay_button" class="owner-pay-btn">
+                        <i class="fas fa-credit-card" style="margin-right:8px;"></i>PAY NOW
+                    </button>
+                    <div style="font-size:0.72rem;color:var(--text-secondary);">Secure · Official Portal</div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- end #dashboard_content -->
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ── Owner Dashboard JS ─────────────────────────────────────────────────────
+let usageChart, solarChart, priceChart;
+
+function setEl(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+}
+function hideError() {
+    const b = document.getElementById('error_banner');
+    if (b) b.style.display = 'none';
+}
+function showError(msg) {
+    const b = document.getElementById('error_banner');
+    if (b) {
+        b.style.display = 'block';
+        document.getElementById('error_msg').textContent = msg;
+    }
+}
+function fmtN(n, d) { return parseFloat(n).toFixed(d !== undefined ? d : 1); }
+function fmtRs(n) {
+    return '₹' + parseFloat(n).toLocaleString('en-IN', {minimumFractionDigits:0, maximumFractionDigits:0});
+}
+
+// Auto-load on page start
+document.addEventListener('DOMContentLoaded', loadDashboard);
+
+async function loadDashboard() {
+    hideError();
+    
+    // Check if there's a manual input, otherwise use automatic flow
+    const manualInput = document.getElementById('consumer_id_input').value.trim();
+    let url = '/api/house/dashboard';
+    if (manualInput) {
+        url += '?consumer_id=' + manualInput;
+    }
+    
+    try {
+        const res = await fetch(url);
+
+        // Guard against HTML responses (login redirect)
+        const ct = res.headers.get('content-type') || '';
+        if (!ct.includes('application/json')) {
+            showError('Session expired. Please login again.');
+            setTimeout(() => window.location.href = '/', 2000);
+            return;
+        }
+
+        const d = await res.json();
+        if (!d.success) {
+            showError(d.message || 'Failed to load data.');
+            // If we have no session AND no manual input, redrect to setup
+            if (!manualInput && d.message && d.message.includes('setup')) {
+                setTimeout(() => window.location.href = '/owner_setup', 2000);
+            }
+            return;
+        }
+
+        // Populate & show the dashboard
+        populateDashboard(d);
+        document.getElementById('dashboard_content').style.display = 'block';
+        document.getElementById('active_meter').textContent = d.meter;
+        
+        // Save current data for payment API
+        window.currentMeter = d.meter;
+        window.currentAmount = d.bill.final_bill;
+        
+        // Update input field if loaded via session
+        if (!manualInput) {
+            document.getElementById('consumer_id_input').value = d.meter;
+        }
+
+    } catch (err) {
+        showError('Connection error: ' + err.message);
+        console.error(err);
+    }
+}
+
+function populateDashboard(d) {
+    // Owner info
+    setEl('owner_name', d.owner_name || 'House Owner');
+    setEl('house_location', d.location || 'N/A');
+
+    // Metric cards
+    setEl('today_usage',    fmtN(d.usage.today) + ' kWh');
+    setEl('solar_generated', fmtN(d.solar.today) + ' kWh');
+    setEl('money_saved',    fmtRs(d.savings.money_saved));
+    setEl('current_bill',   fmtRs(d.bill.final_bill));
+
+    // Net metering
+    setEl('grid_import_kwh',    fmtN(d.grid.import_kwh) + ' kWh');
+    setEl('grid_import_cost',   fmtRs(d.grid.import_cost));
+    setEl('grid_export_kwh',    fmtN(d.grid.export_kwh) + ' kWh');
+    setEl('grid_export_credit', fmtRs(d.grid.export_credit));
+    setEl('grid_final_bill',    fmtRs(d.grid.final_bill));
+
+    // Bill
+    setEl('bill_import_cost',   fmtRs(d.bill.grid_import_cost));
+    setEl('bill_export_credit', fmtRs(d.bill.export_credit));
+    setEl('bill_final',         fmtRs(d.bill.final_bill));
+    const dateStr = d.bill.due_date; // Expected "14-02-2026"
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+        // Construct YYYY-MM-DD for reliable parsing
+        const due = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        setEl('bill_due', due.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}));
+    } else {
+        setEl('bill_due', dateStr);
+    }
+
+    // Savings
+    setEl('sav_base',  fmtN(d.savings.baseline_usage) + ' kWh');
+    setEl('sav_opt',   fmtN(d.savings.optimized_usage) + ' kWh');
+    setEl('sav_elec',  fmtN(d.savings.electricity_saved) + ' kWh');
+    setEl('sav_money', fmtRs(d.savings.money_saved));
+
+    // Subsidy
+    setEl('sub_capacity', d.subsidy.capacity_kw + ' kW');
+    setEl('sub_amount',   fmtRs(d.subsidy.subsidy_amount));
+    setEl('sub_scheme',   d.subsidy.scheme);
+
+    // Predicted Last Month
+    if (d.last_month_predicted) {
+        setEl('pred_usage',   fmtN(d.last_month_predicted.usage_kwh) + ' kWh');
+        setEl('pred_solar',   fmtN(d.last_month_predicted.solar_kwh) + ' kWh');
+        setEl('pred_savings', fmtRs(d.last_month_predicted.savings_rs));
+        setEl('pred_bill',    fmtRs(d.last_month_predicted.bill_rs));
+    }
+
+    // Solar pct
+    setEl('solar_pct', fmtN(d.solar.contribution_percent, 0) + '%');
+
+    // Charts
+    renderUsageChart(d.usage);
+    renderSolarChart(d.solar);
+    renderPriceChart(d.price_prediction);
+
+    // Update payment button based on status
+    const payBtn = document.getElementById('pay_button');
+    if (d.payment_status === 'PAID') {
+        payBtn.innerHTML = '<i class="fas fa-check-circle" style="margin-right:8px;"></i>PAID';
+        payBtn.style.background = 'linear-gradient(135deg,#39ff14,#2db30e)';
+        payBtn.style.boxShadow = '0 0 20px rgba(57,255,20,0.2)';
+        payBtn.onclick = () => alert('This bill has already been paid.');
+    } else {
+        payBtn.innerHTML = '<i class="fas fa-credit-card" style="margin-right:8px;"></i>PAY NOW';
+        payBtn.style.background = 'linear-gradient(135deg,#00b4ff,#0080cc)';
+        payBtn.style.boxShadow = '0 0 30px rgba(0,180,255,0.3)';
+        payBtn.onclick = payBill;
+    }
+}
+
+function renderUsageChart(usage) {
+    const ctx = document.getElementById('usageChart').getContext('2d');
+    if (usageChart) usageChart.destroy();
+    usageChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Today', 'This Week', 'This Month'],
+            datasets: [{
+                label: 'kWh',
+                data: [usage.today, usage.week, usage.month],
+                backgroundColor: ['rgba(0,229,255,0.65)','rgba(0,229,255,0.38)','rgba(0,229,255,0.18)'],
+                borderColor:     ['rgba(0,229,255,1)','rgba(0,229,255,0.8)','rgba(0,229,255,0.5)'],
+                borderWidth: 2, borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: { legend: {display:false} },
+            scales: {
+                x: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#b0c4d8'} },
+                y: { grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#b0c4d8', callback: v => v+' kWh'} }
+            }
+        }
+    });
+}
+
+function renderSolarChart(solar) {
+    const ctx = document.getElementById('solarChart').getContext('2d');
+    if (solarChart) solarChart.destroy();
+    solarChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Solar ☀️','Grid 🔌'],
+            datasets: [{
+                data: [solar.contribution_percent, solar.grid_percent],
+                backgroundColor: ['rgba(255,200,0,0.78)','rgba(0,229,255,0.3)'],
+                borderColor:     ['rgba(255,200,0,1)','rgba(0,229,255,0.6)'],
+                borderWidth: 2, hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, cutout: '68%',
+            plugins: {
+                legend: {position:'bottom', labels:{color:'#b0c4d8', padding:14, font:{size:12}}},
+                tooltip: {callbacks:{label: c => ` ${c.label}: ${c.parsed}%`}}
+            }
+        }
+    });
+}
+
+function renderPriceChart(prediction) {
+    const ctx = document.getElementById('priceChart').getContext('2d');
+    if (priceChart) priceChart.destroy();
+    const hours  = prediction.map(p => p.hour + ':00');
+    const prices = prediction.map(p => p.price_rs);
+    const minPrice = Math.min(...prices);
+    const minHour  = hours[prices.indexOf(minPrice)];
+    priceChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: hours,
+            datasets: [{
+                label: '₹/kWh', data: prices,
+                borderColor: 'rgba(57,255,20,0.9)', backgroundColor: 'rgba(57,255,20,0.07)',
+                borderWidth: 2.5, pointRadius: 3, fill: true, tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+                legend: {display:false},
+                tooltip: {callbacks:{label: c => ` ₹${c.parsed.y}/kWh`}}
+            },
+            scales: {
+                x: {grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#b0c4d8',maxRotation:45,font:{size:10}}},
+                y: {grid:{color:'rgba(255,255,255,0.04)'}, ticks:{color:'#b0c4d8', callback: v => '₹'+v}}
+            }
+        }
+    });
+    setEl('best_time',  minHour);
+    setEl('best_price', '₹' + minPrice + '/kWh');
+}
+
+async function payBill() { 
+    // Redirect to portal first (User preference)
+    window.open('https://portal.apspdcl.in/OnlinePayment', '_blank'); 
+
+    // Then record in our DB for persistence
+    try {
+        const res = await fetch('/api/house/pay_bill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                meter: window.currentMeter,
+                amount: window.currentAmount
+            })
+        });
+        const data = await res.json();
+        if (data.success) {
+            // Reload to show "PAID" status
+            loadDashboard();
+        }
+    } catch (e) {
+        console.error("Payment record error:", e);
+    }
+}
+
+async function downloadTelemetry() {
+    try {
+        const meter = window.currentMeter || document.getElementById('consumer_id_input').value.trim();
+        let url = '/api/house/export_telemetry';
+        if (meter) {
+            url += '?meter=' + meter;
+        }
+
+        const res = await fetch(url);
+        if (!res.ok) {
+            const err = await res.json();
+            alert('Export failed: ' + (err.message || 'Unknown error'));
+            return;
+        }
+        const blob = await res.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = `telemetry_export_${meter || 'meter'}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        document.body.removeChild(a);
+    } catch (err) {
+        console.error('Download error:', err);
+        alert('Failed to download telemetry. Please try again.');
+    }
+}
+
+async function downloadBill() {
+    try {
+        const meter = window.currentMeter || document.getElementById('consumer_id_input').value.trim();
+        if (!meter) {
+            alert("No meter loaded. Please enter a Consumer ID.");
+            return;
+        }
+        
+        console.log("Downloading bill for meter:", meter);
+        
+        const res = await fetch('/api/billing/download?meter=' + meter);
+        if (!res.ok) {
+            const errText = await res.text();
+            alert("Download failed: " + errText);
+            return;
+        }
+        
+        const blob = await res.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        
+        // Try to get filename from Content-Disposition header if possible
+        const contentDisposition = res.headers.get('Content-Disposition');
+        let filename = `AP_Board_Bill_${meter}.txt`;
+        if (contentDisposition && contentDisposition.includes('filename=')) {
+            const matches = /filename="?([^"]+)"?/.exec(contentDisposition);
+            if (matches && matches[1]) {
+                filename = matches[1];
+            }
+        }
+        
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(downloadUrl);
+        document.body.removeChild(a);
+        
+    } catch (err) {
+        console.error('Download error:', err);
+        alert("Download failed. Please check your connection.");
+    }
+}
+
+async function logout() {
+    try {
+        const res = await fetch('/api/logout', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','X-CSRFToken':'{{ csrf_token }}'}
+        });
+        const data = await res.json();
+        if (data.success) window.location.href = data.redirect;
+    } catch (e) { window.location.href = '/'; }
+}
+</script>
+
+<!-- Error banner (restored for auto-load) -->
+<div id="error_banner" style="display:none;position:fixed;top:80px;right:28px;z-index:1000;width:320px;padding:14px 20px;border-radius:10px;background:rgba(255,60,60,0.9);border:1px solid rgba(255,60,60,0.3);color:#fff;font-size:0.85rem;box-shadow:0 10px 30px rgba(0,0,0,0.3);backdrop-filter:blur(10px);">
+    <i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i>
+    <span id="error_msg">Could not load dashboard data.</span>
+</div>
+
+<style>
+.owner-dashboard { min-height:100vh; background:var(--bg-primary); padding-bottom:40px; }
+
+/* Navbar */
+.owner-nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px; background:rgba(5,12,24,0.92);
+    border-bottom:1px solid rgba(0,229,255,0.12);
+    backdrop-filter:blur(20px); position:sticky; top:0; z-index:100;
+}
+.owner-nav-left { display:flex; align-items:center; gap:12px; }
+.owner-nav-title { font-family:var(--font-mono); font-weight:700; font-size:1rem; letter-spacing:2px; color:var(--text-primary); }
+.owner-nav-sub {
+    font-size:0.72rem; color:var(--neon-blue); letter-spacing:1px; text-transform:uppercase;
+    border-left:1px solid rgba(0,229,255,0.3); padding-left:12px;
+}
+.owner-nav-right { display:flex; align-items:center; gap:16px; }
+.owner-nav-user { font-family:var(--font-mono); font-size:0.85rem; color:var(--text-secondary); }
+.owner-logout-btn {
+    background:rgba(255,60,60,0.12); border:1px solid rgba(255,60,60,0.3);
+    color:#ff6060; padding:7px 16px; border-radius:8px; cursor:pointer;
+    font-size:0.8rem; font-weight:600; letter-spacing:1px; transition:all 0.2s;
+}
+/* Predicted Stats */
+.predicted-stat { background:rgba(255,255,255,0.03); padding:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.05); }
+.stat-label { font-size:0.65rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+.stat-val { font-family:var(--font-mono); font-weight:700; font-size:0.95rem; color:var(--text-primary); }
+
+.owner-logout-btn:hover { background:rgba(255,60,60,0.22); }
+
+
+/* Metric Cards */
+.owner-metric-row { display:flex; gap:16px; padding:16px 28px 0; }
+.owner-metric-card {
+    flex:1; display:flex; align-items:center; gap:14px;
+    background:rgba(13,27,42,0.75); border:1px solid rgba(255,255,255,0.08);
+    border-radius:14px; padding:18px; position:relative; overflow:hidden; transition:transform 0.2s;
+}
+.owner-metric-card:hover { transform:translateY(-2px); }
+.omc-icon { width:48px; height:48px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+.omc-body { flex:1; }
+.omc-label { font-size:0.72rem; color:var(--text-secondary); letter-spacing:1px; text-transform:uppercase; margin-bottom:4px; }
+.omc-value { font-size:1.35rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); }
+.omc-badge { font-size:0.6rem; font-weight:700; letter-spacing:1.5px; padding:3px 8px; border-radius:20px; position:absolute; top:14px; right:14px; }
+
+/* Generic Card */
+.owner-card { background:rgba(13,27,42,0.75); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:22px; }
+.owner-card-header { font-size:0.85rem; font-weight:700; letter-spacing:1px; color:var(--text-primary); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; }
+
+/* Charts Row */
+.owner-charts-row { display:flex; gap:16px; padding:16px 28px 0; }
+
+/* Net Metering */
+.owner-net-metering { margin:16px 28px 0; }
+.owner-nm-row { display:flex; align-items:center; gap:12px; }
+.owner-nm-block { flex:1; text-align:center; padding:18px 12px; border:1px solid; border-radius:12px; }
+.nm-icon { font-size:1.8rem; margin-bottom:8px; }
+.nm-label { font-size:0.7rem; color:var(--text-secondary); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+.nm-value { font-size:1.4rem; font-weight:700; font-family:var(--font-mono); }
+.nm-sub { font-size:0.8rem; color:var(--text-secondary); margin-top:4px; }
+.owner-nm-formula { text-align:center; font-size:1.5rem; color:var(--text-secondary); flex-shrink:0; }
+
+/* Bottom Row */
+.owner-bottom-row { display:flex; gap:16px; }
+.owner-bottom-row .owner-card { flex:1; }
+
+/* Bill Rows */
+.owner-bill-rows { display:flex; flex-direction:column; gap:10px; }
+.obr { display:flex; justify-content:space-between; align-items:center; }
+.obr-label { font-size:0.82rem; color:var(--text-secondary); }
+.obr-val { font-family:var(--font-mono); font-weight:700; color:var(--text-primary); }
+.obr-total { padding-top:10px; margin-top:4px; border-top:1px solid rgba(255,255,255,0.08); }
+.obr-total .obr-label { color:var(--text-primary); font-weight:600; }
+
+/* Pay Button */
+.owner-pay-btn {
+    background:linear-gradient(135deg,#00b4ff,#0080cc); color:#fff; border:none;
+    border-radius:12px; padding:16px 36px; font-size:1rem; font-weight:700;
+    letter-spacing:2px; cursor:pointer; box-shadow:0 0 30px rgba(0,180,255,0.3);
+    transition:all 0.2s; width:100%;
+}
+.owner-pay-btn:hover { transform:translateY(-2px); box-shadow:0 0 40px rgba(0,180,255,0.5); }
+</style>
+{% endblock %}

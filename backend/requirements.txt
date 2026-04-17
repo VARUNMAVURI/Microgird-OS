@@ -1,0 +1,12 @@
+numpy
+pandas
+torch
+pymongo
+matplotlib
+flask
+waitress
+pulp
+Flask-WTF
+python-dotenv
+twilio
+fpdf2

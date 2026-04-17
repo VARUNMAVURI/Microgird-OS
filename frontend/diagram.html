@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microgrid DRL Collaboration Diagram - Professional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #3b82f6;
+            --primary-blue-hover: #2563eb;
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+            --box-bg: #ffffff;
+            --box-border: #e2e8f0;
+            --arrow-color: #94a3b8;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--text-main);
+        }
+
+        .diagram-container {
+            background: #ffffff;
+            padding: 80px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: visible;
+        }
+
+        svg {
+            display: block;
+            overflow: visible;
+        }
+
+        /* Generic Box Card Styling */
+        .component-card {
+            background: white;
+            border: 1px solid var(--box-border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .component-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .component-card span {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-main);
+        }
+
+        /* Connector Styling */
+        .connector {
+            fill: none;
+            stroke: var(--arrow-color);
+            stroke-width: 1.5;
+            marker-end: url(#arrowhead);
+            transition: stroke 0.3s ease;
+        }
+
+        .connector:hover {
+            stroke: var(--primary-blue);
+        }
+
+        /* Label Styling */
+        .label-pill {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .label-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .step-num {
+            color: var(--primary-blue);
+            margin-right: 4px;
+        }
+
+        /* Shadow Filter for labels */
+        .label-group {
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.05));
+        }
+    </style>
+</head>
+<body>
+
+<div class="diagram-container">
+    <svg width="1500" height="900" viewBox="0 0 1500 900">
+        <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
+            </marker>
+        </defs>
+
+        <!-- Components (Boxes using foreignObject for HTML/CSS features) -->
+        
+        <!-- Left: User -->
+        <foreignObject x="50" y="300" width="160" height="80">
+            <div class="component-card"><span>User</span></div>
+        </foreignObject>
+
+        <!-- Left: AI Chatbot (Below User) -->
+        <foreignObject x="50" y="650" width="160" height="80">
+            <div class="component-card"><span>AI Chatbot</span></div>
+        </foreignObject>
+
+        <!-- Center-Left: Web Interface -->
+        <foreignObject x="450" y="300" width="180" height="80">
+            <div class="component-card"><span>Web Interface</span></div>
+        </foreignObject>
+
+        <!-- Center: Flask Backend -->
+        <foreignObject x="850" y="300" width="180" height="80">
+            <div class="component-card"><span>Flask Backend</span></div>
+        </foreignObject>
+
+        <!-- Right Stack (Vertical) -->
+        <foreignObject x="1250" y="50" width="200" height="80">
+            <div class="component-card"><span>State Preprocessing</span></div>
+        </foreignObject>
+
+        <foreignObject x="1250" y="180" width="180" height="80">
+            <div class="component-card"><span>DRL Model</span></div>
+        </foreignObject>
+
+        <foreignObject x="1250" y="310" width="200" height="80">
+            <div class="component-card"><span>Strategy Generator</span></div>
+        </foreignObject>
+
+        <foreignObject x="1250" y="470" width="200" height="80">
+            <div class="component-card"><span>Report Generator</span></div>
+        </foreignObject>
+
+        <foreignObject x="1250" y="630" width="150" height="80">
+            <div class="component-card"><span>Database</span></div>
+        </foreignObject>
+
+        <!-- Connectors -->
+
+        <!-- 1: User -> Web Interface -->
+        <path d="M 210 340 L 450 340" class="connector" />
+        
+        <!-- 2: Web Interface -> Flask Backend -->
+        <path d="M 630 330 L 850 330" class="connector" />
+        
+        <!-- 10: Flask Backend -> Web Interface -->
+        <path d="M 850 350 L 630 350" class="connector" />
+
+        <!-- 3: Flask Backend -> State Preprocessing -->
+        <path d="M 940 300 L 940 90 L 1250 90" class="connector" />
+
+        <!-- 4: State Preprocessing -> DRL Model -->
+        <path d="M 1340 130 L 1340 180" class="connector" />
+
+        <!-- 5: DRL Model -> Flask Backend -->
+        <path d="M 1250 220 L 1000 220 L 1000 300" class="connector" />
+
+        <!-- 6 & 7: Flask <-> Strategy Generator -->
+        <path d="M 1030 330 L 1250 330" class="connector" />
+        <path d="M 1250 350 L 1030 350" class="connector" />
+
+        <!-- 8: Flask Backend -> Report Generator -->
+        <path d="M 940 380 L 940 510 L 1250 510" class="connector" />
+
+        <!-- 9: Report Generator -> Database -->
+        <path d="M 1350 550 L 1350 630" class="connector" />
+
+        <!-- 11: User -> AI Chatbot (Vertical) -->
+        <path d="M 130 380 L 130 650" class="connector" />
+
+        <!-- 12: AI Chatbot -> User (Return) -->
+        <path d="M 50 690 L 20 690 L 20 340 L 50 340" class="connector" />
+
+        <!-- LABELS (Using foreignObject for consistent UI font and styling) -->
+
+        <!-- 1 -->
+        <foreignObject x="260" y="295" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">1:</span> login / upload grid</p></div>
+        </foreignObject>
+
+        <!-- 2 -->
+        <foreignObject x="670" y="285" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">2:</span> send telemetry</p></div>
+        </foreignObject>
+
+        <!-- 10 -->
+        <foreignObject x="670" y="360" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">10:</span> display results</p></div>
+        </foreignObject>
+
+        <!-- 3 -->
+        <foreignObject x="1050" y="50" width="180" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">3:</span> validate & preprocess</p></div>
+        </foreignObject>
+
+        <!-- 4 -->
+        <foreignObject x="1355" y="140" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">4:</span> send processed state</p></div>
+        </foreignObject>
+
+        <!-- 5 -->
+        <foreignObject x="1070" y="195" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">5:</span> return action result</p></div>
+        </foreignObject>
+
+        <!-- 6 -->
+        <foreignObject x="1070" y="295" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">6:</span> decode strategy</p></div>
+        </foreignObject>
+
+        <!-- 7 -->
+        <foreignObject x="1070" y="360" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">7:</span> return strategy & savings</p></div>
+        </foreignObject>
+
+        <!-- 8 -->
+        <foreignObject x="1050" y="475" width="180" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">8:</span> create energy report</p></div>
+        </foreignObject>
+
+        <!-- 9 -->
+        <foreignObject x="1360" y="575" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">9:</span> store optimization logs</p></div>
+        </foreignObject>
+
+        <!-- 11 -->
+        <foreignObject x="140" y="500" width="160" height="40" class="label-group">
+            <div class="label-pill"><p class="label-text"><span class="step-num">11:</span> energy question</p></div>
+        </foreignObject>
+
+        <!-- 12 -->
+        <foreignObject x="30" y="500" width="100" height="150" class="label-group">
+            <div class="label-pill" style="transform: rotate(-90deg); transform-origin: left bottom; margin-top: 100px;">
+                <p class="label-text"><span class="step-num">12:</span> chatbot guidance</p>
+            </div>
+        </foreignObject>
+
+    </svg>
+</div>
+
+</body>
+</html>

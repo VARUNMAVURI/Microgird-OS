@@ -1,0 +1,642 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <h2>⚡ Microgrid OS</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item"><i class="fas fa-chart-line"></i> Live Monitor</a>
+            <a href="/history" class="menu-item active"><i class="fas fa-history"></i> History</a>
+            <a href="/suggestions" class="menu-item"><i class="fas fa-lightbulb"></i> Suggestions</a>
+            <a href="/visualization" class="menu-item"><i class="fas fa-magic"></i> Visualization</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="alert-item" style="border-left-color: var(--neon-blue); background: rgba(0, 229, 255, 0.05); color: var(--neon-blue);">
+                <i class="fas fa-archive"></i> Archive Mode
+            </div>
+            <button onclick="handleLogout()" class="glass-btn" style="width: 100%; justify-content: center; margin-top: 15px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <main class="app-content" style="overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="/history" class="header-back-btn" style="margin-right: 0;">
+                    <i class="fas fa-chevron-left"></i> HISTORY
+                </a>
+                <h2 style="color: var(--accent-primary); margin: 0;">📜 Simulation Details</h2>
+            </div>
+        </div>
+
+        <!-- SMART SUGGESTIONS -->
+        {% if simulation.summary.suggestions and simulation.summary.suggestions|length > 0 %}
+        <div class="panel-container"
+            style="border-top: 4px solid var(--neon-purple); background: linear-gradient(135deg, rgba(124, 77, 255, 0.05), transparent); margin-bottom: 30px; position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: -30px; left: -30px; width: 100px; height: 100px; background: rgba(124, 77, 255, 0.2); filter: blur(40px); border-radius: 50%;">
+            </div>
+            <h3
+                style="color: var(--neon-purple); margin-top: 0; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; position: relative; z-index: 2;">
+                <i class="fas fa-lightbulb" style="filter: drop-shadow(var(--glow-purple));"></i> Smart Energy
+                Suggestions
+            </h3>
+            <ul style="margin-bottom: 0; padding-left: 20px; position: relative; z-index: 2;">
+                {% for suggestion in simulation.summary.suggestions %}
+                <li style="margin-bottom: 12px; font-size: 1.05rem; color: var(--text-primary); line-height: 1.5;">
+                    {{ suggestion|safe }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- METRICS BANNERS -->
+        <div class="kpi-grid" style="margin-bottom: 35px;">
+            <!-- Key Stats -->
+            <div class="kpi-card"
+                style="border-top: 3px solid var(--neon-green); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(0, 255, 148, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-money-bill-wave kpi-icon"
+                    style="color: var(--neon-green); filter: drop-shadow(var(--glow-green)); font-size: 1.8rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label">Total Net Profit</div>
+                <div class="kpi-value text-neon-green" style="font-size: 2.2rem; text-shadow: var(--glow-green);">₹{{
+                    "%.2f"|format(simulation.summary.net_profit) }}</div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Simulation Run Earnings
+                </div>
+            </div>
+
+            <div class="kpi-card"
+                style="border-top: 3px solid var(--neon-yellow); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(255, 176, 32, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-chart-line kpi-icon"
+                    style="color: var(--neon-yellow); filter: drop-shadow(var(--glow-yellow)); font-size: 1.8rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label">Total Savings (ROI)</div>
+                <div class="kpi-value text-neon-yellow" style="font-size: 2.2rem; text-shadow: var(--glow-yellow);">{{
+                    "%.1f"|format(simulation.summary.savings_pct) }}%</div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Efficiency vs Baseline
+                </div>
+            </div>
+
+            <div class="kpi-card" style="border-top: 3px solid var(--neon-blue); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(0, 229, 255, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-shoe-prints kpi-icon"
+                    style="color: var(--neon-blue); filter: drop-shadow(var(--glow-blue)); font-size: 1.8rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label">Simulated Steps</div>
+                <div class="kpi-value text-neon-blue" style="font-size: 2.2rem; text-shadow: var(--glow-blue);">{{
+                    simulation.data.full_data_length }}</div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Data Points Analyzed</div>
+            </div>
+        </div>
+
+        <!-- SENIOR FEATURES GRID -->
+        <h3
+            style="color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-top: 35px; margin-bottom: 25px; font-size: 1.3rem; letter-spacing: 0.5px; display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-rocket" style="color: var(--neon-blue); filter: drop-shadow(var(--glow-blue));"></i>
+            Advanced Analytics (Telemetry View)
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
+
+            <!-- 1. Look-Ahead Forecast -->
+            <div class="panel-container" style="grid-column: span 2; position: relative;">
+                <div class="panel-header">
+                    <div class="panel-title" style="color: var(--neon-blue);text-shadow: var(--glow-blue);">
+                        <i class="fas fa-binoculars"></i> AI Look-Ahead (Next 24h)
+                    </div>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0; padding: 0 15px;">The AI Agent
+                    executes strategies based on these forecasted conditions.</p>
+                <div class="chart-wrapper" style="height: 250px; padding: 10px;">
+                    <canvas id="forecastChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 2. Battery Physics (SOH) -->
+            <div class="panel-container" style="display: flex; flex-direction: column;">
+                <div class="panel-header">
+                    <div class="panel-title" style="color: var(--neon-red); text-shadow: var(--glow-red);">
+                        <i class="fas fa-car-battery"></i> Battery Physics (SOH)
+                    </div>
+                </div>
+                <div
+                    style="text-align: center; padding: 30px 20px; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                    <div
+                        style="position: relative; width: 160px; height: 160px; margin: 0 auto; filter: drop-shadow(0 0 15px rgba(255, 51, 102, 0.2));">
+                        <svg viewBox="0 0 36 36" style="transform: rotate(-90deg); width: 100%;">
+                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="3" />
+                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none" stroke="var(--neon-red)" stroke-width="3" stroke-linecap="round"
+                                stroke-dasharray="{% if simulation.data.sim_results %}{{ simulation.data.sim_results[-1].battery_soh }}, 100{% else %}100, 100{% endif %}" />
+                        </svg>
+                        <div
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div
+                                style="font-size: 1.8rem; font-weight: bold; color: var(--text-primary); font-family: var(--font-mono);">
+                                {% if simulation.data.sim_results %}
+                                {{ simulation.data.sim_results[-1].battery_soh }}%
+                                {% else %}
+                                100%
+                                {% endif %}
+                            </div>
+                            <div
+                                style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+                                Health</div>
+                        </div>
+                    </div>
+                </div>
+                <p
+                    style="font-size: 0.8rem; color: var(--text-muted); text-align: center; padding-bottom: 15px; margin: 0;">
+                    Simulating Lithium-Ion Cycle Degradation
+                </p>
+            </div>
+
+            <!-- 3. Benchmark Comparison -->
+            <div class="panel-container">
+                <div class="panel-header">
+                    <div class="panel-title" style="color: var(--neon-purple); text-shadow: var(--glow-purple);">
+                        <i class="fas fa-trophy"></i> Global Benchmark Optimization
+                    </div>
+                </div>
+                {% if simulation.data.sim_results and simulation.data.sim_results[-1].benchmark_savings > 0 %}
+                <div style="padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                        <span style="color: var(--text-primary);">Deep Q-Network (PPO)</span>
+                        <span style="color: var(--neon-green); font-family: var(--font-mono); font-weight: bold;">₹{{
+                            "%.2f"|format(simulation.summary.net_profit) }}</span>
+                    </div>
+                    <div
+                        style="background: rgba(255,255,255,0.05); height: 12px; border-radius: 6px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div
+                            style="--eff: {{ simulation.summary.efficiency | default(0) }}%; width: var(--eff); background: var(--neon-green); height: 100%; box-shadow: 0 0 10px rgba(0,255,148,0.5);">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                        <span style="color: var(--text-secondary);">Theoretical Optimum (LP)</span>
+                        <span style="color: var(--neon-purple); font-family: var(--font-mono);">₹{{
+                            "%.2f"|format(simulation.data.sim_results[-1].benchmark_savings) }}</span>
+                    </div>
+                    <div
+                        style="background: rgba(255,255,255,0.05); height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="width: 100%; background: var(--neon-purple); height: 100%; opacity: 0.7;"></div>
+                    </div>
+
+                    <div
+                        style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px dashed rgba(255,255,255,0.1);">
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                            Model Efficiency Score</div>
+                        <div
+                            style="font-size: 2rem; font-weight: bold; color: var(--text-primary); font-family: var(--font-mono);">
+                            {{ simulation.summary.efficiency | default(0) }}%
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div style="text-align: center; color: var(--text-muted); padding: 40px 20px;">
+                    <i class="fas fa-hourglass-half"
+                        style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><br>
+                    Benchmark algorithms currently computing...
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 4. Future Predictions -->
+            <div class="panel-container" style="grid-column: span 2;">
+                <div class="panel-header">
+                    <div class="panel-title" style="color: var(--neon-blue); text-shadow: var(--glow-blue);">
+                        <i class="fas fa-chart-bar"></i> Financial Projections
+                    </div>
+                </div>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 20px;">
+                    {% if simulation.data.sim_results %}
+                    {% set last = simulation.data.sim_results[-1] %}
+
+                    <!-- Weekly -->
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;">
+                        <div
+                            style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--neon-blue);">
+                        </div>
+                        <h5
+                            style="margin: 0 0 15px 0; color: var(--text-secondary); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">
+                            7-Day Outlook</h5>
+                        <div
+                            style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 8px; display: flex; justify-content: space-between;">
+                            <span>Cost:</span> <span
+                                style="color: var(--neon-red); font-family: var(--font-mono); font-weight: bold;">₹{{
+                                "%.2f"|format(last.proj_cost_week) }}</span>
+                        </div>
+                        <div
+                            style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 12px; display: flex; justify-content: space-between;">
+                            <span>Savings:</span> <span
+                                style="color: var(--neon-green); font-family: var(--font-mono); font-weight: bold;">₹{{
+                                "%.2f"|format(last.proj_savings_week) }}</span>
+                        </div>
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                            Avg Price: <span style="color: var(--neon-blue); font-family: var(--font-mono);">₹{{
+                                "%.2f"|format(last.proj_price_avg) }}/kWh</span>
+                        </div>
+                    </div>
+
+                    <!-- Monthly -->
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;">
+                        <div
+                            style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--neon-purple);">
+                        </div>
+                        <h5
+                            style="margin: 0 0 15px 0; color: var(--text-secondary); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">
+                            30-Day Outlook</h5>
+                        <div
+                            style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 8px; display: flex; justify-content: space-between;">
+                            <span>Cost:</span> <span
+                                style="color: var(--neon-red); font-family: var(--font-mono); font-weight: bold;">₹{{
+                                "%.2f"|format(last.proj_cost_month) }}</span>
+                        </div>
+                        <div
+                            style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 12px; display: flex; justify-content: space-between;">
+                            <span>Savings:</span> <span
+                                style="color: var(--neon-green); font-family: var(--font-mono); font-weight: bold;">₹{{
+                                "%.2f"|format(last.proj_savings_month) }}</span>
+                        </div>
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                            Avg Price: <span style="color: var(--neon-blue); font-family: var(--font-mono);">₹{{
+                                "%.2f"|format(last.proj_price_avg) }}/kWh</span>
+                        </div>
+                    </div>
+
+                    <!-- Annual -->
+                    <div
+                        style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden;">
+                        <div
+                            style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--neon-yellow);">
+                        </div>
+                        <h5
+                            style="margin: 0 0 15px 0; color: var(--text-secondary); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;">
+                            365-Day Outlook</h5>
+                        <div
+                            style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 8px; display: flex; justify-content: space-between;">
+                            <span>Cost:</span> <span
+                                style="color: var(--neon-red); font-family: var(--font-mono); font-weight: bold;">₹{{
+                                "%.2f"|format(last.proj_cost_year) }}</span>
+                        </div>
+                        <div
+                            style="font-size: 1.15rem; color: var(--text-primary); margin-bottom: 12px; display: flex; justify-content: space-between;">
+                            <span>Savings:</span> <span
+                                style="color: var(--neon-green); font-family: var(--font-mono); font-weight: bold;">₹{{
+                                "%.2f"|format(last.proj_savings_year) }}</span>
+                        </div>
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                            <i class="fas fa-chart-pie"></i> Long-term trend analysis
+                        </div>
+                    </div>
+                    {% else %}
+                    <div style="grid-column: span 3; color: var(--text-muted); text-align: center; padding: 30px;">
+                        <i class="fas fa-database" style="font-size: 2rem; margin-bottom: 15px; opacity: 0.5;"></i><br>
+                        Insufficient data volume for long-term prediction modeling.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CHARTS -->
+        <div class="charts-grid" style="grid-template-columns: 1fr 1fr; margin-top: 25px;">
+            <div class="panel-container">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="fas fa-chart-pie"></i> Energy Mix (History)</div>
+                </div>
+                <div class="chart-wrapper" style="padding: 10px;">
+                    <canvas id="mixChart"></canvas>
+                </div>
+            </div>
+            <div class="panel-container">
+                <div class="panel-header">
+                    <div class="panel-title"><i class="fas fa-money-check-alt"></i> Cost vs Revenue (History)</div>
+                </div>
+                <div class="chart-wrapper" style="padding: 10px;">
+                    <canvas id="costChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATA TABLE -->
+        <div class="panel-container" style="margin-top: 30px; overflow-x: auto;">
+            <div class="panel-header">
+                <div class="panel-title"><i class="fas fa-list-alt"></i> Raw Telemetry Log</div>
+            </div>
+            <table
+                style="width: 100%; border-collapse: collapse; color: var(--text-secondary); font-size: 0.9rem; font-family: var(--font-mono);">
+                <thead>
+                    <tr
+                        style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(0,0,0,0.2);">
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Step</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Load (kW)</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Solar (kW)</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Bat SOC</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Bat SOH</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Grid State</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Profit/Loss</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            AI Action</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); border-left: 1px solid rgba(255,255,255,0.05); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Forecast Load (+1h)</th>
+                        <th
+                            style="padding: 12px 15px; color: var(--text-muted); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">
+                            Forecast Solar (+1h)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in simulation.data.sim_results %}
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;"
+                        onmouseover="this.style.background='rgba(255,255,255,0.02)'"
+                        onmouseout="this.style.background='transparent'">
+                        <td style="padding: 12px 15px; color: var(--text-primary); font-weight: bold;">{{ row.hour }}
+                        </td>
+                        <td style="padding: 12px 15px;">{{ row.load }}</td>
+                        <td style="padding: 12px 15px; color: var(--neon-yellow);">{{ row.solar }}</td>
+                        <td style="padding: 12px 15px; color: var(--neon-green);">{{ row.battery_soc }}%</td>
+                        <td style="padding: 12px 15px; color: var(--neon-blue);">{{ row.battery_soh }}%</td>
+                        <td style="padding: 12px 15px;">
+                            {% if row.grid_used > 0 %}
+                            <span
+                                style="color: var(--neon-red); background: rgba(255, 51, 102, 0.1); padding: 2px 6px; border-radius: 4px;">Import
+                                {{ row.grid_used }}</span>
+                            {% elif row.grid_export > 0 %}
+                            <span
+                                style="color: var(--neon-green); background: rgba(0, 255, 148, 0.1); padding: 2px 6px; border-radius: 4px;">Export
+                                {{ row.grid_export }}</span>
+                            {% else %}
+                            <span style="color: var(--text-muted);">0</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 15px;">
+                            {% if row.net_earnings >= 0 %}
+                            <span style="color: var(--neon-green);">+{{ row.net_earnings }}</span>
+                            {% else %}
+                            <span style="color: var(--neon-red);">{{ row.net_earnings }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 15px; font-style: italic; color: var(--neon-purple);">{{ row.decision
+                            }}</td>
+
+                        <!-- Forecast Columns -->
+                        <td
+                            style="padding: 12px 15px; border-left: 1px solid rgba(255,255,255,0.05); color: var(--text-muted);">
+                            {% if row.forecast_load_24h and row.forecast_load_24h|length > 0 %}
+                            {{ row.forecast_load_24h[0] }} kW
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td style="padding: 12px 15px; color: var(--text-muted);">
+                            {% if row.forecast_solar_24h and row.forecast_solar_24h|length > 0 %}
+                            {{ row.forecast_solar_24h[0] }} kW
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<!-- Embed Data for JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="sim-results-data" type="application/json">
+    {{ simulation.data.sim_results | tojson }}
+</script>
+<script>
+    const simResults = JSON.parse(document.getElementById('sim-results-data').textContent);
+
+    // Extract Data Arrays
+    const labels = simResults.map(s => s.hour); // Use Hour for labels
+    const costData = simResults.map(s => s.cost);
+    const revenueData = simResults.map(s => s.revenue);
+    const solarData = simResults.map(s => s.solar);
+    const gridData = simResults.map(s => s.grid_used);
+    const batteryData = simResults.map(s => s.battery_used);
+
+    // Use CSS Variables for Chart Colors
+    const style = getComputedStyle(document.body);
+    const colorNeonGreen = '#00FF94';
+    const colorNeonBlue = '#00E5FF';
+    const colorNeonPurple = '#7C4DFF';
+    const colorNeonYellow = '#FFB020';
+    const colorNeonRed = '#FF3366';
+    const colorTextMuted = '#475569';
+    const colorGridLine = 'rgba(255, 255, 255, 0.05)';
+
+    // Mix Chart
+    const ctxMix = document.getElementById('mixChart').getContext('2d');
+    new Chart(ctxMix, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Solar (kW)',
+                    data: solarData,
+                    borderColor: colorNeonYellow,
+                    backgroundColor: 'rgba(255, 176, 32, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Grid (kW)',
+                    data: gridData,
+                    borderColor: colorNeonRed,
+                    backgroundColor: 'rgba(255, 51, 102, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Battery (kW)',
+                    data: batteryData,
+                    borderColor: colorNeonGreen,
+                    backgroundColor: 'rgba(0, 255, 148, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                y: { grid: { color: colorGridLine, drawBorder: false }, ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 } } },
+                x: { grid: { color: colorGridLine, drawBorder: false }, ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 }, maxTicksLimit: 12 } }
+            },
+            plugins: {
+                legend: { labels: { color: '#94A3B8', usePointStyle: true, boxWidth: 8, font: { family: 'Outfit', size: 12 } } },
+                tooltip: { backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+            }
+        }
+    });
+
+    // Cost Chart
+    const ctxCost = document.getElementById('costChart').getContext('2d');
+    new Chart(ctxCost, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Grid Cost (₹)',
+                    data: costData,
+                    borderColor: colorNeonRed,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 0
+                },
+                {
+                    label: 'Export Revenue (₹)',
+                    data: revenueData,
+                    borderColor: colorNeonGreen,
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+                y: { grid: { color: colorGridLine, drawBorder: false }, ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 } } },
+                x: { grid: { color: colorGridLine, drawBorder: false }, ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 }, maxTicksLimit: 12 } }
+            },
+            plugins: {
+                legend: { labels: { color: '#94A3B8', usePointStyle: true, boxWidth: 8, font: { family: 'Outfit', size: 12 } } },
+                tooltip: { backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+            }
+        }
+    });
+
+
+    // --- SENIOR FEATURES: FORECAST CHART ---
+    // Get the last step's forecast data
+    const lastStep = simResults[simResults.length - 1];
+    if (lastStep && lastStep.forecast_load_24h && lastStep.forecast_load_24h.length > 0) {
+        const ctxForecast = document.getElementById('forecastChart').getContext('2d');
+        const forecastLabels = Array.from({ length: lastStep.forecast_load_24h.length }, (_, i) => `+${i + 1}h`);
+
+        new Chart(ctxForecast, {
+            type: 'line',
+            data: {
+                labels: forecastLabels,
+                datasets: [
+                    {
+                        label: 'Predicted Load (kW)',
+                        data: lastStep.forecast_load_24h,
+                        borderColor: colorNeonBlue,
+                        backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 2
+                    },
+                    {
+                        label: 'Predicted Solar (kW)',
+                        data: lastStep.forecast_solar_24h,
+                        borderColor: colorNeonYellow,
+                        backgroundColor: 'rgba(255, 176, 32, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 2
+                    },
+                    {
+                        label: 'Price (₹/kWh)',
+                        data: lastStep.forecast_price_24h.map(p => p / 1000), // Convert MWh to kWh if needed
+                        borderColor: colorNeonPurple,
+                        yAxisID: 'y1',
+                        borderWidth: 2,
+                        borderDash: [2, 2],
+                        tension: 0.4,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: {
+                        grid: { color: colorGridLine, drawBorder: false },
+                        ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 } },
+                        title: { display: true, text: 'Power (kW)', color: '#94A3B8', font: { family: 'Outfit', size: 12 } }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        ticks: { color: colorNeonPurple, font: { family: 'JetBrains Mono', size: 11 } },
+                        title: { display: true, text: 'Price', color: colorNeonPurple, font: { family: 'Outfit', size: 12 } }
+                    },
+                    x: {
+                        grid: { color: colorGridLine, drawBorder: false },
+                        ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 }, maxTicksLimit: 12 }
+                    }
+                },
+                plugins: {
+                    legend: { labels: { color: '#94A3B8', usePointStyle: true, boxWidth: 8, font: { family: 'Outfit', size: 12 } } },
+                    tooltip: { backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+                }
+            }
+        });
+    }
+
+    async function handleLogout() {
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/';
+    }
+</script>
+{% endblock %}

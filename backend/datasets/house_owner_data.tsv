@@ -1,0 +1,1051 @@
+consumer_id	owner_name	city	today_usage_kwh	week_usage_kwh	month_usage_kwh	solar_generated_today	solar_generated_month	grid_import_kwh	grid_export_kwh	electricity_price	feed_in_tariff	baseline_usage	optimized_usage	solar_capacity_kw	subsidy_amount	bill_due_date
+100000	Varun	Vijayawada	12.7	81.83	369.41	2.09	60.66	11.54	0.47	9.93	4.33	434.73	312.96	1.71	19552.0	14-02-2026
+100001	Varun	Guntur	22.76	122.23	590.52	11.84	312.04	12.62	0.92	8.82	2.1	590.07	522.09	1.68	16315.0	15-07-2026
+100002	Vikram	Nellore	9.03	62.73	229.28	10.11	220.75	0.36	1.99	8.88	3.54	249.28	230.83	3.35	23057.0	09-01-2026
+100003	Suresh	Hyderabad	23.14	138.39	593.42	7.45	153.82	17.34	0.82	6.19	4.72	539.5	392.86	3.01	11813.0	21-04-2026
+100004	Kiran	Visakhapatnam	16.75	112.34	479.16	8.31	217.43	10.64	1.57	7.34	4.6	551.94	458.83	2.07	21698.0	25-06-2026
+100005	Suresh	Tirupati	5.2	26.57	143.98	5.59	122.66	1.83	2.31	6.81	3.78	162.66	131.77	3.23	11179.0	29-07-2026
+100006	Arjun	Tirupati	18.75	94.52	503.25	13.53	328.92	5.31	0.3	7.65	2.22	511.74	425.33	4.93	29147.0	28-02-2026
+100007	Varun	Tirupati	8.65	50.76	248.3	13.82	282.92	2.3	6.71	7.51	4.57	244.71	228.7	2.78	14146.0	13-09-2026
+100008	Suresh	Hyderabad	11.96	63.51	302.29	11.12	222.84	1.14	1.97	7.1	4.99	349.55	311.7	1.3	12167.0	26-05-2026
+100009	Suresh	Guntur	22.4	134.99	645.63	9.49	281.85	13.84	1.63	5.4	4.78	707.22	645.32	3.79	10602.0	25-05-2026
+100010	Anil	Visakhapatnam	14.83	97.42	430.02	8.76	261.62	7.78	0.14	7.89	2.05	488.39	384.44	1.59	12568.0	10-07-2026
+100011	Kiran	Tirupati	19.65	125.78	503.89	9.52	257.77	12.8	1.54	7.16	4.33	575.9	536.51	4.4	24790.0	10-04-2026
+100012	Arjun	Visakhapatnam	5.21	32.49	141.31	11.15	321.2	0.79	7.93	8.49	3.36	153.02	135.57	2.6	6269.0	08-07-2026
+100013	Ravi	Hyderabad	19.2	127.19	487.14	4.49	134.17	17.27	0.39	9.97	3.89	504.88	471.1	2.14	18812.0	19-02-2026
+100014	Mahesh	Vijayawada	13.03	70.89	328.3	3.92	102.32	10.54	1.02	6.74	4.9	377.46	320.2	4.38	15932.0	20-03-2026
+100015	Mahesh	Vijayawada	11.47	76.1	295.07	10.85	242.65	2.3	1.54	5.6	3.84	279.79	264.07	2.29	9154.0	20-11-2026
+100016	Ravi	Hyderabad	11.07	67.77	302.95	12.21	282.29	2.43	2.33	8.0	4.57	299.49	277.25	2.25	5795.0	25-07-2026
+100017	Vikram	Visakhapatnam	24.52	170.84	713.07	6.41	145.26	20.8	1.1	5.17	4.75	831.88	723.5	1.41	29642.0	19-10-2026
+100018	Ramesh	Tirupati	19.53	134.37	573.71	10.19	237.98	10.59	0.35	6.91	4.87	554.61	517.41	3.05	5314.0	23-05-2026
+100019	Vikram	Tirupati	10.77	72.18	318.66	5.34	137.95	6.39	1.27	7.29	2.87	381.07	268.24	3.83	23027.0	16-06-2026
+100020	Suresh	Guntur	18.06	107.21	504.72	8.61	256.61	9.74	0.15	8.28	2.5	530.06	426.12	2.93	28004.0	23-05-2026
+100021	Ramesh	Guntur	12.66	66.31	329.78	8.07	186.29	6.83	1.71	9.41	2.36	356.71	313.07	2.87	26783.0	23-11-2026
+100022	Ravi	Guntur	13.96	70.0	351.41	4.92	111.66	10.33	0.15	6.81	2.16	411.94	370.42	2.45	14422.0	07-07-2026
+100023	Vikram	Guntur	15.26	84.62	446.99	7.27	211.15	10.22	1.73	6.62	3.13	494.84	380.71	1.83	25878.0	03-01-2026
+100024	Sanjay	Visakhapatnam	15.77	79.79	434.14	11.87	283.3	5.6	1.64	9.34	3.05	515.34	402.14	4.66	16108.0	21-09-2026
+100025	Ramesh	Hyderabad	24.64	165.52	627.16	2.6	77.73	24.28	0.68	6.15	2.38	717.26	530.64	3.44	26043.0	26-10-2026
+100026	Sanjay	Tirupati	20.58	131.68	598.39	13.19	266.58	7.64	0.24	7.12	4.35	705.63	650.97	2.91	16903.0	30-08-2026
+100027	Suresh	Vijayawada	19.7	115.69	494.4	2.4	68.09	18.29	0.59	8.42	3.38	564.82	440.08	3.91	10249.0	13-08-2026
+100028	Ravi	Nellore	23.85	163.19	616.57	5.28	144.9	19.92	1.37	5.41	4.13	706.97	544.75	2.01	15335.0	18-08-2026
+100029	Ramesh	Vijayawada	21.56	147.47	541.42	7.01	144.64	14.72	0.92	5.62	4.57	645.69	559.9	4.54	29967.0	02-06-2026
+100030	Sanjay	Guntur	8.51	43.11	248.38	7.45	197.04	1.36	1.47	5.93	4.53	293.48	260.16	3.2	28013.0	05-11-2026
+100031	Ravi	Guntur	13.31	78.68	397.9	11.99	296.67	4.25	1.99	7.42	2.61	433.71	340.33	3.75	14149.0	24-11-2026
+100032	Kiran	Tirupati	14.01	70.87	374.52	3.45	95.44	12.49	0.7	6.89	2.06	446.6	379.14	4.76	18458.0	15-05-2026
+100033	Anil	Tirupati	5.36	28.02	150.38	11.44	244.3	2.37	6.41	9.05	3.68	149.76	118.29	1.37	20550.0	01-11-2026
+100034	Kiran	Tirupati	19.19	109.19	548.8	8.63	196.52	11.79	0.26	6.19	3.31	581.47	442.5	3.32	10752.0	07-10-2026
+100035	Ravi	Vijayawada	13.93	69.66	367.03	3.71	97.18	11.12	1.99	7.19	2.38	415.33	339.09	1.81	12888.0	03-12-2026
+100036	Mahesh	Tirupati	8.07	49.63	236.2	12.47	372.54	1.57	5.55	5.03	4.33	241.66	187.72	3.8	13222.0	11-08-2026
+100037	Vikram	Vijayawada	7.69	49.98	212.71	5.17	149.99	4.51	0.02	7.88	4.09	234.32	164.12	2.87	22776.0	11-03-2026
+100038	Ravi	Vijayawada	23.02	143.91	597.33	14.96	424.64	9.38	0.1	8.41	3.65	563.06	491.31	3.75	19598.0	26-01-2026
+100039	Ramesh	Tirupati	9.1	53.92	232.62	3.31	81.25	7.8	0.27	8.42	2.23	271.05	230.56	2.3	24382.0	07-09-2026
+100040	Vikram	Vijayawada	14.52	80.51	406.12	4.7	135.65	12.41	0.18	7.04	3.44	445.75	337.48	1.66	6714.0	21-01-2026
+100041	Kiran	Nellore	6.18	36.79	168.43	8.35	222.18	2.51	3.09	6.1	3.8	171.26	154.18	2.95	18165.0	25-10-2026
+100042	Sanjay	Hyderabad	16.6	102.32	468.17	13.95	287.5	5.51	0.51	5.53	4.05	558.87	523.73	3.52	15737.0	26-08-2026
+100043	Anil	Vijayawada	22.65	143.7	647.45	3.39	99.59	19.69	1.6	8.43	4.11	720.66	538.92	2.99	20294.0	24-02-2026
+100044	Mahesh	Visakhapatnam	14.8	88.28	389.23	10.08	253.26	5.24	1.27	6.62	4.01	440.93	373.89	1.84	19676.0	16-08-2026
+100045	Vikram	Visakhapatnam	10.12	61.56	264.45	6.31	173.71	4.14	1.84	5.54	4.35	267.56	252.58	3.28	16427.0	21-06-2026
+100046	Mahesh	Tirupati	19.45	120.81	520.26	6.6	156.59	15.18	1.56	8.08	3.35	565.35	396.29	4.53	17936.0	05-08-2026
+100047	Sanjay	Guntur	23.49	128.23	675.51	6.81	175.38	18.93	1.56	6.53	3.92	796.74	649.86	2.76	28450.0	29-08-2026
+100048	Ramesh	Vijayawada	14.78	81.41	396.71	10.71	262.0	6.9	0.15	7.33	2.19	430.33	349.91	1.14	9196.0	16-06-2026
+100049	Ramesh	Visakhapatnam	6.26	31.81	187.44	9.24	256.94	2.01	3.15	5.83	4.08	181.54	156.8	3.84	5161.0	02-11-2026
+100050	Arjun	Vijayawada	24.28	166.38	664.05	7.38	149.34	18.62	1.61	8.28	2.63	606.6	564.24	4.58	10186.0	02-02-2026
+100051	Mahesh	Visakhapatnam	11.67	71.6	335.59	8.03	237.02	6.12	0.03	7.48	2.6	310.51	285.18	1.51	5675.0	02-04-2026
+100052	Suresh	Tirupati	12.28	73.91	340.98	10.39	258.32	4.33	1.16	5.58	3.33	402.74	367.81	1.26	27433.0	03-07-2026
+100053	Varun	Hyderabad	7.26	44.52	197.46	8.0	201.55	0.09	1.6	9.17	4.83	206.38	191.02	1.12	17676.0	11-07-2026
+100054	Vikram	Vijayawada	17.91	105.35	535.05	6.21	168.42	13.97	1.47	7.89	2.03	609.51	428.69	3.38	14631.0	28-05-2026
+100055	Sanjay	Nellore	22.93	147.64	672.07	13.53	283.8	11.19	0.11	6.93	3.27	790.01	556.12	4.73	29744.0	02-07-2026
+100056	Kiran	Hyderabad	6.18	42.62	176.23	6.25	173.62	2.02	2.0	6.95	2.13	210.62	182.92	1.48	22808.0	05-02-2026
+100057	Arjun	Hyderabad	9.78	50.12	281.35	5.53	123.8	7.2	1.78	6.5	3.47	321.85	304.82	3.12	18794.0	12-09-2026
+100058	Varun	Visakhapatnam	9.03	57.99	253.94	9.03	247.9	2.51	1.87	6.69	4.02	257.61	217.91	4.63	19351.0	30-06-2026
+100059	Ravi	Vijayawada	21.82	110.52	603.42	6.77	184.32	16.67	0.07	8.7	4.29	561.2	428.31	3.93	18960.0	08-01-2026
+100060	Anil	Vijayawada	10.47	58.78	284.38	7.74	185.54	4.26	0.03	9.53	2.82	305.88	254.75	4.89	15832.0	30-04-2026
+100061	Varun	Visakhapatnam	19.24	129.75	560.1	10.9	261.57	9.05	1.63	8.83	4.78	532.98	377.41	3.94	21487.0	01-02-2026
+100062	Anil	Nellore	20.7	104.3	580.91	8.65	185.29	14.77	1.26	9.54	3.42	527.85	500.27	3.12	14599.0	20-08-2026
+100063	Vikram	Vijayawada	19.24	106.77	572.76	14.1	298.32	8.0	1.69	9.07	2.1	524.66	371.98	3.86	18927.0	01-10-2026
+100064	Anil	Guntur	22.43	142.82	610.71	13.41	342.56	10.43	1.89	5.18	3.99	693.74	592.42	4.29	17912.0	27-07-2026
+100065	Varun	Vijayawada	23.53	141.27	629.1	8.86	180.36	15.67	0.84	9.92	4.79	689.0	550.03	4.04	14845.0	23-06-2026
+100066	Ravi	Nellore	21.88	148.68	580.57	6.13	183.56	17.29	0.07	8.37	3.57	527.79	454.43	3.44	24011.0	26-10-2026
+100067	Ramesh	Tirupati	12.1	73.7	309.76	8.81	226.17	3.86	0.47	8.98	4.38	295.75	264.65	1.21	16490.0	08-10-2026
+100068	Kiran	Tirupati	19.13	128.4	512.38	13.7	355.8	8.36	0.58	9.66	3.12	604.9	549.51	3.05	27119.0	09-08-2026
+100069	Ravi	Vijayawada	17.75	101.61	452.06	9.26	205.14	10.64	0.78	6.79	3.62	514.32	440.12	3.62	21849.0	11-01-2026
+100070	Vikram	Hyderabad	10.43	55.25	261.27	8.23	170.99	2.51	1.87	6.88	2.09	303.59	283.91	3.31	11016.0	13-09-2026
+100071	Sanjay	Hyderabad	6.1	36.82	153.05	2.11	53.34	4.84	0.45	9.65	3.28	156.96	144.2	2.21	15199.0	22-04-2026
+100072	Suresh	Nellore	16.15	93.08	450.72	8.36	217.89	10.19	1.14	8.25	3.06	435.97	359.0	4.86	18658.0	12-08-2026
+100073	Sanjay	Vijayawada	9.5	52.25	266.32	7.8	230.57	3.13	1.37	5.01	4.91	304.08	269.01	2.77	17632.0	18-01-2026
+100074	Sanjay	Tirupati	10.65	70.79	318.37	8.52	188.18	2.29	0.37	5.63	2.76	319.04	234.62	3.7	15253.0	03-08-2026
+100075	Suresh	Hyderabad	7.56	46.14	199.22	3.84	114.71	4.25	0.28	9.41	3.45	180.97	151.44	1.79	26702.0	03-11-2026
+100076	Varun	Hyderabad	21.88	109.71	642.69	9.82	196.83	14.62	0.92	7.53	4.48	683.47	550.34	1.16	9674.0	16-06-2026
+100077	Suresh	Hyderabad	22.24	147.16	565.86	7.86	215.35	15.06	1.37	5.28	3.66	612.73	543.28	2.64	8013.0	16-09-2026
+100078	Ravi	Hyderabad	8.73	56.54	258.18	9.86	218.04	2.47	2.22	8.59	4.08	255.93	227.51	4.97	15429.0	17-05-2026
+100079	Sanjay	Visakhapatnam	7.73	51.16	213.78	2.42	55.64	5.75	1.43	9.23	3.9	235.39	169.26	2.32	7804.0	31-12-2026
+100080	Ramesh	Nellore	7.35	43.1	189.9	10.59	265.02	2.36	4.55	5.5	2.7	223.84	203.8	1.28	12986.0	22-03-2026
+100081	Suresh	Guntur	15.05	79.61	439.71	4.12	87.58	11.59	0.65	5.62	3.69	453.25	394.29	4.64	6294.0	28-05-2026
+100082	Ravi	Guntur	7.45	45.11	214.03	6.18	144.11	3.1	1.69	6.13	4.24	202.13	165.04	4.87	25212.0	10-09-2026
+100083	Anil	Guntur	23.02	128.49	596.82	7.85	183.65	16.33	2.0	5.52	3.38	649.34	503.25	1.14	10502.0	16-02-2026
+100084	Varun	Nellore	17.22	93.76	483.12	12.05	338.27	6.39	0.4	7.56	4.04	462.26	393.22	4.05	29245.0	22-10-2026
+100085	Mahesh	Tirupati	10.49	65.95	300.76	7.17	205.26	5.23	0.11	6.43	4.07	359.0	270.31	1.76	25969.0	17-02-2026
+100086	Arjun	Guntur	24.23	155.66	682.58	10.83	282.93	13.59	1.87	8.64	2.33	746.01	629.49	2.52	13290.0	07-11-2026
+100087	Vikram	Nellore	22.13	135.15	624.96	13.81	324.86	10.36	0.57	5.17	3.27	724.16	624.6	3.63	20982.0	22-05-2026
+100088	Kiran	Hyderabad	18.68	116.37	467.06	13.42	333.94	5.95	0.99	9.24	4.04	518.46	386.29	3.53	6225.0	03-09-2026
+100089	Mahesh	Hyderabad	9.02	54.37	228.23	14.16	306.69	2.93	7.06	6.91	2.4	244.69	186.09	1.16	25472.0	04-01-2026
+100090	Ravi	Guntur	24.3	144.28	708.77	3.36	94.3	23.65	1.75	6.86	3.75	653.32	495.16	4.54	26033.0	30-12-2026
+100091	Varun	Tirupati	17.45	90.73	496.68	10.82	274.0	7.78	0.45	5.52	3.35	528.28	380.19	4.22	11568.0	23-01-2026
+100092	Anil	Vijayawada	6.22	37.65	156.05	13.22	359.86	0.53	8.4	9.86	2.66	143.13	101.98	3.44	22189.0	10-05-2026
+100093	Kiran	Vijayawada	6.09	33.2	155.25	6.34	182.46	0.84	2.05	8.66	2.59	158.83	140.79	1.57	25988.0	12-04-2026
+100094	Kiran	Vijayawada	13.96	81.35	349.92	3.82	93.75	10.25	1.51	8.95	4.47	328.65	285.63	1.47	17665.0	14-09-2026
+100095	Anil	Tirupati	18.23	111.0	534.7	6.2	153.08	14.31	1.2	9.61	2.81	586.53	491.04	2.96	9597.0	24-06-2026
+100096	Arjun	Visakhapatnam	21.95	128.5	610.7	4.44	94.96	20.0	1.63	9.77	2.26	707.61	624.75	4.35	20822.0	30-11-2026
+100097	Varun	Nellore	18.8	96.0	534.79	8.14	231.55	11.05	1.97	9.04	4.14	523.66	440.68	3.14	23192.0	09-07-2026
+100098	Ramesh	Vijayawada	9.18	54.81	272.08	6.34	132.88	3.24	0.86	6.57	4.56	292.15	222.89	1.47	6460.0	20-03-2026
+100099	Mahesh	Nellore	16.17	108.7	476.05	2.97	71.72	16.15	1.35	7.26	4.66	502.71	436.91	1.32	11193.0	14-12-2026
+100100	Ramesh	Guntur	12.63	75.67	328.66	8.28	243.45	5.19	2.0	6.44	3.11	332.61	260.04	3.88	9969.0	09-01-2026
+101103	Vikram	Vijayawada	18.94	119.6	531.55	13.28	275.73	7.32	1.5	5.68	2.47	631.08	535.53	1.1	21898.0	30-07-2026
+101104	Mahesh	Guntur	8.74	58.12	247.45	7.36	178.72	3.05	1.02	8.41	3.98	277.25	229.99	4.82	28711.0	04-06-2026
+101105	Ramesh	Guntur	22.47	156.03	640.11	2.88	71.18	20.13	1.09	6.92	2.51	659.28	551.76	3.96	9229.0	01-09-2026
+101106	Varun	Tirupati	16.54	111.01	414.9	6.4	184.08	10.92	1.7	8.41	2.99	376.85	300.43	3.14	24679.0	28-12-2026
+101107	Varun	Visakhapatnam	18.44	121.19	532.51	8.39	202.65	11.41	0.88	9.23	3.94	484.68	449.43	2.85	9528.0	31-08-2026
+101108	Arjun	Nellore	21.35	139.94	565.59	5.34	108.57	18.31	0.49	7.07	3.95	588.58	521.7	2.46	26585.0	08-11-2026
+101109	Ravi	Visakhapatnam	22.45	123.44	588.84	8.47	218.55	16.75	1.44	5.76	3.19	585.96	467.65	3.43	19060.0	06-09-2026
+101110	Sanjay	Hyderabad	19.19	121.97	484.41	12.58	279.54	8.54	1.59	8.6	4.97	579.52	463.15	2.88	8621.0	05-07-2026
+101111	Anil	Nellore	17.78	89.92	503.94	6.92	142.33	13.07	1.4	9.92	3.08	571.17	469.59	3.05	13711.0	23-12-2026
+101112	Arjun	Tirupati	18.75	107.34	559.38	12.09	262.51	8.04	0.45	7.44	2.94	620.06	538.09	1.24	24096.0	03-06-2026
+101113	Ravi	Tirupati	12.32	70.78	361.41	9.0	220.51	5.4	1.0	5.7	3.31	342.89	282.65	1.25	27697.0	08-08-2026
+101114	Anil	Nellore	13.68	83.29	395.71	10.3	268.9	4.61	1.09	9.29	2.17	453.9	426.82	1.18	24873.0	01-03-2026
+101115	Kiran	Tirupati	12.8	77.16	364.85	13.37	284.65	2.91	0.89	8.7	3.72	424.54	299.64	4.52	6897.0	17-03-2026
+101116	Ravi	Nellore	10.32	55.77	299.52	3.11	70.45	9.32	1.93	8.56	2.59	285.67	209.19	2.19	9111.0	19-05-2026
+101117	Vikram	Vijayawada	17.26	116.85	474.89	2.69	70.55	15.84	0.65	6.31	4.16	537.47	444.21	2.79	6695.0	27-11-2026
+101118	Vikram	Hyderabad	23.2	149.81	688.63	11.15	318.52	12.85	1.6	9.66	2.81	815.76	702.52	3.12	10187.0	02-10-2026
+101119	Arjun	Visakhapatnam	22.5	146.84	618.07	6.16	177.68	17.19	1.01	7.0	3.51	584.34	429.62	1.4	13501.0	28-09-2026
+101120	Vikram	Tirupati	12.23	76.2	322.83	2.23	54.46	10.0	0.88	9.48	4.63	303.01	267.97	2.95	13266.0	20-10-2026
+101121	Varun	Guntur	17.12	110.18	434.46	14.84	442.61	3.87	1.41	9.7	4.91	393.63	310.97	3.87	14950.0	18-01-2026
+101122	Ravi	Nellore	6.58	39.41	176.17	12.62	283.58	2.15	6.22	9.31	4.44	181.73	159.64	3.68	17840.0	06-08-2026
+101123	Varun	Visakhapatnam	22.01	128.28	579.15	2.69	70.14	21.06	0.86	9.74	3.48	608.65	526.24	1.68	18139.0	24-05-2026
+101124	Vikram	Vijayawada	10.35	61.08	274.14	13.3	386.63	0.19	3.86	9.05	3.24	265.81	240.07	4.89	25662.0	06-07-2026
+101125	Ramesh	Nellore	14.0	73.08	361.38	10.41	274.71	5.5	1.11	9.46	4.89	405.51	373.32	2.39	27400.0	20-07-2026
+101126	Sanjay	Tirupati	23.27	125.27	618.36	13.18	291.52	12.11	0.99	7.71	3.47	707.95	524.03	4.8	21180.0	01-12-2026
+101127	Ravi	Visakhapatnam	5.71	30.87	151.44	4.01	89.66	1.86	1.59	9.36	2.61	150.98	137.46	2.51	8933.0	30-11-2026
+101128	Varun	Visakhapatnam	21.64	144.97	635.7	9.88	232.96	14.64	0.41	8.99	2.93	717.3	526.97	5.0	19535.0	19-06-2026
+101129	Ramesh	Vijayawada	23.56	119.07	669.9	3.37	85.34	22.61	0.94	8.79	3.63	650.29	462.39	2.32	26250.0	28-10-2026
+101130	Kiran	Guntur	15.46	101.36	414.0	7.46	157.78	8.57	1.72	6.94	2.57	446.95	330.18	3.0	10102.0	14-02-2026
+101131	Kiran	Nellore	23.66	159.57	632.65	11.61	335.86	14.62	0.39	9.71	2.06	622.11	469.59	4.18	15481.0	27-06-2026
+101132	Mahesh	Vijayawada	21.0	136.01	577.69	13.37	284.07	10.23	0.29	6.76	2.93	609.41	477.43	1.79	19008.0	04-10-2026
+101133	Sanjay	Nellore	5.73	29.46	170.8	12.03	250.17	0.96	7.03	5.52	3.01	192.84	136.38	3.75	5959.0	08-02-2026
+101134	Ramesh	Hyderabad	19.0	101.09	519.31	11.12	224.58	9.65	1.62	8.53	2.84	601.25	529.75	4.85	27550.0	16-12-2026
+101135	Ravi	Vijayawada	14.2	96.18	361.56	5.2	134.12	11.46	0.09	6.09	4.88	418.45	341.38	1.24	20260.0	21-11-2026
+101136	Suresh	Tirupati	16.28	104.32	426.62	6.71	139.57	12.33	1.91	5.11	3.69	405.41	347.7	3.37	29675.0	16-01-2026
+101137	Mahesh	Hyderabad	19.9	133.42	584.78	15.0	327.21	7.65	1.12	5.38	4.28	664.15	524.73	4.71	18561.0	30-07-2026
+101138	Kiran	Hyderabad	11.46	70.11	308.68	7.96	223.53	3.99	1.12	6.6	4.69	342.53	250.98	1.1	13581.0	16-08-2026
+101139	Mahesh	Visakhapatnam	8.42	58.27	232.78	13.59	337.83	1.92	6.79	8.98	4.11	267.74	208.59	3.86	10081.0	25-11-2026
+101140	Ramesh	Tirupati	23.67	142.42	665.33	6.61	162.95	17.89	0.93	6.01	4.26	694.49	649.23	4.43	6087.0	24-11-2026
+101141	Varun	Tirupati	20.27	135.71	558.05	12.04	327.18	8.57	1.37	9.36	3.32	532.52	461.95	4.57	22723.0	22-11-2026
+101142	Vikram	Nellore	20.87	116.71	538.79	7.97	228.47	15.69	1.91	5.69	4.95	531.28	411.48	4.25	24134.0	07-07-2026
+101143	Varun	Guntur	9.69	55.52	263.28	12.1	335.24	0.82	3.73	8.02	2.18	258.92	231.3	3.02	5939.0	24-08-2026
+101144	Vikram	Guntur	16.16	104.57	431.81	10.08	275.48	6.54	0.09	6.73	4.19	417.25	355.29	2.66	23472.0	15-03-2026
+101145	Sanjay	Visakhapatnam	23.3	144.6	669.86	3.99	83.66	19.75	1.11	8.47	3.62	641.28	498.59	4.32	17090.0	01-08-2026
+101146	Varun	Nellore	6.55	33.2	173.41	14.01	290.68	2.61	7.78	8.44	3.75	197.15	166.35	3.91	27263.0	25-03-2026
+101147	Sanjay	Nellore	9.58	56.79	247.82	2.94	67.26	9.38	0.43	7.41	4.5	240.24	178.97	4.79	24540.0	06-04-2026
+101148	Varun	Guntur	14.64	78.15	386.03	10.25	210.55	4.39	1.12	9.72	4.6	357.93	297.78	3.73	27526.0	12-04-2026
+101149	Anil	Guntur	12.97	90.68	346.58	6.08	154.53	9.51	0.85	9.46	4.61	373.59	330.81	4.03	7292.0	09-02-2026
+101150	Suresh	Tirupati	17.21	106.33	471.72	7.56	174.11	12.51	0.3	9.36	2.82	507.75	470.46	1.71	22349.0	26-02-2026
+101151	Ramesh	Nellore	11.87	60.68	332.47	5.15	116.97	6.89	1.22	7.27	4.6	349.09	302.34	2.75	8970.0	20-06-2026
+101152	Varun	Nellore	17.64	119.09	449.14	12.01	315.95	6.05	1.86	7.47	4.26	510.11	391.58	1.31	14983.0	16-02-2026
+101153	Ramesh	Tirupati	19.4	109.82	504.23	14.52	370.45	6.21	1.19	8.75	3.81	573.97	422.1	1.05	6212.0	14-12-2026
+101154	Arjun	Visakhapatnam	24.89	152.39	694.07	12.47	374.09	12.46	0.04	5.06	4.96	733.12	623.51	4.56	19934.0	26-04-2026
+101155	Kiran	Guntur	15.73	93.42	434.66	11.32	301.56	6.21	0.7	6.1	3.81	494.67	419.36	3.08	10823.0	15-04-2026
+101156	Kiran	Nellore	14.27	91.24	390.2	4.17	107.53	10.46	1.8	8.17	3.35	380.99	324.32	4.29	26054.0	04-06-2026
+101157	Suresh	Hyderabad	17.94	116.71	454.83	11.01	239.11	7.4	0.08	6.51	3.32	514.59	483.52	2.97	21882.0	17-12-2026
+101158	Anil	Hyderabad	9.87	57.65	290.68	2.42	50.79	8.23	1.7	8.85	4.23	347.51	278.44	1.8	15053.0	
+100160	Rohan Reddy	Guntur														
+100161	Deepak Yadav	Guntur														
+100162	Anita Nair	Guntur														
+100163	Pooja Yadav	Visakhapatnam														
+100164	Deepak Singh	Guntur														
+100165	Anjali Sharma	Nellore														
+100166	Suresh Nair	Tirupati														
+100167	Pooja Gupta	Visakhapatnam														
+100168	Vijay Yadav	Guntur														
+100169	Rekha Reddy	Vijayawada														
+100170	Neeta Verma	Hyderabad														
+100171	Sunita Yadav	Tirupati														
+100172	Arjun Sharma	Nellore														
+100173	Anjali Patel	Nellore														
+100174	Manoj Reddy	Nellore														
+100175	Amit Verma	Hyderabad														
+100176	Neeta Iyer	Hyderabad														
+100177	Rekha Sharma	Tirupati														
+100178	Manoj Yadav	Hyderabad														
+100179	Sunita Reddy	Guntur														
+100180	Anjali Kumar	Vijayawada														
+100181	Anita Kumar	Vijayawada														
+100182	Rekha Nair	Guntur														
+100183	Anita Nair	Nellore														
+100184	Rahul Kumar	Nellore														
+100185	Arjun Verma	Nellore														
+100186	Anita Sharma	Visakhapatnam														
+100187	Priya Nair	Guntur														
+100188	Suresh Sharma	Guntur														
+100189	Meera Kumar	Tirupati														
+100190	Neeta Verma	Guntur														
+100191	Rohan Nair	Visakhapatnam														
+100192	Neeta Reddy	Nellore														
+100193	Sneha Reddy	Hyderabad														
+100194	Vikram Kumar	Nellore														
+100195	Deepak Iyer	Hyderabad														
+100196	Priya Yadav	Hyderabad														
+100197	Anjali Gupta	Nellore														
+100198	Sanjay Gupta	Vijayawada														
+100199	Neeta Kumar	Guntur														
+100200	Vijay Verma	Hyderabad														
+100201	Vikram Nair	Hyderabad														
+100202	Sunita Verma	Guntur														
+100203	Pooja Patel	Hyderabad														
+100204	Sanjay Gupta	Visakhapatnam														
+100205	Rahul Singh	Nellore														
+100206	Rekha Kumar	Guntur														
+100207	Sunita Nair	Vijayawada														
+100208	Vijay Nair	Hyderabad														
+100209	Suresh Kumar	Guntur														
+100210	Vijay Singh	Visakhapatnam														
+100211	Deepak Yadav	Hyderabad														
+100212	Meera Patel	Hyderabad														
+100213	Suresh Reddy	Visakhapatnam														
+100214	Sanjay Nair	Vijayawada														
+100215	Deepak Sharma	Guntur														
+100216	Sneha Iyer	Hyderabad														
+100217	Pooja Reddy	Nellore														
+100218	Deepak Reddy	Nellore														
+100219	Sneha Kumar	Visakhapatnam														
+100220	Sunita Reddy	Guntur														
+100221	Priya Reddy	Vijayawada														
+100222	Arjun Kumar	Tirupati														
+100223	Pooja Sharma	Tirupati														
+100224	Sunita Verma	Hyderabad														
+100225	Pooja Yadav	Guntur														
+100226	Vikram Iyer	Nellore														
+100227	Meera Singh	Tirupati														
+100228	Arjun Singh	Tirupati														
+100229	Anjali Yadav	Vijayawada														
+100230	Anjali Gupta	Guntur														
+100231	Vijay Patel	Visakhapatnam														
+100232	Deepak Gupta	Visakhapatnam														
+100233	Amit Yadav	Vijayawada														
+100234	Meera Nair	Visakhapatnam														
+100235	Vijay Reddy	Visakhapatnam														
+100236	Rekha Gupta	Hyderabad														
+100237	Neeta Sharma	Nellore														
+100238	Manoj Patel	Nellore														
+100239	Suresh Patel	Vijayawada														
+100240	Priya Patel	Hyderabad														
+100241	Kavita Gupta	Guntur														
+100242	Deepak Kumar	Guntur														
+100243	Pooja Singh	Tirupati														
+100244	Sunita Nair	Tirupati														
+100245	Anita Nair	Nellore														
+100246	Kavita Verma	Hyderabad														
+100247	Kavita Gupta	Tirupati														
+100248	Neeta Nair	Guntur														
+100249	Pooja Nair	Hyderabad														
+100250	Priya Reddy	Nellore														
+100251	Suresh Reddy	Vijayawada														
+100252	Deepak Yadav	Tirupati														
+100253	Manoj Verma	Hyderabad														
+100254	Meera Sharma	Visakhapatnam														
+100255	Rahul Sharma	Vijayawada														
+100256	Sanjay Nair	Tirupati														
+100257	Sunita Verma	Visakhapatnam														
+100258	Neeta Reddy	Nellore														
+100259	Rohan Yadav	Nellore														
+100260	Vikram Sharma	Guntur														
+100261	Priya Verma	Nellore														
+100262	Kavita Kumar	Visakhapatnam														
+100263	Sneha Yadav	Nellore														
+100264	Sanjay Kumar	Tirupati														
+100265	Anita Gupta	Tirupati														
+100266	Rekha Verma	Nellore														
+100267	Sneha Iyer	Guntur														
+100268	Kavita Gupta	Nellore														
+100269	Manoj Nair	Hyderabad														
+100270	Rahul Kumar	Hyderabad														
+100271	Vikram Nair	Guntur														
+100272	Rohan Verma	Tirupati														
+100273	Amit Reddy	Nellore														
+100274	Deepak Patel	Vijayawada														
+100275	Anita Sharma	Nellore														
+100276	Priya Singh	Tirupati														
+100277	Arjun Kumar	Tirupati														
+100278	Anjali Verma	Nellore														
+100279	Kavita Nair	Vijayawada														
+100280	Pooja Kumar	Vijayawada														
+100281	Suresh Patel	Vijayawada														
+100282	Sneha Gupta	Tirupati														
+100283	Anita Singh	Nellore														
+100284	Suresh Kumar	Visakhapatnam														
+100285	Manoj Verma	Tirupati														
+100286	Pooja Kumar	Nellore														
+100287	Anita Kumar	Hyderabad														
+100288	Anjali Singh	Visakhapatnam														
+100289	Sneha Gupta	Visakhapatnam														
+100290	Rohan Kumar	Vijayawada														
+100291	Vikram Iyer	Visakhapatnam														
+100292	Sanjay Singh	Hyderabad														
+100293	Manoj Iyer	Guntur														
+100294	Sanjay Yadav	Tirupati														
+100295	Pooja Sharma	Vijayawada														
+100296	Rekha Verma	Guntur														
+100297	Manoj Singh	Tirupati														
+100298	Sanjay Verma	Vijayawada														
+100299	Neeta Sharma	Hyderabad														
+100300	Kavita Singh	Nellore														
+100301	Neeta Singh	Tirupati														
+100302	Vikram Iyer	Nellore														
+100303	Kavita Sharma	Tirupati														
+100304	Rekha Yadav	Hyderabad														
+100305	Rahul Reddy	Guntur														
+100306	Sanjay Reddy	Visakhapatnam														
+100307	Sanjay Verma	Tirupati														
+100308	Rahul Iyer	Tirupati														
+100309	Vikram Reddy	Hyderabad														
+100310	Vijay Singh	Visakhapatnam														
+100311	Anjali Nair	Guntur														
+100312	Deepak Kumar	Visakhapatnam														
+100313	Arjun Gupta	Guntur														
+100314	Pooja Patel	Vijayawada														
+100315	Deepak Iyer	Vijayawada														
+100316	Sanjay Nair	Tirupati														
+100317	Neeta Verma	Guntur														
+100318	Deepak Kumar	Visakhapatnam														
+100319	Suresh Gupta	Guntur														
+100320	Deepak Gupta	Guntur														
+100321	Sneha Iyer	Tirupati														
+100322	Sanjay Nair	Vijayawada														
+100323	Arjun Verma	Tirupati														
+100324	Rahul Iyer	Tirupati														
+100325	Sanjay Reddy	Guntur														
+100326	Rohan Iyer	Nellore														
+100327	Arjun Sharma	Tirupati														
+100328	Sneha Singh	Tirupati														
+100329	Arjun Singh	Hyderabad														
+100330	Kavita Kumar	Visakhapatnam														
+100331	Sneha Reddy	Tirupati														
+100332	Meera Nair	Tirupati														
+100333	Sunita Gupta	Vijayawada														
+100334	Priya Nair	Vijayawada														
+100335	Kavita Verma	Nellore														
+100336	Pooja Sharma	Tirupati														
+100337	Anjali Gupta	Nellore														
+100338	Neeta Patel	Hyderabad														
+100339	Rahul Reddy	Vijayawada														
+100340	Anita Kumar	Guntur														
+100341	Kavita Kumar	Visakhapatnam														
+100342	Manoj Nair	Tirupati														
+100343	Meera Iyer	Guntur														
+100344	Kavita Nair	Visakhapatnam														
+100345	Arjun Patel	Vijayawada														
+100346	Meera Gupta	Nellore														
+100347	Rohan Verma	Visakhapatnam														
+100348	Priya Nair	Vijayawada														
+100349	Neeta Kumar	Tirupati														
+100350	Sneha Singh	Nellore														
+100351	Suresh Yadav	Vijayawada														
+100352	Arjun Verma	Visakhapatnam														
+100353	Anita Sharma	Guntur														
+100354	Rahul Iyer	Tirupati														
+100355	Arjun Nair	Vijayawada														
+100356	Anita Patel	Visakhapatnam														
+100357	Neeta Gupta	Visakhapatnam														
+100358	Sneha Kumar	Nellore														
+100359	Amit Singh	Tirupati														
+100360	Rahul Gupta	Guntur														
+100361	Suresh Kumar	Vijayawada														
+100362	Anita Kumar	Guntur														
+100363	Rahul Patel	Tirupati														
+100364	Anjali Reddy	Vijayawada														
+100365	Vikram Patel	Visakhapatnam														
+100366	Rekha Iyer	Guntur														
+100367	Vikram Iyer	Hyderabad														
+100368	Vijay Singh	Guntur														
+100369	Rekha Sharma	Visakhapatnam														
+100370	Sneha Verma	Guntur														
+100371	Anjali Sharma	Visakhapatnam														
+100372	Pooja Verma	Guntur														
+100373	Deepak Sharma	Nellore														
+100374	Suresh Kumar	Vijayawada														
+100375	Sneha Sharma	Tirupati														
+100376	Anjali Kumar	Vijayawada														
+100377	Anjali Reddy	Visakhapatnam														
+100378	Deepak Nair	Nellore														
+100379	Sanjay Patel	Nellore														
+100380	Amit Kumar	Visakhapatnam														
+100381	Manoj Gupta	Visakhapatnam														
+100382	Amit Reddy	Tirupati														
+100383	Anita Verma	Tirupati														
+100384	Neeta Gupta	Guntur														
+100385	Amit Singh	Tirupati														
+100386	Rohan Kumar	Tirupati														
+100387	Rahul Kumar	Visakhapatnam														
+100388	Rekha Nair	Visakhapatnam														
+100389	Pooja Iyer	Nellore														
+100390	Priya Verma	Visakhapatnam														
+100391	Deepak Reddy	Visakhapatnam														
+100392	Priya Yadav	Tirupati														
+100393	Vijay Verma	Guntur														
+100394	Vijay Patel	Tirupati														
+100395	Manoj Reddy	Guntur														
+100396	Manoj Reddy	Tirupati														
+100397	Anjali Sharma	Hyderabad														
+100398	Neeta Patel	Nellore														
+100399	Priya Reddy	Nellore														
+100400	Arjun Gupta	Visakhapatnam														
+100401	Rekha Reddy	Guntur														
+100402	Amit Singh	Tirupati														
+100403	Suresh Iyer	Vijayawada														
+100404	Sanjay Nair	Visakhapatnam														
+100405	Manoj Nair	Guntur														
+100406	Rekha Kumar	Guntur														
+100407	Pooja Singh	Tirupati														
+100408	Rohan Nair	Visakhapatnam														
+100409	Priya Singh	Vijayawada														
+100410	Vijay Nair	Visakhapatnam														
+100411	Sanjay Gupta	Visakhapatnam														
+100412	Manoj Iyer	Tirupati														
+100413	Vijay Nair	Hyderabad														
+100414	Neeta Iyer	Hyderabad														
+100415	Manoj Patel	Guntur														
+100416	Rohan Yadav	Tirupati														
+100417	Manoj Yadav	Guntur														
+100418	Manoj Yadav	Tirupati														
+100419	Neeta Yadav	Vijayawada														
+100420	Amit Patel	Tirupati														
+100421	Anita Iyer	Hyderabad														
+100422	Rekha Sharma	Tirupati														
+100423	Neeta Verma	Tirupati														
+100424	Meera Gupta	Hyderabad														
+100425	Arjun Singh	Hyderabad														
+100426	Amit Kumar	Tirupati														
+100427	Arjun Iyer	Tirupati														
+100428	Sanjay Kumar	Hyderabad														
+100429	Rahul Yadav	Tirupati														
+100430	Anita Iyer	Nellore														
+100431	Arjun Patel	Hyderabad														
+100432	Rohan Reddy	Tirupati														
+100433	Manoj Patel	Guntur														
+100434	Kavita Reddy	Visakhapatnam														
+100435	Vikram Nair	Hyderabad														
+100436	Priya Yadav	Tirupati														
+100437	Anjali Gupta	Nellore														
+100438	Sunita Singh	Guntur														
+100439	Suresh Kumar	Guntur														
+100440	Anjali Reddy	Guntur														
+100441	Meera Kumar	Vijayawada														
+100442	Suresh Iyer	Tirupati														
+100443	Rohan Iyer	Nellore														
+100444	Sneha Verma	Vijayawada														
+100445	Sunita Verma	Hyderabad														
+100446	Priya Patel	Hyderabad														
+100447	Manoj Patel	Guntur														
+100448	Manoj Nair	Vijayawada														
+100449	Arjun Verma	Tirupati														
+100450	Rekha Gupta	Hyderabad														
+100451	Anita Singh	Tirupati														
+100452	Neeta Reddy	Guntur														
+100453	Neeta Verma	Hyderabad														
+100454	Pooja Singh	Hyderabad														
+100455	Vijay Yadav	Nellore														
+100456	Suresh Verma	Vijayawada														
+100457	Anita Iyer	Guntur														
+100458	Sanjay Yadav	Guntur														
+100459	Rekha Yadav	Vijayawada														
+100460	Anita Singh	Hyderabad														
+100461	Vikram Reddy	Vijayawada														
+100462	Sneha Patel	Hyderabad														
+100463	Sunita Sharma	Vijayawada														
+100464	Rekha Sharma	Tirupati														
+100465	Priya Kumar	Tirupati														
+100466	Neeta Kumar	Hyderabad														
+100467	Deepak Verma	Vijayawada														
+100468	Kavita Iyer	Nellore														
+100469	Priya Nair	Visakhapatnam														
+100470	Sneha Nair	Hyderabad														
+100471	Rekha Patel	Hyderabad														
+100472	Rekha Sharma	Tirupati														
+100473	Sneha Gupta	Visakhapatnam														
+100474	Vikram Gupta	Hyderabad														
+100475	Pooja Nair	Guntur														
+100476	Sunita Kumar	Hyderabad														
+100477	Suresh Yadav	Visakhapatnam														
+100478	Pooja Reddy	Tirupati														
+100479	Anjali Patel	Visakhapatnam														
+100480	Kavita Gupta	Guntur														
+100481	Sneha Iyer	Vijayawada														
+100482	Manoj Singh	Nellore														
+100483	Amit Verma	Visakhapatnam														
+100484	Amit Patel	Hyderabad														
+100485	Kavita Verma	Hyderabad														
+100486	Sunita Sharma	Vijayawada														
+100487	Meera Gupta	Tirupati														
+100488	Kavita Singh	Tirupati														
+100489	Rohan Singh	Nellore														
+100490	Suresh Iyer	Vijayawada														
+100491	Vikram Gupta	Tirupati														
+100492	Anjali Verma	Hyderabad														
+100493	Deepak Verma	Vijayawada														
+100494	Suresh Verma	Vijayawada														
+100495	Anita Nair	Hyderabad														
+100496	Neeta Reddy	Nellore														
+100497	Suresh Sharma	Vijayawada														
+100498	Pooja Yadav	Guntur														
+100499	Sneha Patel	Guntur														
+100500	Vikram Reddy	Tirupati														
+100501	Sneha Gupta	Visakhapatnam														
+100502	Deepak Iyer	Nellore														
+100503	Meera Iyer	Hyderabad														
+100504	Kavita Gupta	Nellore														
+100505	Kavita Gupta	Hyderabad														
+100506	Vikram Singh	Tirupati														
+100507	Arjun Sharma	Guntur														
+100508	Deepak Kumar	Visakhapatnam														
+100509	Rekha Singh	Vijayawada														
+100510	Rekha Sharma	Guntur														
+100511	Sanjay Reddy	Guntur														
+100512	Amit Gupta	Guntur														
+100513	Rekha Gupta	Nellore														
+100514	Rahul Nair	Hyderabad														
+100515	Anita Sharma	Hyderabad														
+100516	Vikram Gupta	Visakhapatnam														
+100517	Kavita Verma	Visakhapatnam														
+100518	Sneha Verma	Nellore														
+100519	Sneha Singh	Nellore														
+100520	Rohan Sharma	Vijayawada														
+100521	Deepak Kumar	Hyderabad														
+100522	Sneha Kumar	Nellore														
+100523	Anita Verma	Tirupati														
+100524	Sanjay Patel	Visakhapatnam														
+100525	Anita Sharma	Hyderabad														
+100526	Rahul Gupta	Vijayawada														
+100527	Sanjay Nair	Guntur														
+100528	Sneha Verma	Nellore														
+100529	Sneha Iyer	Guntur														
+100530	Amit Patel	Tirupati														
+100531	Meera Singh	Tirupati														
+100532	Sanjay Sharma	Hyderabad														
+100533	Priya Verma	Vijayawada														
+100534	Neeta Yadav	Nellore														
+100535	Kavita Kumar	Guntur														
+100536	Vijay Reddy	Hyderabad														
+100537	Meera Sharma	Vijayawada														
+100538	Kavita Reddy	Visakhapatnam														
+100539	Deepak Patel	Nellore														
+100540	Anita Nair	Visakhapatnam														
+100541	Neeta Nair	Hyderabad														
+100542	Vijay Sharma	Guntur														
+100543	Sanjay Patel	Hyderabad														
+100544	Sneha Kumar	Nellore														
+100545	Neeta Reddy	Tirupati														
+100546	Sneha Singh	Visakhapatnam														
+100547	Vijay Reddy	Tirupati														
+100548	Vikram Iyer	Vijayawada														
+100549	Pooja Singh	Vijayawada														
+100550	Suresh Gupta	Vijayawada														
+100551	Sunita Iyer	Guntur														
+100552	Neeta Verma	Hyderabad														
+100553	Sanjay Singh	Vijayawada														
+100554	Suresh Yadav	Tirupati														
+100555	Rohan Gupta	Nellore														
+100556	Pooja Sharma	Tirupati														
+100557	Anjali Verma	Hyderabad														
+100558	Pooja Verma	Visakhapatnam														
+100559	Vijay Sharma	Tirupati														
+100560	Rekha Yadav	Tirupati														
+100561	Priya Nair	Visakhapatnam														
+100562	Meera Gupta	Tirupati														
+100563	Rohan Yadav	Nellore														
+100564	Manoj Sharma	Guntur														
+100565	Sunita Verma	Hyderabad														
+100566	Meera Kumar	Guntur														
+100567	Rekha Iyer	Nellore														
+100568	Meera Kumar	Vijayawada														
+100569	Amit Gupta	Nellore														
+100570	Anjali Reddy	Visakhapatnam														
+100571	Meera Gupta	Visakhapatnam														
+100572	Anjali Gupta	Hyderabad														
+100573	Anjali Verma	Visakhapatnam														
+100574	Meera Gupta	Guntur														
+100575	Amit Sharma	Hyderabad														
+100576	Sunita Iyer	Hyderabad														
+100577	Amit Reddy	Hyderabad														
+100578	Priya Reddy	Vijayawada														
+100579	Neeta Patel	Vijayawada														
+100580	Rahul Yadav	Vijayawada														
+100581	Vikram Gupta	Hyderabad														
+100582	Anita Iyer	Tirupati														
+100583	Vikram Nair	Vijayawada														
+100584	Rekha Kumar	Vijayawada														
+100585	Kavita Gupta	Vijayawada														
+100586	Manoj Patel	Nellore														
+100587	Rohan Kumar	Hyderabad														
+100588	Rohan Patel	Vijayawada														
+100589	Neeta Gupta	Vijayawada														
+100590	Vikram Verma	Visakhapatnam														
+100591	Amit Nair	Visakhapatnam														
+100592	Anita Singh	Guntur														
+100593	Anita Yadav	Vijayawada														
+100594	Deepak Patel	Guntur														
+100595	Manoj Sharma	Tirupati														
+100596	Deepak Gupta	Tirupati														
+100597	Deepak Verma	Vijayawada														
+100598	Anjali Iyer	Vijayawada														
+100599	Meera Reddy	Hyderabad														
+100600	Rohan Kumar	Vijayawada														
+100601	Vikram Reddy	Nellore														
+100602	Sunita Nair	Nellore														
+100603	Rohan Nair	Vijayawada														
+100604	Vijay Patel	Visakhapatnam														
+100605	Kavita Kumar	Guntur														
+100606	Pooja Gupta	Vijayawada														
+100607	Suresh Nair	Guntur														
+100608	Neeta Sharma	Guntur														
+100609	Sanjay Patel	Visakhapatnam														
+100610	Rekha Reddy	Guntur														
+100611	Rekha Iyer	Vijayawada														
+100612	Pooja Kumar	Tirupati														
+100613	Vikram Nair	Guntur														
+100614	Rahul Kumar	Visakhapatnam														
+100615	Suresh Verma	Guntur														
+100616	Vijay Patel	Guntur														
+100617	Sneha Gupta	Hyderabad														
+100618	Rahul Verma	Nellore														
+100619	Pooja Sharma	Visakhapatnam														
+100620	Rohan Yadav	Visakhapatnam														
+100621	Vijay Gupta	Tirupati														
+100622	Kavita Verma	Visakhapatnam														
+100623	Anjali Patel	Vijayawada														
+100624	Pooja Singh	Guntur														
+100625	Vikram Kumar	Guntur														
+100626	Manoj Yadav	Nellore														
+100627	Rahul Kumar	Nellore														
+100628	Pooja Reddy	Vijayawada														
+100629	Kavita Nair	Guntur														
+100630	Kavita Verma	Visakhapatnam														
+100631	Sneha Reddy	Guntur														
+100632	Suresh Singh	Guntur														
+100633	Anita Nair	Guntur														
+100634	Neeta Yadav	Guntur														
+100635	Meera Yadav	Vijayawada														
+100636	Amit Nair	Tirupati														
+100637	Manoj Patel	Visakhapatnam														
+100638	Neeta Nair	Tirupati														
+100639	Sneha Kumar	Visakhapatnam														
+100640	Priya Sharma	Hyderabad														
+100641	Vijay Yadav	Tirupati														
+100642	Sneha Gupta	Tirupati														
+100643	Rekha Reddy	Hyderabad														
+100644	Kavita Gupta	Visakhapatnam														
+100645	Anita Reddy	Tirupati														
+100646	Anjali Nair	Tirupati														
+100647	Kavita Reddy	Hyderabad														
+100648	Sneha Kumar	Hyderabad														
+100649	Amit Kumar	Hyderabad														
+100650	Anjali Kumar	Tirupati														
+100651	Vijay Iyer	Tirupati														
+100652	Manoj Nair	Nellore														
+100653	Anjali Kumar	Tirupati														
+100654	Rahul Gupta	Hyderabad														
+100655	Sanjay Verma	Hyderabad														
+100656	Kavita Verma	Nellore														
+100657	Sneha Gupta	Vijayawada														
+100658	Deepak Gupta	Visakhapatnam														
+100659	Arjun Sharma	Vijayawada														
+100660	Kavita Iyer	Vijayawada														
+100661	Sanjay Gupta	Visakhapatnam														
+100662	Vikram Gupta	Visakhapatnam														
+100663	Vikram Nair	Tirupati														
+100664	Anjali Reddy	Vijayawada														
+100665	Anjali Iyer	Tirupati														
+100666	Sunita Reddy	Guntur														
+100667	Sanjay Sharma	Visakhapatnam														
+100668	Priya Nair	Vijayawada														
+100669	Anita Patel	Tirupati														
+100670	Manoj Yadav	Visakhapatnam														
+100671	Vikram Patel	Tirupati														
+100672	Priya Yadav	Vijayawada														
+100673	Deepak Sharma	Guntur														
+100674	Priya Reddy	Hyderabad														
+100675	Sunita Kumar	Visakhapatnam														
+100676	Manoj Reddy	Guntur														
+100677	Priya Yadav	Nellore														
+100678	Vikram Gupta	Guntur														
+100679	Deepak Reddy	Nellore														
+100680	Anita Yadav	Visakhapatnam														
+100681	Sunita Nair	Hyderabad														
+100682	Amit Kumar	Vijayawada														
+100683	Rekha Yadav	Guntur														
+100684	Vikram Patel	Visakhapatnam														
+100685	Sanjay Iyer	Nellore														
+100686	Neeta Gupta	Guntur														
+100687	Manoj Yadav	Hyderabad														
+100688	Kavita Iyer	Nellore														
+100689	Neeta Reddy	Tirupati														
+100690	Manoj Nair	Guntur														
+100691	Manoj Reddy	Nellore														
+100692	Vikram Patel	Hyderabad														
+100693	Rahul Gupta	Vijayawada														
+100694	Sunita Iyer	Vijayawada														
+100695	Meera Kumar	Vijayawada														
+100696	Sunita Reddy	Nellore														
+100697	Sunita Yadav	Visakhapatnam														
+100698	Sneha Yadav	Tirupati														
+100699	Vikram Sharma	Nellore														
+100700	Rekha Sharma	Guntur														
+100701	Neeta Reddy	Visakhapatnam														
+100702	Arjun Gupta	Nellore														
+100703	Neeta Reddy	Visakhapatnam														
+100704	Suresh Sharma	Tirupati														
+100705	Suresh Patel	Hyderabad														
+100706	Sneha Singh	Hyderabad														
+100707	Sneha Iyer	Guntur														
+100708	Sanjay Reddy	Nellore														
+100709	Amit Sharma	Hyderabad														
+100710	Sneha Iyer	Nellore														
+100711	Anjali Yadav	Nellore														
+100712	Rahul Kumar	Nellore														
+100713	Neeta Reddy	Vijayawada														
+100714	Meera Nair	Guntur														
+100715	Kavita Sharma	Nellore														
+100716	Deepak Verma	Nellore														
+100717	Suresh Sharma	Nellore														
+100718	Deepak Patel	Tirupati														
+100719	Vijay Iyer	Guntur														
+100720	Sneha Kumar	Nellore														
+100721	Vikram Yadav	Guntur														
+100722	Priya Kumar	Hyderabad														
+100723	Rekha Verma	Hyderabad														
+100724	Deepak Yadav	Nellore														
+100725	Anita Patel	Vijayawada														
+100726	Vikram Yadav	Guntur														
+100727	Deepak Reddy	Tirupati														
+100728	Manoj Gupta	Guntur														
+100729	Anita Yadav	Tirupati														
+100730	Rohan Reddy	Tirupati														
+100731	Arjun Reddy	Visakhapatnam														
+100732	Kavita Reddy	Tirupati														
+100733	Priya Sharma	Visakhapatnam														
+100734	Vijay Sharma	Nellore														
+100735	Sneha Singh	Visakhapatnam														
+100736	Rekha Singh	Hyderabad														
+100737	Amit Patel	Visakhapatnam														
+100738	Rekha Yadav	Guntur														
+100739	Priya Iyer	Tirupati														
+100740	Deepak Gupta	Guntur														
+100741	Rekha Iyer	Nellore														
+100742	Rohan Sharma	Hyderabad														
+100743	Arjun Singh	Vijayawada														
+100744	Rohan Sharma	Vijayawada														
+100745	Rekha Iyer	Nellore														
+100746	Neeta Gupta	Vijayawada														
+100747	Deepak Gupta	Hyderabad														
+100748	Anita Patel	Nellore														
+100749	Vikram Sharma	Hyderabad														
+100750	Anita Gupta	Tirupati														
+100751	Suresh Kumar	Hyderabad														
+100752	Rekha Gupta	Nellore														
+100753	Sanjay Verma	Hyderabad														
+100754	Neeta Singh	Vijayawada														
+100755	Deepak Gupta	Guntur														
+100756	Meera Sharma	Visakhapatnam														
+100757	Sunita Verma	Hyderabad														
+100758	Suresh Reddy	Guntur														
+100759	Suresh Iyer	Nellore														
+100760	Sneha Nair	Vijayawada														
+100761	Anjali Sharma	Vijayawada														
+100762	Meera Verma	Guntur														
+100763	Deepak Patel	Nellore														
+100764	Vikram Nair	Visakhapatnam														
+100765	Vikram Patel	Visakhapatnam														
+100766	Amit Yadav	Nellore														
+100767	Rahul Singh	Nellore														
+100768	Deepak Patel	Hyderabad														
+100769	Vikram Yadav	Guntur														
+100770	Anita Iyer	Tirupati														
+100771	Neeta Singh	Visakhapatnam														
+100772	Neeta Yadav	Hyderabad														
+100773	Sanjay Reddy	Tirupati														
+100774	Rahul Iyer	Guntur														
+100775	Neeta Patel	Vijayawada														
+100776	Amit Gupta	Hyderabad														
+100777	Vikram Gupta	Guntur														
+100778	Amit Kumar	Tirupati														
+100779	Suresh Reddy	Hyderabad														
+100780	Priya Sharma	Visakhapatnam														
+100781	Vijay Yadav	Nellore														
+100782	Sanjay Iyer	Visakhapatnam														
+100783	Neeta Gupta	Tirupati														
+100784	Vikram Singh	Hyderabad														
+100785	Vikram Verma	Hyderabad														
+100786	Deepak Reddy	Guntur														
+100787	Rekha Singh	Guntur														
+100788	Amit Yadav	Tirupati														
+100789	Meera Gupta	Nellore														
+100790	Deepak Sharma	Guntur														
+100791	Rohan Kumar	Tirupati														
+100792	Amit Sharma	Visakhapatnam														
+100793	Pooja Iyer	Nellore														
+100794	Priya Nair	Guntur														
+100795	Vikram Kumar	Guntur														
+100796	Neeta Singh	Nellore														
+100797	Neeta Verma	Vijayawada														
+100798	Anjali Yadav	Nellore														
+100799	Rahul Yadav	Hyderabad														
+100800	Manoj Sharma	Vijayawada														
+100801	Deepak Iyer	Tirupati														
+100802	Sneha Sharma	Vijayawada														
+100803	Vijay Reddy	Tirupati														
+100804	Amit Singh	Hyderabad														
+100805	Rohan Iyer	Visakhapatnam														
+100806	Sunita Iyer	Tirupati														
+100807	Amit Verma	Vijayawada														
+100808	Sneha Kumar	Tirupati														
+100809	Deepak Nair	Vijayawada														
+100810	Suresh Patel	Tirupati														
+100811	Amit Singh	Visakhapatnam														
+100812	Neeta Reddy	Vijayawada														
+100813	Sunita Iyer	Nellore														
+100814	Sneha Nair	Hyderabad														
+100815	Arjun Iyer	Visakhapatnam														
+100816	Vijay Singh	Visakhapatnam														
+100817	Sunita Gupta	Tirupati														
+100818	Anjali Patel	Guntur														
+100819	Arjun Gupta	Vijayawada														
+100820	Anita Reddy	Guntur														
+100821	Rekha Iyer	Hyderabad														
+100822	Anita Iyer	Hyderabad														
+100823	Neeta Verma	Nellore														
+100824	Sunita Nair	Hyderabad														
+100825	Sanjay Nair	Guntur														
+100826	Sanjay Sharma	Nellore														
+100827	Sneha Gupta	Vijayawada														
+100828	Sunita Verma	Nellore														
+100829	Sunita Gupta	Tirupati														
+100830	Rohan Kumar	Nellore														
+100831	Deepak Sharma	Nellore														
+100832	Kavita Singh	Hyderabad														
+100833	Sunita Reddy	Tirupati														
+100834	Anjali Reddy	Vijayawada														
+100835	Arjun Kumar	Nellore														
+100836	Kavita Verma	Nellore														
+100837	Anjali Singh	Hyderabad														
+100838	Sanjay Iyer	Visakhapatnam														
+100839	Anjali Kumar	Guntur														
+100840	Suresh Yadav	Hyderabad														
+100841	Anita Iyer	Guntur														
+100842	Suresh Kumar	Vijayawada														
+100843	Meera Reddy	Nellore														
+100844	Manoj Reddy	Tirupati														
+100845	Suresh Verma	Tirupati														
+100846	Priya Reddy	Vijayawada														
+100847	Neeta Patel	Nellore														
+100848	Deepak Yadav	Nellore														
+100849	Amit Yadav	Visakhapatnam														
+100850	Arjun Gupta	Tirupati														
+100851	Sneha Gupta	Hyderabad														
+100852	Sanjay Singh	Visakhapatnam														
+100853	Sanjay Sharma	Tirupati														
+100854	Sanjay Patel	Vijayawada														
+100855	Sneha Nair	Nellore														
+100856	Sanjay Iyer	Nellore														
+100857	Neeta Nair	Vijayawada														
+100858	Kavita Verma	Vijayawada														
+100859	Sunita Iyer	Tirupati														
+100860	Amit Gupta	Vijayawada														
+100861	Sneha Sharma	Tirupati														
+100862	Rohan Iyer	Tirupati														
+100863	Rohan Kumar	Tirupati														
+100864	Sanjay Iyer	Guntur														
+100865	Rohan Verma	Tirupati														
+100866	Deepak Nair	Tirupati														
+100867	Kavita Verma	Nellore														
+100868	Rekha Yadav	Hyderabad														
+100869	Neeta Gupta	Visakhapatnam														
+100870	Meera Singh	Vijayawada														
+100871	Vikram Nair	Tirupati														
+100872	Anita Nair	Tirupati														
+100873	Deepak Sharma	Hyderabad														
+100874	Priya Nair	Tirupati														
+100875	Anjali Iyer	Nellore														
+100876	Deepak Iyer	Guntur														
+100877	Rohan Verma	Vijayawada														
+100878	Manoj Iyer	Guntur														
+100879	Suresh Yadav	Nellore														
+100880	Meera Patel	Guntur														
+100881	Suresh Singh	Guntur														
+100882	Manoj Nair	Hyderabad														
+100883	Sunita Iyer	Tirupati														
+100884	Anjali Yadav	Vijayawada														
+100885	Vikram Nair	Hyderabad														
+100886	Suresh Verma	Visakhapatnam														
+100887	Anita Iyer	Guntur														
+100888	Anita Yadav	Guntur														
+100889	Deepak Kumar	Nellore														
+100890	Deepak Patel	Visakhapatnam														
+100891	Deepak Sharma	Hyderabad														
+100892	Pooja Verma	Hyderabad														
+100893	Meera Yadav	Hyderabad														
+100894	Vikram Kumar	Tirupati														
+100895	Amit Kumar	Guntur														
+100896	Anita Kumar	Hyderabad														
+100897	Pooja Kumar	Tirupati														
+100898	Pooja Verma	Guntur														
+100899	Suresh Yadav	Hyderabad														
+100900	Rahul Gupta	Tirupati														
+100901	Sneha Nair	Vijayawada														
+100902	Priya Singh	Vijayawada														
+100903	Anita Reddy	Vijayawada														
+100904	Neeta Yadav	Tirupati														
+100905	Rekha Kumar	Nellore														
+100906	Sanjay Iyer	Visakhapatnam														
+100907	Sunita Singh	Nellore														
+100908	Neeta Patel	Nellore														
+100909	Anita Patel	Visakhapatnam														
+100910	Rekha Patel	Vijayawada														
+100911	Anita Patel	Vijayawada														
+100912	Pooja Verma	Guntur														
+100913	Rahul Verma	Guntur														
+100914	Sneha Nair	Visakhapatnam														
+100915	Rahul Sharma	Hyderabad														
+100916	Kavita Yadav	Visakhapatnam														
+100917	Rohan Patel	Visakhapatnam														
+100918	Amit Yadav	Visakhapatnam														
+100919	Rahul Nair	Vijayawada														
+100920	Rohan Verma	Visakhapatnam														
+100921	Anita Singh	Tirupati														
+100922	Amit Kumar	Vijayawada														
+100923	Vijay Gupta	Vijayawada														
+100924	Sanjay Reddy	Hyderabad														
+100925	Rahul Yadav	Tirupati														
+100926	Manoj Verma	Nellore														
+100927	Rohan Kumar	Vijayawada														
+100928	Pooja Iyer	Guntur														
+100929	Rohan Patel	Nellore														
+100930	Anjali Nair	Hyderabad														
+100931	Anita Patel	Tirupati														
+100932	Sanjay Singh	Nellore														
+100933	Pooja Gupta	Guntur														
+100934	Rahul Gupta	Guntur														
+100935	Sunita Iyer	Vijayawada														
+100936	Suresh Reddy	Tirupati														
+100937	Vijay Yadav	Guntur														
+100938	Priya Nair	Visakhapatnam														
+100939	Anjali Sharma	Tirupati														
+100940	Rekha Yadav	Visakhapatnam														
+100941	Rahul Reddy	Hyderabad														
+100942	Manoj Iyer	Guntur														
+100943	Arjun Gupta	Guntur														
+100944	Neeta Kumar	Visakhapatnam														
+100945	Vikram Yadav	Vijayawada														
+100946	Amit Iyer	Tirupati														
+100947	Sneha Yadav	Vijayawada														
+100948	Kavita Sharma	Vijayawada														
+100949	Kavita Verma	Vijayawada														
+100950	Sneha Singh	Tirupati														
+100951	Vijay Reddy	Guntur														
+100952	Pooja Yadav	Vijayawada														
+100953	Rohan Sharma	Vijayawada														
+100954	Sneha Sharma	Hyderabad														
+100955	Meera Reddy	Vijayawada														
+100956	Sunita Iyer	Nellore														
+100957	Sneha Gupta	Hyderabad														
+100958	Rohan Reddy	Nellore														
+100959	Meera Kumar	Vijayawada														
+100960	Rekha Verma	Vijayawada														
+100961	Anjali Yadav	Nellore														
+100962	Neeta Iyer	Tirupati														
+100963	Rohan Verma	Guntur														
+100964	Rohan Sharma	Tirupati														
+100965	Anita Gupta	Hyderabad														
+100966	Rohan Gupta	Visakhapatnam														
+100967	Sanjay Sharma	Guntur														
+100968	Vijay Kumar	Guntur														
+100969	Kavita Singh	Nellore														
+100970	Rahul Singh	Vijayawada														
+100971	Arjun Sharma	Tirupati														
+100972	Priya Singh	Tirupati														
+100973	Suresh Sharma	Hyderabad														
+100974	Anita Yadav	Tirupati														
+100975	Deepak Verma	Nellore														
+100976	Meera Patel	Visakhapatnam														
+100977	Manoj Sharma	Vijayawada														
+100978	Meera Nair	Guntur														
+100979	Arjun Iyer	Vijayawada														
+100980	Meera Gupta	Vijayawada														
+100981	Rahul Sharma	Tirupati														
+100982	Rohan Kumar	Hyderabad														
+100983	Amit Gupta	Vijayawada														
+100984	Rohan Singh	Hyderabad														
+100985	Sanjay Gupta	Vijayawada														
+100986	Pooja Singh	Nellore														
+100987	Rekha Gupta	Visakhapatnam														
+100988	Vikram Kumar	Tirupati														
+100989	Rohan Sharma	Nellore														
+100990	Sanjay Singh	Nellore														
+100991	Neeta Iyer	Tirupati														
+100992	Neeta Singh	Tirupati														
+100993	Arjun Singh	Guntur														
+100994	Anjali Gupta	Nellore														
+100995	Kavita Yadav	Vijayawada														
+100996	Rohan Verma	Guntur														
+100997	Sunita Verma	Guntur														
+100998	Sanjay Singh	Hyderabad														
+100999	Pooja Nair	Visakhapatnam														
+101000	Manoj Iyer	Vijayawada														
+101001	Sneha Reddy	Visakhapatnam														
+101002	Vijay Sharma	Hyderabad														
+101003	Meera Reddy	Hyderabad														
+101004	Rekha Nair	Guntur														
+101005	Manoj Verma	Visakhapatnam														
+101006	Meera Patel	Hyderabad														
+101007	Manoj Verma	Guntur														
+101008	Neeta Yadav	Visakhapatnam														
+101009	Sanjay Singh	Visakhapatnam														
+101010	Anita Yadav	Hyderabad														
+101011	Vijay Sharma	Vijayawada														
+101012	Sanjay Kumar	Tirupati														
+101013	Suresh Verma	Guntur														
+101014	Rahul Reddy	Visakhapatnam														
+101015	Rahul Sharma	Guntur														
+101016	Rahul Iyer	Hyderabad														
+101017	Pooja Patel	Vijayawada														
+101018	Priya Reddy	Tirupati														
+101019	Vikram Gupta	Nellore														
+101020	Neeta Verma	Visakhapatnam														
+101021	Anjali Reddy	Tirupati														
+101022	Arjun Singh	Visakhapatnam														
+101023	Sneha Patel	Visakhapatnam														
+101024	Sunita Verma	Tirupati														
+101025	Deepak Reddy	Nellore														
+101026	Suresh Reddy	Hyderabad														
+101027	Deepak Verma	Visakhapatnam														
+101028	Suresh Gupta	Vijayawada														
+101029	Anjali Singh	Visakhapatnam														
+101030	Vijay Nair	Visakhapatnam														
+101031	Deepak Gupta	Guntur														
+101032	Manoj Verma	Visakhapatnam														
+101033	Rohan Yadav	Nellore														
+101034	Rekha Nair	Vijayawada														
+101035	Amit Reddy	Nellore														
+101036	Rohan Singh	Vijayawada														
+101037	Rahul Reddy	Guntur														
+101038	Neeta Singh	Hyderabad														
+101039	Kavita Iyer	Nellore														
+101040	Rohan Singh	Vijayawada														
+101041	Sanjay Singh	Visakhapatnam														
+101042	Priya Singh	Hyderabad														
+101043	Rahul Yadav	Visakhapatnam														
+101044	Suresh Yadav	Nellore														
+101045	Meera Iyer	Hyderabad														
+101046	Vijay Yadav	Nellore														
+101047	Vikram Patel	Hyderabad														
+101048	Manoj Patel	Guntur														
+101049	Sneha Yadav	Vijayawada														
+101050	Sanjay Nair	Hyderabad														
+101051	Amit Singh	Vijayawada														
+101052	Rohan Reddy	Nellore														

@@ -1,0 +1,480 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="login-wrapper">
+    <!-- Animated Blobs -->
+    <div class="login-blob"></div>
+    <div class="login-blob"></div>
+
+    <div class="login-glass-card">
+        <div class="login-brand-header">
+            <i class="fas fa-bolt"
+                style="font-size: 2.2rem; color: var(--neon-yellow); margin-bottom: 15px; filter: drop-shadow(var(--glow-yellow));"></i>
+            <h1 style="letter-spacing: 1px;">MICROGRID OS</h1>
+            <p
+                style="font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: var(--neon-blue);">
+                AI Energy Command Brain</p>
+        </div>
+
+        <form id="auth-form" onsubmit="handleSubmit(event)">
+            <!-- STEP 1: Mobile & OTP -->
+            <div id="step-1">
+                <div class="login-input-group">
+                    <label>Mobile Number</label>
+                    <div style="position: relative; display: flex; gap: 10px;">
+                        <div style="position: relative; flex: 1;">
+                            <i class="fas fa-phone"
+                                style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                            <input type="text" id="mobile" class="login-modern-input" placeholder="8800000000"
+                                maxlength="10"
+                                style="padding-left: 48px; width: 100%; box-sizing: border-box; font-family: var(--font-mono); letter-spacing: 2px;"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'')" value="{{ mobile }}">
+                        </div>
+                        <button type="button" id="get-otp-btn" onclick="requestOTP()" class="login-action-btn"
+                            style="width: auto; padding: 0 15px; font-size: 0.8rem; height: 45px; margin-top: 0; white-space: nowrap;">
+                            GET OTP
+                        </button>
+                    </div>
+                </div>
+
+                <div id="otp-group" class="login-input-group">
+                    <label>Verification OTP</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-key"
+                            style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                        <input type="text" id="otp" class="login-modern-input" placeholder="000000" maxlength="6"
+                            style="padding-left: 48px; width: 100%; box-sizing: border-box; font-family: var(--font-mono); letter-spacing: 5px;">
+                    </div>
+                </div>
+                <div id="otp-expiry-info" style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 12px; font-family: var(--font-mono); display: none; text-align: center; border: 1px dashed rgba(255,255,255,0.1); padding: 8px; border-radius: 10px; background: rgba(255,100,100,0.05);">
+                    <i class="fas fa-history" style="margin-right: 5px; color: var(--neon-yellow);"></i> 
+                    SESSION EXPIRES IN: <span id="expiry-timer" style="color: var(--white); font-weight: 800; letter-spacing: 1px;">5:00</span>
+                </div>
+
+                <div style="text-align: right; margin-top: 5px;">
+                    <a href="javascript:void(0)" onclick="resetLoginStep()"
+                        style="font-size: 0.75rem; color: var(--text-secondary); text-decoration: none; transition: color 0.2s;"
+                        onmouseover="this.style.color='var(--neon-yellow)'"
+                        onmouseout="this.style.color='var(--text-secondary)'">
+                        <i class="fas fa-undo"></i> Try another number?
+                    </a>
+                </div>
+
+                <button type="button" id="verify-otp-btn" onclick="verifyOTPOnly()" class="login-action-btn"
+                    style="margin-top: 20px;">
+                    VERIFY & PROCEED <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+            </div>
+
+            <!-- Step 2: Role Selection - Horizontal with 3D Icons -->
+            <div id="step-2" style="display: none; animation: fadeIn 0.5s ease;">
+                <h2 style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; text-align: center; font-weight: 700;">
+                    IDENTIFICATION COMPLETE
+                </h2>
+                
+                <div class="role-grid">
+                    <!-- Community Head Card -->
+                    <div id="role-admin" class="role-card" onclick="selectRole('community_admin')">
+                        <div class="role-img-wrapper">
+                            <img src="{{ url_for('static', filename='images/role_admin.png') }}" alt="Community Head">
+                        </div>
+                        <div class="role-info">
+                            <h3>Community Head</h3>
+                            <p>Admin control & monitoring</p>
+                        </div>
+                    </div>
+
+                    <!-- House Owner Card -->
+                    <div id="role-owner" class="role-card" onclick="selectRole('house_owner')">
+                        <div class="role-img-wrapper">
+                            <img src="{{ url_for('static', filename='images/role_owner.png') }}" alt="House Owner">
+                        </div>
+                        <div class="role-info">
+                            <h3>House Owner</h3>
+                            <p>Personal energy portal</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 35px;">
+                    <a href="javascript:void(0)" onclick="resetLoginStep()" class="login-secondary-link">
+                        <i class="fas fa-undo-alt" style="font-size: 0.7rem;"></i> Switch Phone Number
+                    </a>
+                </div>
+            </div>
+
+            <input type="hidden" id="selected-role">
+            <input type="hidden" id="admin-auth-mode" value="signin">
+
+            <!-- Step 3: Admin Credentials - With Sign In / Sign Up Toggle -->
+            <div id="step-3" style="display: none; margin-top: 30px; animation: slideUp 0.4s ease;">
+                <div style="display: flex; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05);">
+                    <button type="button" id="toggle-signin" onclick="setAdminMode('signin')" style="flex: 1; padding: 10px; border: none; border-radius: 9px; background: var(--neon-blue); color: #000; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: all 0.3s;">SIGN IN</button>
+                    <button type="button" id="toggle-signup" onclick="setAdminMode('signup')" style="flex: 1; padding: 10px; border: none; border-radius: 9px; background: transparent; color: var(--text-secondary); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: all 0.3s;">SIGN UP</button>
+                </div>
+
+                <div class="login-input-group">
+                    <label id="email-label">Admin Email</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-envelope" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                        <input type="email" id="email" class="login-modern-input" placeholder="admin@microgrid.com"
+                            style="padding-left: 48px; width: 100%; box-sizing: border-box;">
+                    </div>
+                </div>
+                <div class="login-input-group">
+                    <label id="pass-label">Admin Password</label>
+                    <div style="position: relative;">
+                        <i class="fas fa-lock" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                        <input type="password" id="password" class="login-modern-input" placeholder="••••••••"
+                            style="padding-left: 48px; padding-right: 48px; width: 100%; box-sizing: border-box;">
+                        <i class="fas fa-eye" id="toggle-pass-icon" onclick="togglePasswordVisibility('password', 'toggle-pass-icon')" 
+                            style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; transition: color 0.2s; z-index: 10;"></i>
+                    </div>
+                </div>
+                
+                <div id="signup-extra" style="display: none; animation: fadeIn 0.3s ease;">
+                    <div class="login-input-group">
+                        <label>Confirm Password</label>
+                        <div style="position: relative;">
+                            <i class="fas fa-shield-alt" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+                            <input type="password" id="confirm-password" class="login-modern-input" placeholder="••••••••"
+                                style="padding-left: 48px; padding-right: 48px; width: 100%; box-sizing: border-box;">
+                            <i class="fas fa-eye" id="toggle-confirm-icon" onclick="togglePasswordVisibility('confirm-password', 'toggle-confirm-icon')" 
+                                style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); cursor: pointer; transition: color 0.2s; z-index: 10;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="submit-btn" class="login-action-btn" style="display: none; margin-top: 30px;">
+                <span id="submit-text">INITIATE SESSION</span> <i class="fas fa-arrow-right" style="margin-left: 10px; font-size: 0.8rem;"></i>
+            </button>
+
+            <div id="status-msg" class="login-status-msg"></div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function setStatus(msg, type = 'info') {
+        const el = document.getElementById('status-msg');
+        el.innerText = msg;
+        el.className = 'login-status-msg ' + type;
+    }
+
+    let otpTimer = null;
+    let expiryTimer = null;
+
+    function startExpiryTimer(seconds) {
+        if (expiryTimer) clearInterval(expiryTimer);
+        const display = document.getElementById('expiry-timer');
+        const info = document.getElementById('otp-expiry-info');
+        info.style.display = 'block';
+        
+        let remaining = seconds;
+        expiryTimer = setInterval(() => {
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            display.innerText = `${mins}:${secs.toString().padStart(2, '0')}`;
+            
+            if (remaining <= 30) {
+                display.style.color = '#ff4444';
+                display.style.textShadow = '0 0 10px rgba(255, 68, 68, 0.5)';
+                info.style.borderColor = 'rgba(255, 68, 68, 0.3)';
+            } else {
+                display.style.color = 'var(--neon-blue)';
+                display.style.textShadow = 'none';
+                info.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }
+
+            if (remaining <= 0) {
+                clearInterval(expiryTimer);
+                info.innerHTML = '<span style="color: #ff4444;"><i class="fas fa-times-circle"></i> CODE EXPIRED. PLEASE RESEND.</span>';
+            }
+            remaining--;
+        }, 1000);
+    }
+
+    function resetLoginStep() {
+        if (otpTimer) {
+            clearInterval(otpTimer);
+            otpTimer = null;
+        }
+        const btn = document.getElementById('get-otp-btn');
+        btn.disabled = false;
+        btn.innerHTML = "GET OTP";
+
+        // Show Step 1 if we were in Step 2
+        document.getElementById('step-1').style.display = 'block';
+        document.getElementById('step-2').style.display = 'none';
+        document.getElementById('step-3').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
+
+        document.getElementById('mobile').value = '';
+        document.getElementById('otp').value = '';
+        setStatus("Process reset. Enter new number.", "info");
+    }
+
+    async function requestOTP() {
+        const mobile = document.getElementById('mobile').value;
+        const btn = document.getElementById('get-otp-btn');
+
+        if (!mobile) {
+            setStatus("❌ Please enter your mobile number", "error");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            const res = await fetch('/api/request_otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ mobile })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                if (data.debug_otp) {
+                    setStatus("✅ DEBUG: Use verification code " + data.debug_otp, "success");
+                    // Auto-fill for convenience in debug mode
+                    document.getElementById('otp').value = data.debug_otp;
+                } else {
+                    setStatus("✅ OTP Sent to " + mobile, "success");
+                }
+
+                // Cooldown timer
+                let sec = 60;
+                if (otpTimer) clearInterval(otpTimer);
+                otpTimer = setInterval(() => {
+                    btn.innerHTML = sec + "s";
+                    sec--;
+                    if (sec < 0) {
+                        clearInterval(otpTimer);
+                        otpTimer = null;
+                        btn.disabled = false;
+                        btn.innerHTML = "RESEND";
+                    }
+                }, 1000);
+
+                if (data.expiry_seconds) {
+                    startExpiryTimer(data.expiry_seconds);
+                }
+            } else {
+                setStatus("❌ " + data.message, "error");
+                btn.disabled = false;
+                btn.innerHTML = "GET OTP";
+            }
+        } catch (err) {
+            console.error(err);
+            setStatus("❌ Connection Error", "error");
+            btn.disabled = false;
+            btn.innerHTML = "RETRY";
+        }
+    }
+
+    async function verifyOTPOnly() {
+        const mobile = document.getElementById('mobile').value;
+        const otp = document.getElementById('otp').value;
+        const btn = document.getElementById('verify-otp-btn');
+
+        if (!mobile || !otp) {
+            setStatus("❌ Mobile and OTP required", "error");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFYING...';
+
+        try {
+            const res = await fetch('/api/verify_otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ mobile, otp })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setStatus("✅ OTP Verified. Proceed to role selection.", "success");
+                document.getElementById('step-1').style.display = 'none';
+                document.getElementById('step-2').style.display = 'block';
+            } else {
+                setStatus("❌ " + data.message, "error");
+                btn.disabled = false;
+                btn.innerHTML = 'VERIFY & PROCEED <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>';
+            }
+        } catch (err) {
+            console.error(err);
+            setStatus("❌ Connection Error", "error");
+            btn.disabled = false;
+            btn.innerHTML = 'RETRY';
+        }
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+            icon.style.color = 'var(--neon-blue)';
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+            icon.style.color = 'var(--text-secondary)';
+        }
+    }
+
+    function setAdminMode(mode) {
+        document.getElementById('admin-auth-mode').value = mode;
+        const signInBtn = document.getElementById('toggle-signin');
+        const signUpBtn = document.getElementById('toggle-signup');
+        const signupExtra = document.getElementById('signup-extra');
+        const submitText = document.getElementById('submit-text');
+
+        if (mode === 'signup') {
+            signUpBtn.style.background = 'var(--neon-blue)';
+            signUpBtn.style.color = '#000';
+            signInBtn.style.background = 'transparent';
+            signInBtn.style.color = 'var(--text-secondary)';
+            signupExtra.style.display = 'block';
+            submitText.innerText = 'CREATE ADMIN ACCOUNT';
+        } else {
+            signInBtn.style.background = 'var(--neon-blue)';
+            signInBtn.style.color = '#000';
+            signUpBtn.style.background = 'transparent';
+            signUpBtn.style.color = 'var(--text-secondary)';
+            signupExtra.style.display = 'none';
+            submitText.innerText = 'INITIATE SESSION';
+        }
+    }
+
+    async function handleSubmit(e) {
+        if (e) e.preventDefault();
+
+        const mobile = document.getElementById('mobile').value;
+        const otp = document.getElementById('otp').value;
+        const role = document.getElementById('selected-role').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = (document.getElementById('confirm-password') || {}).value;
+        const authMode = (document.getElementById('admin-auth-mode') || {}).value;
+        const btn = document.getElementById('submit-btn');
+
+        // Manual validation
+        const otpVerified = '{{ session.get("otp_verified") }}' === 'True';
+        if (!mobile) { setStatus("❌ Mobile number is required", "error"); return; }
+        if (!otp && !otpVerified) { setStatus("❌ Verification OTP is required", "error"); return; }
+        
+        if (!role) {
+            setStatus("❌ Please select a role first", "error");
+            return;
+        }
+
+        if (role === 'community_admin') {
+            if (!email || !password) {
+                setStatus("❌ Admin email and password are required", "error");
+                return;
+            }
+            if (authMode === 'signup' && password !== confirmPassword) {
+                setStatus("❌ Passwords do not match", "error");
+                return;
+            }
+        }
+
+        // Reset Status
+        setStatus('');
+        btn.disabled = true;
+        const originalText = document.getElementById('submit-text').innerText;
+        document.getElementById('submit-text').innerHTML = '<i class="fas fa-spinner fa-spin"></i> AUTHENTICATING...';
+
+        try {
+            const endpoint = (role === 'community_admin' && authMode === 'signup') ? '/api/signup' : '/api/login';
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ mobile, otp, role, email, password })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                setStatus("✅ Access Granted. Redirecting...", "success");
+                window.location.href = data.redirect;
+            } else {
+                setStatus("❌ " + data.message, "error");
+                document.getElementById('submit-text').innerText = originalText;
+                btn.disabled = false;
+            }
+        } catch (err) {
+            console.error(err);
+            setStatus("❌ Connection Error. Server not responding.", "error");
+            btn.disabled = false;
+            document.getElementById('submit-text').innerText = 'RETRY CONNECTION';
+        }
+    }
+
+    function selectRole(role) {
+        document.getElementById('selected-role').value = role;
+        const adminCard = document.getElementById('role-admin');
+        const ownerCard = document.getElementById('role-owner');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Reset classes
+        adminCard.classList.remove('active-blue');
+        ownerCard.classList.remove('active-yellow');
+
+        if (role === 'community_admin') {
+            adminCard.classList.add('active-blue');
+            // Transition to Step 3 (Admin Auth)
+            setTimeout(() => {
+                step2.style.display = 'none';
+                step3.style.display = 'block';
+                submitBtn.style.display = 'flex';
+                setStatus("Admin verification required.", "info");
+            }, 300);
+        } else {
+            ownerCard.classList.add('active-yellow');
+            // Direct redirect to consumer ID page (owner_setup)
+            setStatus("🚀 Identifying resident portal...", "success");
+            setTimeout(() => {
+                handleSubmit(); 
+            }, 600);
+        }
+    }
+
+    // Auto-select role based on URL parameter (if returning from owner dash)
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const step = urlParams.get('step');
+        const role = urlParams.get('role');
+
+        if (step === '2') {
+            document.getElementById('step-1').style.display = 'none';
+            document.getElementById('step-2').style.display = 'block';
+            setStatus("🚀 Session verified. Please select a role.", "success");
+        }
+
+        if (role) {
+            selectRole(role);
+        }
+    });
+</script>
+{% endblock %}

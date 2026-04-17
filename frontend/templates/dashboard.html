@@ -1,0 +1,1628 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if not data_loaded %}
+<script>
+    document.body.classList.add('gate-active');
+</script>
+{% endif %}
+<div class="app-container" style="display: {% if data_loaded %}grid{% else %}none{% endif %};">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <h2>⚡ Microgrid OS</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item active">
+                <i class="fas fa-th-large"></i> Overview
+            </a>
+            <a href="/energy_flow" class="menu-item">
+                <i class="fas fa-project-diagram"></i> Energy Flow
+            </a>
+            <a href="/history" class="menu-item">
+                <i class="fas fa-history"></i> History Log
+            </a>
+            <a href="/suggestions" class="menu-item">
+                <i class="fas fa-lightbulb"></i> AI Insights
+            </a>
+            <a href="/visualization" class="menu-item">
+                <i class="fas fa-magic"></i> Visualization
+            </a>
+            <a href="/about" class="menu-item">
+                <i class="fas fa-info-circle"></i> Project Info
+            </a>
+            <a href="/settings" class="menu-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            
+            
+            <a href="/switch_to_owner" class="menu-item" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; color: var(--neon-blue);">
+                <i class="fas fa-home"></i> Switch to Resident Portal
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="alert-item success">
+                <i class="fas fa-check-circle"></i> System Online
+            </div>
+            <div style="margin-top: 10px; font-size: 0.75rem; color: var(--text-muted);">
+                v2.4.0-stable
+            </div>
+        </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-title" style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-satellite-dish" style="color: var(--neon-blue); font-size: 1.2rem;"></i>
+            <span style="font-weight: 600; letter-spacing: 1px;">COMMAND CENTER &bull; LIVE MONITORING</span>
+        </div>
+
+        <div class="header-controls">
+            <div class="realtime-clock" id="clock"
+                style="background: rgba(0,0,0,0.3); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 15px; border-radius: 6px; font-family: var(--font-mono); font-size: 1.1rem; box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.1);">
+                00:00:00 PM</div>
+
+            <div class="user-profile">
+                <!-- NEW: Dataset & Time Info -->
+                <div
+                    style="display: flex; flex-direction: column; align-items: flex-end; margin-right: 15px; font-size: 0.8rem;">
+                    <span id="header-dataset" style="color: var(--neon-blue);">No Dataset Loaded</span>
+                    <span id="header-sim-time" style="color: var(--text-secondary);">Hour: --</span>
+                </div>
+
+                <span>{{ email }}</span>
+                <div class="user-avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+                <button onclick="handleLogout()" class="glass-btn" style="padding: 5px 10px;">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-content" style="padding: 20px; overflow-y: auto; position: relative;">
+
+        <!-- CINEMATIC BACKGROUND -->
+        <div class="cinematic-bg-container">
+            <div id="main-bg-layer" class="cinematic-bg-layer bg-overview"
+                style="transition: background-image 0.5s ease-in-out;"></div>
+            <!-- 3D Parallax Objects -->
+            <div class="bg-energy-object"
+                style="width: 20vw; height: 18vh; top: 15%; left: 8%; animation-duration: 25s;"></div>
+            <div class="bg-energy-object purple"
+                style="width: 25vw; height: 12vh; bottom: 15%; right: -5%; animation-duration: 35s;"></div>
+            <div class="bg-energy-object circle"
+                style="width: 20vh; height: 20vh; top: 40%; left: 60%; animation-duration: 28s;"></div>
+            <!-- Floating light particles -->
+            <div class="bg-particle" style="left: 15vw; animation-duration: 12s; animation-delay: 0s;"></div>
+            <div class="bg-particle" style="left: 35vw; animation-duration: 18s; animation-delay: 5s;"></div>
+            <div class="bg-particle" style="left: 55vw; animation-duration: 14s; animation-delay: 2s;"></div>
+            <div class="bg-particle" style="left: 75vw; animation-duration: 22s; animation-delay: 10s;"></div>
+            <div class="bg-particle" style="left: 90vw; animation-duration: 20s; animation-delay: 8s;"></div>
+        </div>
+        <div class="cinematic-overlay"></div>
+
+        <!-- (no-dataset-banner removed; gate overlay is used instead) -->
+
+        <!-- TOP CONTROL BAR (PILL SHAPED) -->
+        <div class="panel-container"
+            style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 10px 25px; gap: 15px; margin-top: 10px; margin-bottom: 25px; border-radius: 50px; border: 1px solid rgba(0, 229, 255, 0.2); background: rgba(0,0,0,0.4); backdrop-filter: blur(15px); position: relative; overflow: visible;">
+
+            <div style="display: flex; gap: 20px; align-items: center; z-index: 2;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-brain"
+                        style="color: var(--neon-purple); font-size: 1.4rem; filter: drop-shadow(var(--glow-purple));"></i>
+                    <div style="display: flex; flex-direction: column;">
+                        <span
+                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary); letter-spacing: 0.5px; line-height: 1.1;">OS
+                            &bull; AI</span>
+                        <span
+                            style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 400; letter-spacing: 1px;">Energy</span>
+                    </div>
+                </div>
+
+                <div style="border-left: 1px solid rgba(255,255,255,0.1); height: 25px;"></div>
+
+                <div style="display: flex; gap: 8px;">
+                    <button id="btn-run" class="glass-btn primary" onclick="startSimulation()"
+                        style="padding: 6px 15px; border-radius: 4px; font-size: 0.75rem; border-color: var(--neon-blue); color: var(--neon-blue);">
+                        <i class="fas fa-caret-right"></i> RUN
+                    </button>
+                    <button id="btn-pause" onclick="pauseSimulation()" class="glass-btn btn-yellow"
+                        style="padding: 6px 15px; border-radius: 4px; font-size: 0.75rem; display: none;">
+                        <i class="fas fa-pause"></i> PAUSE
+                    </button>
+                    <button id="btn-resume" onclick="resumeSimulation()" class="glass-btn btn-green"
+                        style="padding: 6px 15px; border-radius: 4px; font-size: 0.75rem; display: none;">
+                        <i class="fas fa-play"></i> RESUME
+                    </button>
+                    <button id="btn-reset" onclick="resetSimulation()" class="glass-btn btn-purple"
+                        style="padding: 6px 15px; border-radius: 4px; font-size: 0.75rem;">
+                        <i class="fas fa-undo"></i> RESET
+                    </button>
+                    <button id="btn-stop" onclick="stopSimulation()" class="glass-btn btn-red"
+                        style="padding: 6px 15px; border-radius: 4px; font-size: 0.75rem;">
+                        <i class="fas fa-stop"></i> STOP
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 20px; align-items: center; z-index: 2;">
+                <button id="btn-upload" onclick="triggerUpload()" class="glass-btn btn-blue"
+                    style="padding: 5px 12px; border-radius: 4px; font-size: 0.7rem; border-color: var(--neon-blue); color: var(--neon-blue);">
+                    <i class="fas fa-file-upload"></i> UPLOAD DATA
+                </button>
+                <button id="btn-resilience" onclick="toggleResilience()" class="glass-btn btn-green"
+                    style="padding: 5px 12px; border-radius: 4px; font-size: 0.7rem;">
+                    <i class="fas fa-power-off"></i> GRID ONLINE
+                </button>
+
+                <div class="ai-status-indicator ai-learning" id="ai-status-box"
+                    style="padding: 5px 12px; border-radius: 20px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.3); color: var(--neon-blue);">
+                    <i class="fas fa-circle" style="font-size: 0.45rem;"></i> <span
+                        style="font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;">LEARNING</span>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span
+                        style="font-size: 0.65rem; color: var(--text-secondary); font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Sim
+                        Speed</span>
+                    <input type="range" id="sim-speed" min="0" max="1000" value="700" title="Simulation Delay in ms (Left is Faster)"
+                        style="width: 100px; accent-color: var(--neon-blue); height: 4px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3-COLUMN APPLICATION GRID -->
+        <div style="display: grid; grid-template-columns: 320px 1fr 320px; gap: 25px; align-items: start;">
+
+            <!-- LEFT COLUMN: Environment & Context -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <!-- Card 1: Time Panel (Digital Clock Style) -->
+                <div class="panel-container"
+                    style="padding: 30px 25px; text-align: center; position: relative; overflow: hidden;">
+                    <!-- Subtle glowing background orb -->
+                    <div
+                        style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: var(--grad-blue); border-radius: 50%; filter: blur(40px); opacity: 0.5;">
+                    </div>
+
+                    <div
+                        style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; z-index: 2; position: relative;">
+                        Simulation Timeline</div>
+
+                    <div id="val-hour"
+                        style="font-size: 3.5rem; font-weight: 300; color: var(--text-primary); line-height: 1; margin: 10px 0; font-family: var(--font-mono); text-shadow: 0 0 20px rgba(255,255,255,0.1); z-index: 2; position: relative;">
+                        00:00
+                    </div>
+
+                    <div id="val-day"
+                        style="color: var(--neon-blue); font-family: var(--font-mono); font-size: 1.1rem; font-weight: 600; letter-spacing: 1px; z-index: 2; position: relative;">
+                        DAY 1</div>
+
+                    <!-- Animated timeline progress bar -->
+                    <div
+                        style="width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 20px; overflow: hidden; position: relative; z-index: 2;">
+                        <div id="timeline-progress"
+                            style="width: 0%; height: 100%; background: var(--neon-blue); box-shadow: var(--glow-blue); transition: width 0.5s linear;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Environmental Context -->
+                <div class="panel-container" style="padding: 25px;">
+                    <h3
+                        style="margin: 0 0 20px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-globe-americas" style="color: var(--neon-blue);"></i> Environment
+                    </h3>
+
+                    <!-- Weather & Cloud Cover -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div
+                                style="width: 45px; height: 45px; border-radius: 12px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-cloud-sun" style="color: var(--neon-blue); font-size: 1.3rem;"></i>
+                            </div>
+                            <div>
+                                <div
+                                    style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                                    Weather</div>
+                                <div id="val-weather"
+                                    style="font-size: 1.4rem; font-weight: 600; color: var(--text-primary);">
+                                    --°C</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                            <div
+                                style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                                Cloud Cover</div>
+                            <div id="val-cloud" style="font-size: 1.1rem; color: var(--neon-blue); font-weight: 600;">
+                                --%</div>
+                        </div>
+                    </div>
+
+                    <!-- Carbon Intensity -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div
+                                style="width: 40px; height: 40px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; position: relative;">
+                                <i class="fas fa-smog" id="icon-carbon"
+                                    style="color: var(--text-muted); font-size: 1.1rem; z-index: 2;"></i>
+                                <!-- Gradient Ring -->
+                                <svg
+                                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg);">
+                                    <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(255,255,255,0.1)"
+                                        stroke-width="2">
+                                    </circle>
+                                    <circle id="carbon-ring" cx="20" cy="20" r="18" fill="none"
+                                        stroke="var(--neon-green)" stroke-width="2" stroke-dasharray="113"
+                                        stroke-dashoffset="0" style="transition: all 0.5s;"></circle>
+                                </svg>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">
+                                    Carbon Intensity</div>
+                                <div style="display: flex; align-items: baseline; gap: 5px;">
+                                    <span id="val-carbon"
+                                        style="font-size: 1.3rem; font-weight: 600; color: var(--text-primary);">--</span>
+                                    <span style="font-size: 0.7rem; color: var(--text-muted);">gCO2/kWh</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Market Intelligence -->
+                <div class="panel-container" style="padding: 25px;">
+                    <h3
+                        style="margin: 0 0 20px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-chart-line" style="color: var(--neon-purple);"></i> Market Intel
+                    </h3>
+
+                    <!-- Live Grid Price -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                        <div>
+                            <div
+                                style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                                Live Spot Price</div>
+                            <div id="val-price-rate"
+                                style="font-size: 2rem; font-weight: 700; color: var(--neon-yellow); font-family: var(--font-mono); line-height: 1; text-shadow: var(--glow-red); animation: pulse-red 2s infinite alternate;">
+                                --</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div
+                                style="font-size: 0.7rem; padding: 4px 8px; background: rgba(255, 176, 32, 0.1); color: var(--neon-yellow); border: 1px solid rgba(255, 176, 32, 0.3); border-radius: 4px; display: inline-block;">
+                                DYNAMIC TARIFF</div>
+                        </div>
+                    </div>
+
+                    <!-- EV Fleet & P2P -->
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div
+                            style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-car" style="color: var(--text-muted); font-size: 1.1rem;"></i>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">EV Fleet</span>
+                            </div>
+                            <div id="val-ev-status"
+                                style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 20px;">
+                                OFFLINE
+                            </div>
+                        </div>
+
+                        <div
+                            style="background: rgba(0,0,0,0.2); border-radius: 8px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-network-wired"
+                                    style="color: var(--text-muted); font-size: 1.1rem;"></i>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">P2P Node</span>
+                            </div>
+                            <div id="val-neighbor"
+                                style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 20px;">
+                                ISOLATED
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CENTER COLUMN: Core Telemetry Grid -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <h2
+                    style="margin: 0; font-size: 1.2rem; color: var(--text-primary); display: flex; align-items: center; gap: 10px; text-shadow: var(--glow-blue);">
+                    <i class="fas fa-microchip" style="color: var(--neon-blue);"></i> Core System Metrics
+                </h2>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+                    <!-- FACILITY DEMAND (LOAD) -->
+                    <div class="panel-container metric-card"
+                        style="padding: 25px; position: relative; overflow: hidden; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                            <div
+                                style="width: 50px; height: 50px; border-radius: 12px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);">
+                                <i class="fas fa-bolt"
+                                    style="color: var(--neon-blue); font-size: 1.5rem; filter: drop-shadow(0 0 8px var(--neon-blue));"></i>
+                            </div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                                    AI Forecast</div>
+                                <div
+                                    style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--text-secondary); font-weight: 600;">
+                                    <span id="fc-load">--</span> kW
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">
+                                Facility Demand</div>
+                            <div id="val-load"
+                                style="font-size: 2.8rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-mono); line-height: 1; letter-spacing: -1px;">
+                                0.0 kW</div>
+                        </div>
+                    </div>
+
+                    <!-- PV GENERATION (SOLAR) -->
+                    <div class="panel-container metric-card"
+                        style="padding: 25px; position: relative; overflow: hidden; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                            <div
+                                style="width: 50px; height: 50px; border-radius: 12px; background: rgba(255, 176, 32, 0.1); border: 1px solid rgba(255, 176, 32, 0.2); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 176, 32, 0.1);">
+                                <i class="fas fa-sun"
+                                    style="color: var(--neon-yellow); font-size: 1.5rem; filter: drop-shadow(0 0 8px var(--neon-yellow));"></i>
+                            </div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                                    AI Forecast</div>
+                                <div
+                                    style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--text-secondary); font-weight: 600;">
+                                    <span id="fc-solar">--</span> kW
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">
+                                PV Generation</div>
+                            <div id="val-solar"
+                                style="font-size: 2.8rem; font-weight: 800; color: var(--neon-yellow); font-family: var(--font-mono); line-height: 1; letter-spacing: -1px; text-shadow: 0 0 20px rgba(255, 176, 32, 0.15);">
+                                0.0 kW</div>
+                        </div>
+                    </div>
+
+                    <!-- STORAGE (BATTERY) -->
+                    <div class="panel-container metric-card"
+                        style="padding: 25px; position: relative; overflow: hidden; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                            <div
+                                style="width: 50px; height: 50px; border-radius: 12px; background: rgba(0, 255, 127, 0.1); border: 1px solid rgba(0, 255, 127, 0.2); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 255, 127, 0.1);">
+                                <i class="fas fa-battery-three-quarters"
+                                    style="color: var(--neon-green); font-size: 1.5rem; filter: drop-shadow(0 0 8px var(--neon-green));"></i>
+                            </div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                                    Health (SOH)</div>
+                                <div
+                                    style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--neon-green); font-weight: 600;">
+                                    <span id="val-soh-mini">100</span> %
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">
+                                Energy Storage (SOC)</div>
+                            <div id="val-soc"
+                                style="font-size: 2.8rem; font-weight: 800; color: var(--neon-green); font-family: var(--font-mono); line-height: 1; letter-spacing: -1px; text-shadow: 0 0 20px rgba(0, 255, 127, 0.15);">
+                                0.0 %</div>
+                        </div>
+                        <!-- Miniature Progress bar -->
+                        <div
+                            style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; margin-top: 15px; overflow: hidden;">
+                            <div id="metric-soc-bar"
+                                style="width: 0%; height: 100%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); transition: width 0.5s ease;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRID FLOW (GRID) -->
+                    <div class="panel-container metric-card"
+                        style="padding: 25px; position: relative; overflow: hidden; border-radius: 16px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); transition: all 0.3s ease;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px;">
+                            <div
+                                style="width: 50px; height: 50px; border-radius: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-network-wired"
+                                    style="color: var(--text-primary); font-size: 1.5rem; opacity: 0.8;"></i>
+                            </div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                                    Live Grid Link</div>
+                                <div
+                                    style="font-family: var(--font-mono); font-size: 0.95rem; color: var(--neon-purple); font-weight: 600;">
+                                    <span id="val-price">--</span> $/MWh
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.5px;">
+                                Transmission Flow</div>
+                            <div id="val-grid"
+                                style="font-size: 2.8rem; font-weight: 800; color: var(--text-primary); font-family: var(--font-mono); line-height: 1; letter-spacing: -1px;">
+                                0.0 kW</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner Link to Energy Flow -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Solar Forecast Card -->
+                    <div class="panel-container" style="padding: 20px; background: rgba(0,0,0,0.4); border-radius: 16px;">
+                        <h3
+                            style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: 1px;">
+                            <i class="fas fa-sun" style="color: var(--neon-yellow);"></i> Solar Forecast (24H)
+                        </h3>
+                        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Peak Power</div>
+                                <div id="fc-solar-peak" style="font-size: 1.1rem; color: var(--neon-yellow); font-weight: 700;">0.0 <span style="font-size: 0.6rem;">kW</span></div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Daily Yield</div>
+                                <div id="fc-solar-yield" style="font-size: 1.1rem; color: var(--text-primary); font-weight: 700;">0.0 <span style="font-size: 0.6rem;">kW</span></div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Peak Time</div>
+                                <div id="fc-solar-time" style="font-size: 1.1rem; color: var(--text-primary); font-weight: 700;">--</div>
+                            </div>
+                        </div>
+                        <div style="height: 140px; position: relative;">
+                            <canvas id="solar-forecast-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Price Forecast Card -->
+                    <div class="panel-container" style="padding: 20px; background: rgba(0,0,0,0.4); border-radius: 16px;">
+                        <h3
+                            style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; letter-spacing: 1px;">
+                            <i class="fas fa-tags" style="color: var(--neon-purple);"></i> Price Forecast (24H)
+                        </h3>
+                        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Avg Price</div>
+                                <div id="fc-price-avg" style="font-size: 1.1rem; color: var(--neon-purple); font-weight: 700;">0.0<span style="font-size: 0.6rem;">$</span></div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Peak Price</div>
+                                <div id="fc-price-peak" style="font-size: 1.1rem; color: var(--text-primary); font-weight: 700;">0.0<span style="font-size: 0.6rem;">$</span></div>
+                            </div>
+                            <div style="text-align: center; flex: 1;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Best Buy</div>
+                                <div id="fc-price-best" style="font-size: 1.1rem; color: var(--neon-green); font-weight: 700;">--</div>
+                            </div>
+                        </div>
+                        <div style="height: 140px; position: relative;">
+                            <canvas id="price-forecast-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Smart Load Scheduler -->
+                <div class="panel-container" style="padding: 20px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+                    <h3
+                        style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; letter-spacing: 1px;">
+                        <i class="fas fa-microchip" style="color: var(--neon-blue);"></i> Smart Load Scheduler
+                    </h3>
+                    <div id="load-scheduler-content" style="display: flex; align-items: center; justify-content: center; height: 100px; color: var(--text-muted); font-size: 0.9rem; font-family: var(--font-mono); font-style: italic;">
+                        Initialize simulation to see recommendations...
+                    </div>
+                </div>
+
+                <div class="panel-container"
+                    style="background: linear-gradient(135deg, rgba(0, 229, 255, 0.1) 0%, rgba(124, 77, 255, 0.1) 100%); border: 1px solid rgba(124, 77, 255, 0.2); padding: 30px; display: flex; justify-content: space-between; align-items: center; margin-top: auto; position: relative; overflow: hidden; border-radius: 16px;">
+                    <!-- Animated background element -->
+                    <div
+                        style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent); transform: rotate(45deg); animation: shine 3s infinite linear;">
+                    </div>
+
+                    <div style="z-index: 2; position: relative;">
+                        <h3
+                            style="margin: 0 0 10px 0; font-size: 1.3rem; color: var(--text-primary); letter-spacing: 0.5px; font-weight: 700;">
+                            Advanced Analytics Center</h3>
+                        <p style="margin: 0; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.4;">Access
+                            live multi-node power flow animations,<br>historical trends, and AI decision logic.</p>
+                    </div>
+                    <a href="/energy_flow" class="glass-btn btn-purple"
+                        style="padding: 14px 28px; z-index: 2; position: relative;">
+                        <i class="fas fa-project-diagram"></i> OPEN TELEMETRY
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- RIGHT COLUMN: Financials & Logs -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                <!-- Financial Impact (SAVINGS CARD) -->
+                <div class="panel-container"
+                    style="padding: 30px 25px; border: 1px solid rgba(0, 255, 148, 0.2); background: linear-gradient(135deg, rgba(0, 255, 148, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%); position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 0 30px rgba(0, 255, 148, 0.05);">
+
+                    <div style="text-align: center; margin-bottom: 25px; position: relative; z-index: 2;">
+                        <div
+                            style="width: 50px; height: 50px; background: rgba(0, 255, 148, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                            <i class="fas fa-leaf"
+                                style="font-size: 1.8rem; color: var(--neon-green); filter: drop-shadow(0 0 10px var(--neon-green));"></i>
+                        </div>
+                        <div
+                            style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; margin-bottom: 10px;">
+                            Lifetime AI Savings</div>
+                        <div id="val-savings"
+                            style="font-size: 3.5rem; font-weight: 800; color: var(--neon-green); margin: 0; font-family: var(--font-mono); line-height: 1; text-shadow: 0 0 30px rgba(0, 255, 148, 0.4);">
+                            ₹0.00</div>
+
+                        <!-- Target Badge -->
+                        <div
+                            style="margin-top: 15px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; background: rgba(124, 77, 255, 0.1); border: 1px solid rgba(124, 77, 255, 0.2); border-radius: 20px; font-size: 0.75rem; color: var(--neon-purple);">
+                            <i class="fas fa-bullseye"></i> Target (LP): <span id="val-benchmark">--</span>
+                        </div>
+                        <div
+                            style="margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); border-radius: 20px; font-size: 0.75rem; color: var(--neon-blue);">
+                            <i class="fas fa-percent"></i> Efficiency: <span id="val-efficiency">0.0%</span>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: flex; flex-direction: column; gap: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px; z-index: 2; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-calendar-alt" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                                <span
+                                    style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Est.
+                                    Monthly Bill</span>
+                            </div>
+                            <span id="val-proj-month"
+                                style="font-size: 1.1rem; font-weight: 700; color: var(--neon-red); font-family: var(--font-mono);">₹0.00</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-chart-line" style="color: var(--text-muted); font-size: 0.8rem;"></i>
+                                <span
+                                    style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Est.
+                                    Annual Bill</span>
+                            </div>
+                            <span id="val-proj-year"
+                                style="font-size: 1.1rem; font-weight: 700; color: var(--neon-red); font-family: var(--font-mono);">₹0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community Market Widget -->
+                <div class="panel-container" style="padding: 25px; background: rgba(0,0,0,0.3); border-radius: 16px;">
+                    <h3
+                        style="margin: 0 0 20px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-primary); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-users" style="color: var(--neon-purple);"></i> Community Market
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-hand-holding-dollar" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">P2P Rate</span>
+                            </div>
+                            <span id="market-p2p-rate" style="font-size: 1rem; color: var(--neon-yellow); font-weight: 700; font-family: var(--font-mono);">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-scale-balanced" style="color: var(--text-muted); font-size: 0.85rem;"></i>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Neighbor Balance</span>
+                            </div>
+                            <span id="market-neighbor-balance" style="font-size: 1rem; color: var(--text-primary); font-weight: 700; font-family: var(--font-mono);">--</span>
+                        </div>
+                    </div>
+                    <div id="market-status-box" style="margin-top: 20px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px; font-size: 0.75rem; color: var(--text-muted); text-align: center; border: 1px solid rgba(255,255,255,0.05);">
+                        <i class="fas fa-sync fa-spin"></i> Waiting for market data...
+                    </div>
+                </div>
+
+                <!-- Intelligence Log -->
+                <div class="panel-container" style="flex: 1; display: flex; flex-direction: column; padding: 0; min-height: 300px;"
+                    onmouseenter="changeBg('bg-ai')">
+                    <div
+                        style="padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2);">
+                        <h3
+                            style="margin: 0; font-size: 0.95rem; color: var(--text-primary); display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px;">
+                            <i class="fas fa-terminal" style="color: var(--neon-blue);"></i> Control Activity Log
+                        </h3>
+                        <div
+                            style="width: 8px; height: 8px; border-radius: 50%; background: var(--neon-green); box-shadow: var(--glow-green); animation: pulse-green 2s infinite;">
+                        </div>
+                    </div>
+
+                    <!-- NEW EXPLAINABLE AI REASONING BOX -->
+                    <div
+                        style="padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0, 229, 255, 0.05);">
+                        <div
+                            style="font-size: 0.75rem; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-weight: 600;">
+                            <i class="fas fa-brain"></i> AI Reasoning Output
+                        </div>
+                        <div id="ai-reason-text"
+                            style="font-size: 0.9rem; color: var(--text-primary); font-family: var(--font-mono); font-style: italic; line-height: 1.4;">
+                            Awaiting simulation data...
+                        </div>
+                    </div>
+                    <!-- END EXPLAINABLE AI -->
+                    <div id="decision-log" class="alerts-list"
+                        style="padding: 15px; flex: 1; max-height: 250px; overflow-y: auto;">
+                        <!-- Logs injected by JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ===== FULL-PAGE UPLOAD GATE ===== -->
+<!-- Shown immediately after login if no dataset is loaded. Cannot be dismissed without uploading. -->
+<div id="upload-modal"
+    style="display:{% if not data_loaded %}flex{% else %}none{% endif %}; position:fixed; inset:0; z-index:9999; background: radial-gradient(ellipse at 50% 40%, rgba(0,20,40,0.98) 0%, rgba(5,10,20,1) 100%); align-items:center; justify-content:center; flex-direction:column;">
+
+    <!-- animated grid lines background -->
+    <div
+        style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;">
+    </div>
+
+    <!-- Glow orbs -->
+    <div
+        style="position:absolute;top:15%;left:20%;width:300px;height:300px;background:radial-gradient(circle,rgba(0,229,255,0.08) 0%,transparent 70%);pointer-events:none;">
+    </div>
+    <div
+        style="position:absolute;bottom:20%;right:15%;width:250px;height:250px;background:radial-gradient(circle,rgba(124,77,255,0.07) 0%,transparent 70%);pointer-events:none;">
+    </div>
+
+    <!-- Floating Particles -->
+    <div class="bg-particle" style="left: 10vw; animation-duration: 15s; animation-delay: 0s;"></div>
+    <div class="bg-particle" style="left: 30vw; animation-duration: 20s; animation-delay: 3s;"></div>
+    <div class="bg-particle" style="left: 60vw; animation-duration: 16s; animation-delay: 6s;"></div>
+    <div class="bg-particle" style="left: 85vw; animation-duration: 25s; animation-delay: 1s;"></div>
+
+    <div
+        style="position:relative;z-index:2;background:rgba(13,27,42,0.9);border:1px solid rgba(0,229,255,0.35);border-radius:24px;padding:50px 45px;max-width:580px;width:92%;box-shadow:0 0 80px rgba(0,229,255,0.12), inset 0 1px 0 rgba(255,255,255,0.05);">
+
+        <!-- Logo / Brand -->
+        <div style="text-align:center;margin-bottom:36px;">
+            <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:18px;">
+                <i class="fas fa-bolt"
+                    style="color:var(--neon-blue);font-size:1.6rem;filter:drop-shadow(0 0 10px var(--neon-blue));"></i>
+                <span
+                    style="font-size:1rem;font-weight:700;color:var(--text-secondary);letter-spacing:2px;text-transform:uppercase;">Microgrid
+                    OS</span>
+            </div>
+            <i class="fas fa-database"
+                style="font-size:3rem;color:var(--neon-blue);filter:drop-shadow(0 0 20px var(--neon-blue));margin-bottom:18px;display:block;"></i>
+            <h2
+                style="margin:0 0 8px;font-size:1.75rem;font-weight:700;color:var(--text-primary);letter-spacing:0.5px;">
+                Upload Your Energy Dataset</h2>
+            <p style="margin:0;font-size:0.9rem;color:var(--text-secondary);line-height:1.6;">To begin the simulation,
+                upload a CSV file containing your microgrid data.</p>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div id="drop-zone"
+            ondragover="event.preventDefault(); this.style.borderColor='var(--neon-blue)'; this.style.background='rgba(0,229,255,0.1)';"
+            ondragleave="this.style.borderColor='rgba(0,229,255,0.25)'; this.style.background='rgba(0,229,255,0.03)';"
+            ondrop="handleDrop(event)" onclick="document.getElementById('file-upload').click()"
+            style="border:2px dashed rgba(0,229,255,0.25); border-radius:16px; padding:44px 20px; text-align:center; cursor:pointer; background:rgba(0,229,255,0.03); transition:all 0.3s; margin-bottom:24px;">
+            <i class="fas fa-cloud-upload-alt"
+                style="font-size:3rem; color:var(--neon-blue); opacity:0.8; margin-bottom:14px; display:block; filter:drop-shadow(0 0 12px var(--neon-blue));"></i>
+            <div style="font-size:1.05rem; font-weight:600; color:var(--text-primary); margin-bottom:6px;">Drag &amp;
+                drop your CSV file here</div>
+            <div style="font-size:0.83rem; color:var(--text-secondary);">or <span
+                    style="color:var(--neon-blue); font-weight:700;">click to browse files</span></div>
+            <div id="drop-zone-filename"
+                style="margin-top:14px; font-size:0.85rem; color:var(--neon-green); font-weight:600; min-height:20px;">
+            </div>
+        </div>
+
+        <!-- Required Columns Info -->
+        <div
+            style="background:rgba(0,229,255,0.04); border:1px solid rgba(0,229,255,0.12); border-radius:12px; padding:14px 18px; margin-bottom:26px; font-size:0.8rem; color:var(--text-secondary);">
+            <div style="font-weight:700; color:var(--text-primary); margin-bottom:10px;"><i class="fas fa-info-circle"
+                    style="color:var(--neon-blue);"></i>&nbsp; Required CSV Columns</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
+                <code
+                    style="background:rgba(0,229,255,0.12); color:var(--neon-blue); padding:4px 10px; border-radius:6px; font-size:0.82rem;">load_kW</code>
+                <code
+                    style="background:rgba(0,229,255,0.12); color:var(--neon-blue); padding:4px 10px; border-radius:6px; font-size:0.82rem;">solar_kW</code>
+                <code
+                    style="background:rgba(0,229,255,0.12); color:var(--neon-blue); padding:4px 10px; border-radius:6px; font-size:0.82rem;">price_per_MWh</code>
+            </div>
+            <div>Optional: <code
+                    style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;">temperature</code>
+                &nbsp;<code
+                    style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;">cloud_cover</code>
+                &nbsp;<code
+                    style="background:rgba(255,255,255,0.05);padding:2px 6px;border-radius:4px;">carbon_intensity</code>
+            </div>
+        </div>
+
+        <!-- Upload Progress -->
+        <div id="upload-progress-wrap" style="display:none; margin-bottom:20px;">
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:8px; letter-spacing:0.5px;">
+                Processing your dataset...</div>
+            <div style="width:100%; height:7px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden;">
+                <div id="upload-progress-bar"
+                    style="width:0%; height:100%; background:linear-gradient(90deg, var(--neon-blue), rgba(124,77,255,0.9)); box-shadow:0 0 10px var(--neon-blue); transition:width 0.4s; border-radius:4px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Message -->
+        <div id="upload-status-msg" style="min-height:26px; font-size:0.88rem; text-align:center; margin-bottom:20px;">
+        </div>
+
+        <!-- Upload Button -->
+        <button id="modal-upload-btn" onclick="document.getElementById('file-upload').click()"
+            style="width:100%; padding:16px; border:none; border-radius:12px; background:linear-gradient(135deg, rgba(0,229,255,0.2), rgba(0,229,255,0.08)); border:1px solid rgba(0,229,255,0.5); color:var(--neon-blue); font-size:1rem; font-weight:700; cursor:pointer; letter-spacing:0.5px; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:10px;"
+            onmouseover="this.style.background='rgba(0,229,255,0.18)'; this.style.boxShadow='0 0 25px rgba(0,229,255,0.2)';"
+            onmouseout="this.style.background='linear-gradient(135deg, rgba(0,229,255,0.2), rgba(0,229,255,0.08))'; this.style.boxShadow='none';">
+            <i class="fas fa-cloud-upload-alt"></i> Choose File &amp; Upload
+        </button>
+        
+        <!-- NEW: Back Button (Only visible if data already loaded) -->
+        <button id="modal-back-btn" onclick="closeUploadModal()"
+            style="width:100%; padding:14px; border:none; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-secondary); font-size:0.9rem; font-weight:600; cursor:pointer; letter-spacing:0.5px; transition:all 0.3s; display:none; align-items:center; justify-content:center; gap:10px; margin-top:12px;"
+            onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.color='var(--text-primary)';"
+            onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.color='var(--text-secondary)';">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+
+        <!-- NEW: Skip to Dashboard Button -->
+        <button id="modal-dashboard-btn" onclick="hideUploadGate()"
+            style="width:100%; padding:14px; border:none; border-radius:12px; background:rgba(0,255,136,0.1); border:1px solid rgba(0,255,136,0.3); color:#00ff88; font-size:0.95rem; font-weight:700; cursor:pointer; letter-spacing:0.5px; transition:all 0.3s; display:flex; align-items:center; justify-content:center; gap:10px; margin-top:12px;"
+            onmouseover="this.style.background='rgba(0,255,136,0.2)'; this.style.boxShadow='0 0 15px rgba(0,255,136,0.1)';"
+            onmouseout="this.style.background='rgba(0,255,136,0.1)'; this.style.boxShadow='none';">
+            <i class="fas fa-th-large"></i> Go to Dashboard UI
+        </button>
+
+        <div style="text-align:center; margin-top:18px; font-size:0.75rem; color:var(--text-muted); opacity:0.6;">
+            Supported format: <strong>.csv</strong> &nbsp;&bull;&nbsp; You can explore the UI without uploading
+        </div>
+
+        <!-- HIDDEN FILE INPUT -->
+        <input type="file" id="file-upload" accept=".csv" style="display:none" onchange="handleFileUpload()">
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // --- REALTIME CLOCK ---
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // --- DYNAMIC BACKGROUND ---
+    function changeBg(className) {
+        const bgLayer = document.getElementById('main-bg-layer');
+        if (bgLayer && !bgLayer.classList.contains(className)) {
+            bgLayer.className = 'cinematic-bg-layer ' + className;
+        }
+    }
+
+    // --- CHARTS INITIALIZATION ---
+    let solarChart, priceChart;
+
+    function initCharts() {
+        const solarCtx = document.getElementById('solar-forecast-chart').getContext('2d');
+        const priceCtx = document.getElementById('price-forecast-chart').getContext('2d');
+
+        const chartConfig = {
+            type: 'bar',
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 9 } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 9 } }
+                    }
+                }
+            }
+        };
+
+        solarChart = new Chart(solarCtx, {
+            ...chartConfig,
+            data: {
+                labels: Array.from({ length: 24 }, (_, i) => `H+${i + 1}`),
+                datasets: [{
+                    label: 'Solar (kW)',
+                    data: Array(24).fill(0),
+                    backgroundColor: 'rgba(255, 176, 32, 0.6)',
+                    borderColor: 'rgba(255, 176, 32, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            }
+        });
+
+        priceChart = new Chart(priceCtx, {
+            ...chartConfig,
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 24 }, (_, i) => `H+${i + 1}`),
+                datasets: [{
+                    label: 'Price ($)',
+                    data: Array(24).fill(0),
+                    borderColor: 'rgba(124, 77, 255, 1)',
+                    backgroundColor: 'rgba(124, 77, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 2
+                }]
+            }
+        });
+    }
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+        initCharts();
+        fetchSimulationStatus();
+    });
+
+    async function fetchSimulationStatus() {
+        try {
+            const res = await fetch('/api/simulation/status');
+            const data = await res.json();
+
+            if (data.success) {
+                // Update Dataset Name – only show if actually loaded
+                const headerDataset = document.getElementById('header-dataset');
+                const container = document.querySelector('.app-container');
+
+                if (data.data_loaded && data.dataset) {
+                    headerDataset.innerText = "Dataset: " + data.dataset;
+                    // Dataset already loaded (returning user) — reveal dashboard
+                    if (container) container.style.display = 'grid';
+                    document.body.classList.remove('gate-active');
+                    document.getElementById('upload-modal').style.display = 'none';
+                    // Enable the back button in modal for next time it's opened
+                    const backBtn = document.getElementById('modal-back-btn');
+                    if (backBtn) backBtn.style.display = 'flex';
+                } else {
+                    headerDataset.innerText = "No Dataset Loaded";
+                    // No dataset yet — ensure dashboard is hidden and show the gate
+                    if (container) container.style.display = 'none';
+                    showUploadGate();
+                    // Disable back button if no data
+                    const backBtn = document.getElementById('modal-back-btn');
+                    if (backBtn) backBtn.style.display = 'none';
+                }
+
+                // Update Benchmark
+                if (data.benchmark_savings !== undefined && data.benchmark_savings > 0) {
+                    const benchEl = document.getElementById('val-benchmark');
+                    if (benchEl) benchEl.innerText = "₹" + parseFloat(data.benchmark_savings).toFixed(2);
+                }
+
+                // If we have a latest result, update the whole dashboard
+                if (data.latest_result) {
+                    updateDashboard(data.latest_result);
+                } else {
+                    log("Ready to Start", "info");
+                }
+
+                // KEY FIX: If backend is still running (e.g. user navigated away and came back),
+                // automatically resume frontend polling WITHOUT pausing the backend.
+                if (data.running && !intervalId) {
+                    const speed = document.getElementById('sim-speed').value || 50;
+                    intervalId = setInterval(runStep, parseInt(speed));
+                    pausedState = false;
+                    const btn = document.getElementById('btn-pause');
+                    if (btn) btn.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
+                    log("Simulation resumed (running in background)", "success");
+                }
+            }
+        } catch (e) {
+            console.error("Failed to fetch simulation status:", e);
+        }
+    }
+
+    const CSRF_TOKEN = '{{ csrf_token }}';
+
+    // --- SIMULATION LOGIC ---
+    let intervalId = null;
+
+    async function handleLogout() {
+        await fetch('/api/logout', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+        window.location.href = '/';
+    }
+
+    // ===== UPLOAD GATE FUNCTIONS =====
+    function showUploadGate() {
+        const gate = document.getElementById('upload-modal');
+        gate.style.display = 'flex';
+        gate.style.flexDirection = 'column';
+        document.getElementById('upload-status-msg').innerText = '';
+        document.getElementById('upload-progress-wrap').style.display = 'none';
+        document.getElementById('drop-zone-filename').innerText = '';
+        document.getElementById('upload-progress-bar').style.width = '0%';
+
+        // Block the entire dashboard
+        document.body.classList.add('gate-active');
+    }
+
+    function hideUploadGate() {
+        const gate = document.getElementById('upload-modal');
+        const container = document.querySelector('.app-container');
+
+        // Reveal the dashboard
+        if (container) container.style.display = 'grid';
+        document.body.classList.remove('gate-active');
+
+        setTimeout(() => {
+            gate.style.display = 'none';
+        }, 650);
+    }
+
+    // Alias for sidebar/control-bar buttons (dataset can be re-uploaded anytime)
+    function openUploadModal() { showUploadGate(); }
+
+    function closeUploadModal() {
+        hideUploadGate();
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.style.borderColor = 'rgba(0,229,255,0.3)';
+        dropZone.style.background = 'rgba(0,229,255,0.03)';
+        const files = event.dataTransfer.files;
+        if (files && files.length > 0) {
+            const fileInput = document.getElementById('file-upload');
+            // Create a DataTransfer to assign files to input
+            const dt = new DataTransfer();
+            dt.items.add(files[0]);
+            fileInput.files = dt.files;
+            document.getElementById('drop-zone-filename').innerText = '📄 ' + files[0].name;
+            handleFileUpload();
+        }
+    }
+
+    function triggerUpload() {
+        openUploadModal();
+    }
+
+    async function handleFileUpload() {
+        const fileInput = document.getElementById('file-upload');
+        const file = fileInput.files[0];
+        if (!file) return;
+
+        // Update drop zone filename display
+        const filenameEl = document.getElementById('drop-zone-filename');
+        if (filenameEl && file.name) filenameEl.innerText = '📄 ' + file.name;
+
+        // Show progress
+        const progressWrap = document.getElementById('upload-progress-wrap');
+        const progressBar = document.getElementById('upload-progress-bar');
+        const statusMsg = document.getElementById('upload-status-msg');
+        const modalUploadBtn = document.getElementById('modal-upload-btn');
+
+        if (progressWrap) progressWrap.style.display = 'block';
+        if (statusMsg) statusMsg.innerText = '';
+        if (modalUploadBtn) { modalUploadBtn.disabled = true; modalUploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...'; }
+
+        // Animate progress bar
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress = Math.min(progress + 8, 85);
+            if (progressBar) progressBar.style.width = progress + '%';
+        }, 150);
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch('/api/upload_data', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': CSRF_TOKEN },
+                body: formData
+            });
+            const data = await res.json();
+
+            clearInterval(progressInterval);
+            if (progressBar) progressBar.style.width = '100%';
+
+            if (data.success) {
+                if (statusMsg) { statusMsg.style.color = 'var(--neon-green)'; statusMsg.innerHTML = '<i class="fas fa-check-circle"></i> ' + data.message; }
+                log("Data Uploaded Successfully", "success");
+                resetSimulation();
+
+                // Show Benchmark
+                if (data.benchmark_savings !== undefined) {
+                    const benchmarkEl = document.getElementById('val-benchmark');
+                    if (benchmarkEl) benchmarkEl.innerText = "₹" + parseFloat(data.benchmark_savings).toFixed(2);
+                    log(`Benchmark Savings Calculated: ₹${parseFloat(data.benchmark_savings).toFixed(2)}`, "info");
+                }
+
+                // Show Dataset Name in header
+                if (data.dataset) {
+                    document.getElementById('header-dataset').innerText = "Dataset: " + data.dataset;
+                }
+
+                // Hide the upload gate and reveal the dashboard
+                setTimeout(() => hideUploadGate(), 1600);
+            } else {
+                if (statusMsg) { statusMsg.style.color = 'var(--neon-red)'; statusMsg.innerHTML = '<i class="fas fa-times-circle"></i> ' + data.message; }
+                log("Upload Failed: " + data.message, "critical");
+                if (progressBar) { progressBar.style.width = '100%'; progressBar.style.background = 'var(--neon-red)'; }
+            }
+        } catch (e) {
+            clearInterval(progressInterval);
+            if (statusMsg) { statusMsg.style.color = 'var(--neon-red)'; statusMsg.innerText = 'Upload error. Check console.'; }
+            log("Upload Error", "critical");
+            console.error(e);
+        } finally {
+            // Reset input so change event fires even if same file selected
+            fileInput.value = '';
+            if (modalUploadBtn) { modalUploadBtn.disabled = false; modalUploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Choose File &amp; Upload'; }
+        }
+    }
+
+    async function startSimulation() {
+        if (intervalId) return; // Prevent double-clicks
+
+        const datasetStatus = document.getElementById('header-dataset').innerText;
+        if (datasetStatus.includes("No Dataset Loaded")) {
+            alert("⚠️ Please upload the dataset first to start the simulation.");
+            return;
+        }
+
+        const speed = document.getElementById('sim-speed').value || 50;
+
+        // Reset and Start fresh
+        resetSimulation();
+
+        // UI Updates
+        document.getElementById('btn-run').style.display = 'none';
+        document.getElementById('btn-stop').style.display = 'inline-flex';
+        document.getElementById('btn-pause').style.display = 'inline-flex';
+        document.getElementById('btn-resume').style.display = 'none';
+
+        try {
+            const res = await fetch('/api/simulation/start', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': CSRF_TOKEN
+                },
+                body: JSON.stringify({ mode: 'AI', speed: parseInt(speed) })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                log("Simulation Started (AI Mode)", "success");
+
+                if (data.initial_state) {
+                    try {
+                        updateDashboard(data.initial_state);
+                    } catch (uiErr) {
+                        console.error("UI Update Error (Initial):", uiErr);
+                    }
+                }
+
+                // Polling loop
+                intervalId = setInterval(runStep, parseInt(speed));
+            } else {
+                log("Start Failed: " + (data.message || "Unknown"), "critical");
+                alert("⚠️ Simulation Start Failed: " + data.message);
+                resetSimulation(); // Revert UI
+            }
+        } catch (e) {
+            console.error(e);
+            log("Start Error: " + e.message, "critical");
+            resetSimulation();
+        }
+    }
+
+    async function resumeSimulation() {
+        if (intervalId || !pausedState) return;
+
+        const speed = document.getElementById('sim-speed').value || 50;
+        pausedState = false;
+
+        // UI Updates
+        document.getElementById('btn-pause').style.display = 'inline-flex';
+        document.getElementById('btn-resume').style.display = 'none';
+        log("Simulation Resumed", "info");
+
+        // Tell server to resume
+        await fetch('/api/simulation/resume', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN
+            },
+            body: JSON.stringify({ speed: parseInt(speed) })
+        });
+
+        // Start polling again
+        intervalId = setInterval(runStep, parseInt(speed));
+    }
+
+    async function stopSimulation() {
+        log("Stopping Simulation...", "warning");
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+        pausedState = false;
+
+        // UI Updates
+        document.getElementById('btn-run').style.display = 'inline-flex';
+        document.getElementById('btn-stop').style.display = 'inline-flex'; // Keep stop visible but maybe disabled? Let's just reset UI
+        document.getElementById('btn-pause').style.display = 'none';
+        document.getElementById('btn-resume').style.display = 'none';
+
+        // Tell server to stop
+        await fetch('/api/simulation/pause', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+        log("Simulation Stopped", "danger");
+    }
+
+    let pausedState = false;
+
+    async function pauseSimulation() {
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+            pausedState = true;
+
+            // UI Updates
+            document.getElementById('btn-pause').style.display = 'none';
+            document.getElementById('btn-resume').style.display = 'inline-flex';
+            log("Simulation Paused", "warning");
+
+            // Tell server to stop
+            await fetch('/api/simulation/pause', { 
+                method: 'POST',
+                headers: { 'X-CSRFToken': CSRF_TOKEN }
+            });
+
+        }
+    }
+
+    async function resetSimulation() {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = null;
+        pausedState = false;
+
+        // UI Updates
+        document.getElementById('btn-run').style.display = 'inline-flex';
+        document.getElementById('btn-stop').style.display = 'inline-flex';
+        document.getElementById('btn-pause').style.display = 'none';
+        document.getElementById('btn-resume').style.display = 'none';
+
+        // Ensure server stops AND resets
+        await fetch('/api/simulation/reset', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+
+        document.getElementById('val-load').innerText = "0.0 kW";
+        document.getElementById('val-solar').innerText = "0.0 kW";
+        document.getElementById('val-soc').innerText = "0.0 %";
+        document.getElementById('val-grid').innerText = "0.0 kW";
+        document.getElementById('val-savings').innerText = "₹0.00";
+        document.getElementById('val-efficiency').innerText = "0.0%";
+        document.getElementById('val-proj-month').innerText = "₹0.00";
+        document.getElementById('val-proj-year').innerText = "₹0.00";
+        document.getElementById('val-hour').innerText = "Hour 0";
+        document.getElementById('val-day').innerText = "Day 1";
+
+        document.getElementById('decision-log').innerHTML = '';
+        log("Dashboard Reset");
+    }
+
+
+
+    async function toggleResilience() {
+        try {
+            const res = await fetch('/api/simulation/toggle_grid', { 
+                method: 'POST',
+                headers: { 'X-CSRFToken': CSRF_TOKEN }
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                const btn = document.getElementById('btn-resilience');
+                if (data.grid_online) {
+                    btn.innerHTML = '<i class="fas fa-power-off"></i> GRID ONLINE';
+                    btn.className = "glass-btn btn-green";
+                    log("Grid Restored", "success");
+                } else {
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ISLAND MODE';
+                    btn.className = "glass-btn btn-red";
+                    log("Grid Offline (Island Mode)", "danger");
+                }
+            }
+        } catch (e) {
+            console.error("Resilience Toggle Failed", e);
+        }
+    }
+
+    async function runStep() {
+        try {
+            const res = await fetch('/api/simulation/status');
+            const data = await res.json();
+
+            if (data.success && data.latest_result) {
+                // Check if running state changed asynchronously
+                if (!data.running && intervalId && data.step >= (data.full_length || 99999)) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                    pausedState = false;
+                    document.getElementById('btn-run').style.display = 'inline-flex';
+                    document.getElementById('btn-pause').style.display = 'none';
+                    document.getElementById('btn-resume').style.display = 'none';
+                    log("Simulation Complete", "success");
+                }
+
+                try {
+                    updateDashboard(data.latest_result);
+                } catch (uiErr) {
+                    console.error("UI Update Error (Step):", uiErr);
+                }
+            }
+        } catch (e) {
+            console.error("Polling Error:", e);
+        }
+    }
+
+    function updateDashboard(data) {
+        // UPDATE HEADER INFO
+        if (data.dataset) {
+            document.getElementById('header-dataset').innerText = "Dataset: " + data.dataset;
+        }
+        if (data.hour !== undefined) {
+            // Redundant header update can stay or be removed, keeping for now
+            document.getElementById('header-sim-time').innerText = "Sim Time: Hour " + data.hour;
+
+            // UPDATE NEW TIME BLOCK
+            document.getElementById('val-hour').innerText = "Hour " + (data.hour % 24);
+            const day = Math.floor(data.hour / 24) + 1;
+            document.getElementById('val-day').innerText = "Day " + day + " (Total: " + data.hour + "h)";
+        }
+
+        // UPDATE KPI
+        document.getElementById('val-load').innerText = data.load.toFixed(2) + " kW";
+        document.getElementById('val-solar').innerText = data.solar.toFixed(2) + " kW";
+        document.getElementById('val-soc').innerText = data.battery_soc.toFixed(1) + " %";
+
+        // Grid Logic
+        const gridEl = document.getElementById('val-grid');
+        const gridUsedVal = parseFloat(data.grid_used) || 0;
+        const gridExportVal = parseFloat(data.grid_export) || 0;
+        if (gridUsedVal > 0.1) {
+            gridEl.innerText = `+${gridUsedVal.toFixed(2)} kW (Import)`;
+            gridEl.className = "kpi-value text-neon-red";
+        } else if (gridExportVal > 0.1) {
+            gridEl.innerText = `-${gridExportVal.toFixed(2)} kW (Export)`;
+            gridEl.className = "kpi-value text-neon-green";
+        } else {
+            gridEl.innerText = "0.0 kW";
+            gridEl.className = "kpi-value";
+        }
+
+        // Savings Display Logic
+        if (data.total_savings !== undefined) {
+            const savings = parseFloat(data.total_savings);
+            const el = document.getElementById('val-savings');
+            el.innerText = "₹" + Math.abs(savings).toFixed(2) + (savings >= 0 ? " Saved" : " Lost");
+
+            // Color Coding: GREEN = we saved vs baseline, RED = we spent more
+            if (savings > 0) {
+                el.style.color = "var(--neon-green)";
+                el.style.textShadow = "0 0 10px var(--neon-green)";
+            } else if (savings < 0) {
+                el.style.color = "var(--neon-red)";
+                el.style.textShadow = "0 0 10px var(--neon-red)";
+            } else {
+                el.style.color = "white";
+                el.style.textShadow = "none";
+            }
+        }
+
+        if (data.efficiency !== undefined) {
+            document.getElementById('val-efficiency').innerText = data.efficiency.toFixed(1) + "%";
+        }
+
+        // Projected Costs
+        if (data.proj_cost_month !== undefined) {
+            const val = parseFloat(data.proj_cost_month);
+            const el = document.getElementById('val-proj-month');
+            el.innerText = "₹" + Math.abs(val).toFixed(2);
+            if (val < 0) { el.style.color = "var(--neon-green)"; }
+            else { el.style.color = "var(--neon-red)"; }
+        }
+        if (data.proj_cost_year !== undefined) {
+            const val = parseFloat(data.proj_cost_year);
+            const el = document.getElementById('val-proj-year');
+            el.innerText = "₹" + Math.abs(val).toFixed(2);
+            if (val < 0) { el.style.color = "var(--neon-green)"; }
+            else { el.style.color = "var(--neon-red)"; }
+        }
+
+        // SOH
+        if (data.battery_soh !== undefined) {
+            const soh = parseFloat(data.battery_soh).toFixed(1);
+            const miniEl = document.getElementById('val-soh-mini');
+            if (miniEl) miniEl.innerText = soh + "%";
+
+            const bar = document.getElementById('bar-soh');
+            if (bar) {
+                bar.style.width = soh + "%";
+                // Color coding
+                if (soh > 90) bar.style.backgroundColor = "var(--neon-green)";
+                else if (soh > 80) bar.style.backgroundColor = "var(--neon-yellow)";
+                else bar.style.backgroundColor = "var(--neon-red)";
+            }
+        }
+
+        // --- NEW: PHASE 1 ENVIRONMENT ---
+        if (data.weather_temp !== undefined) {
+            const wEl = document.getElementById('val-weather');
+            const cEl = document.getElementById('val-cloud');
+            if (wEl) wEl.innerHTML = data.weather_temp.toFixed(1) + "°C";
+            if (cEl) cEl.innerHTML = data.weather_cloud.toFixed(0) + "%";
+        }
+
+        if (data.carbon_intensity !== undefined) {
+            const carbon = data.carbon_intensity;
+            const valEl = document.getElementById('val-carbon');
+            const iconEl = document.getElementById('icon-carbon');
+
+            if (valEl) {
+                valEl.innerText = carbon;
+                // Color Coding
+                if (carbon < 150) {
+                    valEl.style.color = "var(--neon-green)";
+                    valEl.style.textShadow = "var(--glow-green)";
+                    if (iconEl) iconEl.style.color = "var(--neon-green)";
+                } else if (carbon < 250) {
+                    valEl.style.color = "var(--neon-yellow)";
+                    valEl.style.textShadow = "none";
+                    if (iconEl) iconEl.style.color = "var(--neon-yellow)";
+                } else {
+                    valEl.style.color = "var(--neon-red)";
+                    valEl.style.textShadow = "var(--glow-red)";
+                    if (iconEl) iconEl.style.color = "var(--neon-red)";
+                }
+            }
+        }
+
+
+        if (data.price !== undefined) {
+            const priceKwh = parseFloat(data.price) / 1000.0;
+            const pEl = document.getElementById('val-price-rate');
+            if (pEl) pEl.innerText = "$" + priceKwh.toFixed(3);
+        }
+
+        // --- NEW: PHASE 3 MARKET ---
+        if (data.neighbor_status !== undefined) {
+            const nEl = document.getElementById('val-neighbor');
+            const nStatusEl = document.getElementById('market-status-box');
+            if (nEl) nEl.innerText = data.neighbor_status;
+            
+            if (nStatusEl) {
+                if (data.neighbor_status === "BUYING") {
+                    nStatusEl.innerHTML = '<i class="fas fa-shopping-cart" style="color: var(--neon-green)"></i> Neighbor is buying excess solar';
+                    document.getElementById('market-p2p-rate').innerText = "₹5.5/kWh";
+                } else if (data.neighbor_status === "SELLING") {
+                    nStatusEl.innerHTML = '<i class="fas fa-store" style="color: var(--neon-yellow)"></i> Neighbor is selling clean energy';
+                    document.getElementById('market-p2p-rate').innerText = "₹4.2/kWh";
+                } else {
+                    nStatusEl.innerHTML = '<i class="fas fa-link-slash"></i> P2P Market Inactive';
+                    document.getElementById('market-p2p-rate').innerText = "--";
+                }
+            }
+            document.getElementById('market-neighbor-balance').innerText = "0.0 kWh";
+        }
+
+        // --- NEW: LOAD SCHEDULER ---
+        const schedulerEl = document.getElementById('load-scheduler-content');
+        if (schedulerEl && data.hour !== undefined) {
+            if (data.hour % 24 >= 18 && data.hour % 24 <= 21) {
+                schedulerEl.innerHTML = '<div style="text-align:center;"><i class="fas fa-exclamation-circle" style="color: var(--neon-red); font-size: 1.5rem; margin-bottom: 5px;"></i><br>PEAK DEMAND: Postpone heavy appliances to 11 PM</div>';
+            } else if (data.hour % 24 >= 10 && data.hour % 24 <= 14 && data.solar > 5) {
+                schedulerEl.innerHTML = '<div style="text-align:center;"><i class="fas fa-bolt" style="color: var(--neon-yellow); font-size: 1.5rem; margin-bottom: 5px;"></i><br>SOLAR SURPLUS: Recommended time for EV charging</div>';
+            } else {
+                schedulerEl.innerHTML = '<div style="text-align:center;"><i class="fas fa-check-circle" style="color: var(--neon-green); font-size: 1.5rem; margin-bottom: 5px;"></i><br>Load balanced: No immediate shifting required</div>';
+            }
+        }
+
+        if (data.ev_soc !== undefined) {
+            // Updated to match the existing IDs
+            const sEl = document.getElementById('val-ev-status');
+
+            if (data.ev_connected) {
+                if (sEl) {
+                    sEl.innerHTML = '<span style="color: var(--neon-green)">● Connected (' + data.ev_soc.toFixed(1) + '%)</span>';
+                    if (data.ev_load > 0) sEl.innerHTML += ` (Charging ${data.ev_load.toFixed(1)}kW)`;
+                }
+            } else {
+                if (sEl) sEl.innerHTML = '<span style="color: var(--text-muted)">○ Away</span>';
+            }
+        }
+
+        // --- UPDATE CHARTS ---
+        if (data.forecast_solar_24h && solarChart) {
+            solarChart.data.datasets[0].data = data.forecast_solar_24h;
+            solarChart.update('none');
+            
+            // Stats
+            const peak = Math.max(...data.forecast_solar_24h);
+            const yield = data.forecast_solar_24h.reduce((a,b) => a+b, 0) / 4; // Approx yield
+            document.getElementById('fc-solar-peak').innerText = peak.toFixed(1) + " kW";
+            document.getElementById('fc-solar-yield').innerText = yield.toFixed(1) + " kWh";
+            const peakHr = data.forecast_solar_24h.indexOf(peak);
+            document.getElementById('fc-solar-time').innerText = "H+" + (peakHr + 1);
+        }
+
+        if (data.forecast_price_24h && priceChart) {
+            const priceKwhArr = data.forecast_price_24h.map(p => p / 1000.0);
+            priceChart.data.labels = Array.from({ length: data.forecast_price_24h.length }, (_, i) => `H+${i + 1}`);
+            priceChart.data.datasets[0].data = priceKwhArr;
+            priceChart.update('none');
+
+            // Stats
+            const avg = priceKwhArr.reduce((a,b) => a+b, 0) / priceKwhArr.length;
+            const peak = Math.max(...priceKwhArr);
+            const min = Math.min(...priceKwhArr);
+            const bestHr = priceKwhArr.indexOf(min);
+            
+            document.getElementById('fc-price-avg').innerText = avg.toFixed(3) + "$";
+            document.getElementById('fc-price-peak').innerText = peak.toFixed(3) + "$";
+            document.getElementById('fc-price-best').innerText = "H+" + (bestHr + 1);
+        }
+
+        // --- PHASE 4: ADVANCED FEATURES ---
+        if (data.grid_online !== undefined) {
+            const btn = document.getElementById('btn-resilience');
+            if (data.grid_online) {
+                btn.innerHTML = '<i class="fas fa-power-off"></i> GRID ONLINE';
+                btn.className = "glass-btn btn-green";
+            } else {
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ISLAND MODE';
+                btn.className = "glass-btn btn-red";
+            }
+            // TOGGLE BODY CLASS FOR VISUALS
+            if (data.grid_online) {
+                document.body.classList.remove('island-mode-active');
+            } else {
+                document.body.classList.add('island-mode-active');
+            }
+        }
+
+        if (data.eco_score !== undefined) {
+            const es = document.getElementById('val-eco-score');
+            if (es) {
+                es.innerText = data.eco_score;
+                // Color
+                if (parseFloat(data.eco_score) > 80) es.style.color = "var(--neon-green)";
+                else if (parseFloat(data.eco_score) > 50) es.style.color = "var(--neon-yellow)";
+                else es.style.color = "var(--neon-red)";
+            }
+        }
+
+        if (data.decision_reason) {
+            const dr = document.getElementById('ai-reason-text');
+            if (dr) dr.innerText = data.decision_reason;
+        }
+
+        // Benchmark
+        if (data.benchmark_savings !== undefined) {
+            document.getElementById('val-benchmark').innerText = "₹" + parseFloat(data.benchmark_savings).toFixed(2);
+        } else {
+            document.getElementById('val-benchmark').innerText = "--";
+        }
+
+        // Forecasts (Next Hour from 24h array)
+        if (data.forecast_load_24h && data.forecast_load_24h.length > 0) {
+            document.getElementById('fc-load').innerText = data.forecast_load_24h[0].toFixed(1);
+        }
+        if (data.forecast_solar_24h && data.forecast_solar_24h.length > 0) {
+            document.getElementById('fc-solar').innerText = data.forecast_solar_24h[0].toFixed(1);
+        }
+        if (data.price !== undefined) {
+            document.getElementById('val-price').innerText = data.price.toFixed(2);
+        }
+
+        // LOG
+        log(`[Hour ${data.hour}] ${data.decision}`, "info");
+    }
+
+    function log(msg, type = 'info') {
+        const box = document.getElementById('decision-log');
+        if (!box) {
+            console.warn(`[${type}] ${msg} (Log container not found)`);
+            return;
+        }
+        const line = document.createElement('div');
+        line.className = `alert-item ${type}`;
+
+        // Icons for log types
+        let icon = '<i class="fas fa-info-circle"></i>';
+        if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
+        if (type === 'warning') icon = '<i class="fas fa-exclamation-triangle"></i>';
+        if (type === 'critical') icon = '<i class="fas fa-skull-crossbones"></i>';
+        if (type === 'danger') icon = '<i class="fas fa-radiation-alt"></i>';
+
+        line.innerHTML = `${icon} <span style="font-family: var(--font-mono); opacity: 0.7;">${new Date().toLocaleTimeString()}</span> ${msg}`;
+        box.prepend(line);
+
+        // Cap logs to prevent massive DOM lag
+        while (box.children.length > 50) {
+            box.removeChild(box.lastChild);
+        }
+    }
+
+    // Sim Speed — Restart local polling AND sync with backend thread
+    document.getElementById('sim-speed').addEventListener('change', async function () {
+        const speed = parseInt(this.value) || 700;
+        
+        // SYNC WITH BACKEND
+        try {
+            await fetch('/api/simulation/speed', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': CSRF_TOKEN 
+                },
+                body: JSON.stringify({ speed: speed })
+            });
+            log(`Simulation speed set to ${speed}ms`, "info");
+        } catch (e) {
+            console.error("Failed to sync speed with backend:", e);
+        }
+
+        if (intervalId) {
+            clearInterval(intervalId);  // Stop old JS interval
+            intervalId = setInterval(runStep, speed);  // Restart at new speed
+        }
+    });
+
+</script>
+{% endblock %}

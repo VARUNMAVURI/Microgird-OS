@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroForecast System Use Case Diagram</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .diagram-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+            background-image: 
+                linear-gradient(to right, #e0e0e0 1px, transparent 1px),
+                linear-gradient(to bottom, #e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        svg {
+            display: block;
+        }
+
+        .actor-label {
+            font-size: 14px;
+            font-weight: bold;
+            text-anchor: middle;
+        }
+
+        .use-case-label {
+            font-size: 12px;
+            text-anchor: middle;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .system-title {
+            font-size: 16px;
+            font-weight: bold;
+            text-anchor: middle;
+        }
+
+        .subject-box {
+            fill: none;
+            stroke: #000;
+            stroke-width: 2;
+        }
+
+        .use-case-ellipse {
+            fill: #fff;
+            stroke: #000;
+            stroke-width: 1.5;
+        }
+
+        .actor-line {
+            stroke: #000;
+            stroke-width: 1;
+        }
+
+        .stick-figure {
+            stroke: #000;
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="diagram-container">
+    <svg width="1000" height="500" viewBox="0 0 1000 500">
+        <!-- Grid Background Pattern is in CSS, but let's make it explicitly white here as well -->
+        
+        <!-- System Boundary -->
+        <rect x="150" y="50" width="700" height="400" class="subject-box" />
+        <text x="500" y="80" class="system-title">NeuroForecast System</text>
+
+        <!-- Use Cases - Top Row -->
+        <!-- 1: Register Account -->
+        <ellipse cx="230" cy="150" rx="60" ry="35" class="use-case-ellipse" />
+        <text x="230" y="145" class="use-case-label">Register</text>
+        <text x="230" y="160" class="use-case-label">Account</text>
+
+        <!-- 2: Login -->
+        <ellipse cx="360" cy="150" rx="60" ry="35" class="use-case-ellipse" />
+        <text x="360" y="155" class="use-case-label">Login</text>
+
+        <!-- 3: Upload MRI Scan -->
+        <ellipse cx="500" cy="150" rx="60" ry="35" class="use-case-ellipse" />
+        <text x="500" y="145" class="use-case-label">Upload MRI</text>
+        <text x="500" y="160" class="use-case-label">Scan</text>
+
+        <!-- 4: Analyze MRI using AI Model -->
+        <ellipse cx="640" cy="150" rx="80" ry="40" class="use-case-ellipse" />
+        <text x="640" y="145" class="use-case-label">Analyze MRI</text>
+        <text x="640" y="160" class="use-case-label">using AI Model</text>
+
+        <!-- 5: View Diagnosis Result -->
+        <ellipse cx="780" cy="150" rx="60" ry="35" class="use-case-ellipse" />
+        <text x="780" y="145" class="use-case-label">View</text>
+        <text x="780" y="160" class="use-case-label">Diagnosis Result</text>
+
+
+        <!-- Use Cases - Bottom Row -->
+        <!-- 6: Generate Diagnostic Report -->
+        <ellipse cx="230" cy="350" rx="70" ry="40" class="use-case-ellipse" />
+        <text x="230" y="345" class="use-case-label">Generate</text>
+        <text x="230" y="360" class="use-case-label">Diagnostic Report</text>
+
+        <!-- 7: Download Medical Report -->
+        <ellipse cx="360" cy="350" rx="70" ry="40" class="use-case-ellipse" />
+        <text x="360" y="345" class="use-case-label">Download</text>
+        <text x="360" y="360" class="use-case-label">Medical Report</text>
+
+        <!-- 8: View Report History -->
+        <ellipse cx="500" cy="350" rx="70" ry="40" class="use-case-ellipse" />
+        <text x="500" y="345" class="use-case-label">View Report</text>
+        <text x="500" y="360" class="use-case-label">History</text>
+
+        <!-- 9: Add Clinical Notes -->
+        <ellipse cx="640" cy="350" rx="60" ry="35" class="use-case-ellipse" />
+        <text x="640" y="345" class="use-case-label">Add Clinical</text>
+        <text x="640" y="360" class="use-case-label">Notes</text>
+
+        <!-- 10: Chat with AI Consultant -->
+        <ellipse cx="780" cy="350" rx="70" ry="40" class="use-case-ellipse" />
+        <text x="780" y="345" class="use-case-label">Chat with AI</text>
+        <text x="780" y="360" class="use-case-label">Consultant</text>
+
+
+        <!-- Doctor Actor (Left) -->
+        <g transform="translate(80, 250)">
+            <circle cx="0" cy="-40" r="15" class="stick-figure" /> <!-- Head -->
+            <line x1="0" y1="-25" x2="0" y2="20" class="stick-figure" /> <!-- Body -->
+            <line x1="0" y1="-10" x2="-20" y2="5" class="stick-figure" /> <!-- Left Arm -->
+            <line x1="0" y1="-10" x2="20" y2="5" class="stick-figure" /> <!-- Right Arm -->
+            <line x1="0" y1="20" x2="-15" y2="50" class="stick-figure" /> <!-- Left Leg -->
+            <line x1="0" y1="20" x2="15" y2="50" class="stick-figure" /> <!-- Right Leg -->
+            <text x="0" y="70" class="actor-label">Doctor</text>
+        </g>
+
+        <!-- Patient Actor (Right) -->
+        <g transform="translate(920, 250)">
+            <circle cx="0" cy="-40" r="15" class="stick-figure" /> <!-- Head -->
+            <line x1="0" y1="-25" x2="0" y2="20" class="stick-figure" /> <!-- Body -->
+            <line x1="0" y1="-10" x2="-20" y2="5" class="stick-figure" /> <!-- Left Arm -->
+            <line x1="0" y1="-10" x2="20" y2="5" class="stick-figure" /> <!-- Right Arm -->
+            <line x1="0" y1="20" x2="-15" y2="50" class="stick-figure" /> <!-- Left Leg -->
+            <line x1="0" y1="20" x2="15" y2="50" class="stick-figure" /> <!-- Right Leg -->
+            <text x="0" y="70" class="actor-label">Patient</text>
+        </g>
+
+        <!-- Connections for Doctor -->
+        <g class="actor-line">
+            <line x1="95" y1="240" x2="170" y2="150" /> <!-- to Register Account -->
+            <line x1="95" y1="245" x2="300" y2="150" /> <!-- to Login -->
+            <line x1="95" y1="250" x2="440" y2="155" /> <!-- to Upload MRI -->
+            <line x1="95" y1="255" x2="560" y2="160" /> <!-- to Analyze MRI -->
+            <line x1="95" y1="260" x2="720" y2="165" /> <!-- to View Diagnosis Result -->
+            
+            <line x1="95" y1="265" x2="160" y2="340" /> <!-- to Generate Diagnostic Report -->
+            <line x1="95" y1="270" x2="290" y2="345" /> <!-- to Download Medical Report -->
+            <line x1="95" y1="275" x2="430" y2="350" /> <!-- to View Report History -->
+            <line x1="95" y1="280" x2="580" y2="355" /> <!-- to Add Clinical Notes -->
+            <line x1="95" y1="285" x2="710" y2="360" /> <!-- to Chat with AI Consultant -->
+        </g>
+
+        <!-- Connections for Patient -->
+        <g class="actor-line">
+            <line x1="905" y1="240" x2="290" y2="150" /> <!-- to Register Account? Wait, looking at crop... -->
+            <line x1="905" y1="245" x2="420" y2="150" /> <!-- to Login -->
+            <line x1="905" y1="250" x2="560" y2="150" /> <!-- to Upload MRI -->
+            <line x1="905" y1="255" x2="720" y2="150" /> <!-- to Analyze MRI -->
+            <line x1="905" y1="260" x2="840" y2="160" /> <!-- to View Diagnosis Result -->
+            
+            <line x1="905" y1="265" x2="300" y2="350" /> <!-- to Generate Report? -->
+            <line x1="905" y1="270" x2="430" y2="350" /> <!-- to Download Report -->
+            <line x1="905" y1="275" x2="570" y2="350" /> <!-- to View History -->
+            <line x1="905" y1="280" x2="700" y2="350" /> <!-- to Add Notes? (maybe not for patient) -->
+            <line x1="905" y1="285" x2="850" y2="350" /> <!-- to Chat with Consultant -->
+        </g>
+    </svg>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <h2>⚡ Microgrid OS</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-pie"></i> Overview
+            </a>
+            <a href="/dashboard#energy-flow-panel" class="menu-item">
+                <i class="fas fa-project-diagram"></i> Energy Flow
+            </a>
+            <a href="/history" class="menu-item active">
+                <i class="fas fa-history"></i> History Log
+            </a>
+            <a href="/suggestions" class="menu-item">
+                <i class="fas fa-lightbulb"></i> AI Insights
+            </a>
+            <a href="/visualization" class="menu-item">
+                <i class="fas fa-magic"></i> Visualization
+            </a>
+            <a href="/about" class="menu-item">
+                <i class="fas fa-info-circle"></i> Project Info
+            </a>
+            <a href="/settings" class="menu-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="alert-item"
+                style="border-left-color: var(--neon-yellow); background: rgba(250, 255, 0, 0.05); color: var(--neon-yellow);">
+                <i class="fas fa-archive"></i> Archive Mode
+            </div>
+            <button onclick="handleLogout()" class="glass-btn"
+                style="width: 100%; justify-content: center; margin-top: 15px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-title">
+            <a href="/dashboard" class="header-back-btn">
+                <i class="fas fa-chevron-left"></i> BACK
+            </a>
+            <i class="fas fa-history"></i>
+            <span>SYSTEM ARCHIVE &bull; SIMULATION HISTORY</span>
+        </div>
+
+        <div class="header-controls">
+            <div class="user-profile">
+                <span>{{ email }}</span>
+                <div class="user-avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-content" style="overflow-y: auto;">
+
+        <!-- CINEMATIC BACKGROUND -->
+        <div class="cinematic-bg-container">
+            <div class="cinematic-bg-layer bg-battery"></div>
+        </div>
+        <div class="cinematic-overlay"></div>
+
+        <!-- HISTORY SUMMARY KPI (Only show if there is history) -->
+        {% if history %}
+        <div class="kpi-grid" style="margin-bottom: 30px;">
+            <div class="kpi-card"
+                style="border-top: 3px solid var(--neon-green); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(0, 255, 148, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-clipboard-check kpi-icon"
+                    style="color: var(--neon-green); filter: drop-shadow(var(--glow-green)); font-size: 2rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label" style="letter-spacing: 1px;">Total Simulations</div>
+                <div class="kpi-value text-neon-green" style="font-size: 2.5rem; text-shadow: var(--glow-green);">{{
+                    history|length }}</div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Runs Archived</div>
+            </div>
+
+            {% set total_profit = namespace(value=0) %}
+            {% set total_savings_pct = namespace(value=0) %}
+            {% for item in history %}
+            {% set total_profit.value = total_profit.value + item.summary.net_profit %}
+            {% set total_savings_pct.value = total_savings_pct.value + item.summary.savings_pct %}
+            {% endfor %}
+
+            <div class="kpi-card" style="border-top: 3px solid var(--neon-blue); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(0, 229, 255, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-coins kpi-icon"
+                    style="color: var(--neon-blue); filter: drop-shadow(var(--glow-blue)); font-size: 2rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label" style="letter-spacing: 1px;">Lifetime Profit</div>
+                <div class="kpi-value text-neon-blue" style="font-size: 2.5rem; text-shadow: var(--glow-blue);">₹{{
+                    "%.2f"|format(total_profit.value) }}</div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Cumulative across all runs
+                </div>
+            </div>
+
+            <div class="kpi-card"
+                style="border-top: 3px solid var(--neon-yellow); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(255, 176, 32, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-percentage kpi-icon"
+                    style="color: var(--neon-yellow); filter: drop-shadow(var(--glow-yellow)); font-size: 2rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label" style="letter-spacing: 1px;">Avg. Savings</div>
+                <div class="kpi-value text-neon-yellow" style="font-size: 2.5rem; text-shadow: var(--glow-yellow);">
+                    {% if history|length > 0 %}
+                    {{ "%.1f"|format(total_savings_pct.value / history|length) }}%
+                    {% else %}
+                    0%
+                    {% endif %}
+                </div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Efficiency Average</div>
+            </div>
+        </div>
+
+        <!-- SEARCH & FILTER BAR -->
+        <div class="panel-container"
+            style="padding: 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-direction: row; background: rgba(0,0,0,0.2);">
+            <div style="display: flex; gap: 15px; flex: 1; margin-right: 20px;">
+                <div style="position: relative; flex: 1; max-width: 500px;">
+                    <i class="fas fa-search"
+                        style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--neon-blue);"></i>
+                    <input type="text" id="history-search" placeholder="Search archive by dataset name..."
+                        style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-primary); padding: 12px 15px 12px 45px; border-radius: 8px; outline: none; transition: all 0.3s; font-family: var(--font-mono);"
+                        onfocus="this.style.borderColor='var(--neon-blue)'; this.style.boxShadow='0 0 10px rgba(0,229,255,0.2)';"
+                        onblur="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.boxShadow='none';"
+                        onkeyup="filterHistory()">
+                </div>
+                <button class="glass-btn btn-blue"
+                    onclick="document.getElementById('history-search').value=''; filterHistory();" title="Clear Search"
+                    style="padding: 10px 15px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="color: var(--text-secondary); font-size: 0.95rem; font-family: var(--font-mono);">
+                <i class="fas fa-database" style="color: var(--neon-purple); margin-right: 8px;"></i> Showing <span
+                    id="visible-count" style="color: white; font-weight: bold;">{{ history|length }}</span> of {{
+                history|length }} records
+            </div>
+        </div>
+
+        <!-- HISTORY LIST -->
+        <div id="history-list" style="display: flex; flex-direction: column; gap: 20px;">
+            {% for item in history %}
+            <div class="panel-container history-card-item"
+                data-dataset="{{ item.data.dataset|lower if item.data.dataset else 'unknown dataset' }}"
+                style="padding: 25px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; cursor: pointer; border-left: 4px solid transparent; background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, transparent 100%);"
+                onclick="window.location.href='/history/view/{{ item._id }}'">
+
+                <!-- Info Section -->
+                <div style="display: flex; gap: 25px; align-items: center;">
+                    <div
+                        style="background: rgba(0, 229, 255, 0.1); width: 60px; height: 60px; border-radius: 14px; display: flex; justify-content: center; align-items: center; border: 1px solid rgba(0, 229, 255, 0.2); box-shadow: inset 0 0 15px rgba(0,229,255,0.1);">
+                        <i class="fas fa-microchip"
+                            style="color: var(--neon-blue); font-size: 1.8rem; filter: drop-shadow(var(--glow-blue));"></i>
+                    </div>
+                    <div>
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-family: var(--font-mono); letter-spacing: 0.5px;">
+                            <i class="far fa-clock" style="color: var(--neon-purple);"></i> {{
+                            item.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </div>
+                        <h3
+                            style="margin: 0; color: var(--text-primary); font-weight: 600; font-size: 1.3rem; letter-spacing: 0.5px;">
+                            {{ item.data.dataset if item.data.dataset else "Archive Data" }}
+                        </h3>
+                        <div
+                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; display: flex; gap: 10px;">
+                            <span
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; display: flex; align-items: center; gap: 5px;">
+                                <i class="fas fa-step-forward" style="font-size: 0.7rem;"></i>
+                                {{ item.data.full_data_length }} steps
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metrics & Actions Section -->
+                <div style="display: flex; gap: 40px; align-items: center;">
+                    <div style="text-align: right; min-width: 130px;">
+                        <div
+                            style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px;">
+                            Net AI Profit</div>
+                        <div
+                            style="font-size: 1.8rem; font-weight: 700; color: var(--neon-green); text-shadow: var(--glow-green); font-family: var(--font-mono);">
+                            ₹{{ "%.2f"|format(item.summary.net_profit) }}
+                        </div>
+                    </div>
+
+                    <div
+                        style="width: 1px; height: 50px; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent);">
+                    </div>
+
+                    <div style="text-align: right; min-width: 110px;">
+                        <div
+                            style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px;">
+                            Efficiency Gap</div>
+                        <div
+                            style="font-size: 1.5rem; font-weight: 600; color: var(--neon-yellow); text-shadow: var(--glow-yellow); font-family: var(--font-mono);">
+                            {{ "%.1f"|format(item.summary.savings_pct) }}%
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;" onclick="event.stopPropagation();">
+                        <button onclick="deleteHistoryItem('{{ item._id }}')" class="glass-btn btn-red"
+                            title="Delete Archive" style="padding: 12px 18px; font-size: 1.1rem;">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <script>
+            // Add hover effects to cards
+            document.querySelectorAll('.history-card-item').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.background = 'linear-gradient(90deg, rgba(0, 229, 255, 0.05) 0%, rgba(255,255,255,0.02) 100%)';
+                    card.style.borderLeftColor = 'var(--neon-blue)';
+                    card.style.transform = 'translateX(8px)';
+                    card.style.boxShadow = '0 10px 30px rgba(0, 229, 255, 0.1)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.02) 0%, transparent 100%)';
+                    card.style.borderLeftColor = 'transparent';
+                    card.style.transform = 'translateX(0)';
+                    card.style.boxShadow = 'none';
+                });
+            });
+
+            // Filtering logic
+            function filterHistory() {
+                const query = document.getElementById('history-search').value.toLowerCase();
+                const cards = document.querySelectorAll('.history-card-item');
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const datasetName = card.getAttribute('data-dataset');
+                    if (datasetName.includes(query)) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('visible-count').innerText = visibleCount;
+            }
+
+            async function deleteHistoryItem(id) {
+                if (!confirm("⚠️ Are you sure you want to permanently delete this simulation archive?")) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/history/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ simulation_id: id })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        // Refresh to reflect changes
+                        window.location.reload();
+                    } else {
+                        alert("Failed to delete: " + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert("An error occurred while deleting.");
+                }
+            }
+        </script>
+        {% else %}
+        <div class="panel-container"
+            style="padding: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; border-style: dashed; border-width: 2px;">
+            <div style="position: relative; margin-bottom: 30px;">
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: rgba(0, 229, 255, 0.1); filter: blur(40px); border-radius: 50%;">
+                </div>
+                <div
+                    style="width: 120px; height: 120px; border-radius: 50%; background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.2); display: flex; justify-content: center; align-items: center; z-index: 2; position: relative; box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1);">
+                    <i class="fas fa-history"
+                        style="font-size: 3.5rem; color: var(--neon-blue); filter: drop-shadow(var(--glow-blue));"></i>
+                </div>
+            </div>
+            <h2
+                style="color: var(--text-primary); margin-bottom: 15px; font-weight: 500; font-size: 1.8rem; letter-spacing: 1px;">
+                Archive Empty</h2>
+            <p
+                style="color: var(--text-secondary); max-width: 450px; line-height: 1.6; margin-bottom: 35px; font-size: 1.05rem;">
+                The System Archive requires completed simulation runs in the Command Center to record performance
+                metadata and financial telemetry.
+            </p>
+            <a href="/dashboard" class="glass-btn btn-purple" style="font-size: 1.1rem; padding: 14px 30px;">
+                <i class="fas fa-satellite-dish"></i> INITIALIZE COMMAND CENTER
+            </a>
+        </div>
+        {% endif %}
+    </main>
+</div>
+
+<script>
+    async function handleLogout() {
+        await fetch('/api/logout', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        });
+        window.location.href = '/';
+    }
+</script>
+{% endblock %}

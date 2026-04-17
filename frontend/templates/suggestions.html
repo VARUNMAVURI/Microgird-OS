@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <h2>⚡ Microgrid OS</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-pie"></i> Overview
+            </a>
+            <a href="/dashboard#energy-flow-panel" class="menu-item">
+                <i class="fas fa-project-diagram"></i> Energy Flow
+            </a>
+            <a href="/history" class="menu-item">
+                <i class="fas fa-history"></i> History Log
+            </a>
+            <a href="/suggestions" class="menu-item active">
+                <i class="fas fa-lightbulb"></i> AI Insights
+            </a>
+            <a href="/visualization" class="menu-item">
+                <i class="fas fa-magic"></i> Visualization
+            </a>
+            <a href="/about" class="menu-item">
+                <i class="fas fa-info-circle"></i> Project Info
+            </a>
+            <a href="/settings" class="menu-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="alert-item"
+                style="border-left-color: var(--neon-purple); background: rgba(189, 0, 255, 0.05); color: var(--neon-purple);">
+                <i class="fas fa-robot"></i> Advisor Mode Active
+            </div>
+            <button onclick="handleLogout()" class="glass-btn"
+                style="width: 100%; justify-content: center; margin-top: 15px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-title">
+            <a href="/dashboard" class="header-back-btn">
+                <i class="fas fa-chevron-left"></i> BACK
+            </a>
+            <i class="fas fa-lightbulb" style="color: var(--neon-yellow);"></i>
+            <span>AI INSIGHTS &bull; OPTIMIZATION RECOMMENDATIONS</span>
+        </div>
+
+        <div class="header-controls">
+            <div class="user-profile">
+                <span>{{ email }}</span>
+                <div class="user-avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-content" style="overflow-y: auto;">
+
+        <!-- CINEMATIC BACKGROUND -->
+        <div class="cinematic-bg-container">
+            <div class="cinematic-bg-layer bg-ai"></div>
+        </div>
+        <div class="cinematic-overlay"></div>
+
+        <div style="margin-bottom: 30px;">
+            <h1 style="font-size: 2rem; color: white; margin-bottom: 10px; font-weight: 500;">
+                <span style="color: var(--neon-purple);"><i class="fas fa-brain"></i></span> Intelligence Report
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; max-width: 800px; line-height: 1.6;">
+                The AI Agent has analyzed your energy profile. Below are the identified patterns and recommended
+                strategies to maximize your savings and minimize reliance on the main grid.
+            </p>
+        </div>
+
+        {% if suggestions and suggestions|length > 0 %}
+        <!-- AI INTELLIGENCE CONTENT (NO BOX) -->
+        <div style="margin-bottom: 40px;">
+            <p style="color: var(--text-secondary); font-size: 1.15rem; margin-bottom: 20px;">
+                Detected <strong style="color: var(--text-primary);">{{ suggestions|length }} optimization vectors</strong> for the current energy profile:
+            </p>
+
+            <ul style="padding-left: 20px; color: var(--text-primary); font-size: 1.15rem; line-height: 1.6;">
+                {% for suggestion in suggestions %}
+                <li style="margin-bottom: 15px;">
+                    {{ suggestion|safe }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- POTENTIAL IMPACT METRICS -->
+        <h2
+            style="color: var(--text-primary); margin-bottom: 25px; font-size: 1.4rem; display: flex; align-items: center; gap: 12px; letter-spacing: 0.5px;">
+            <i class="fas fa-chart-line" style="color: var(--neon-green); filter: drop-shadow(var(--glow-green));"></i>
+            Projected Impact
+        </h2>
+
+        <div class="kpi-grid">
+            <div class="kpi-card"
+                style="border-top: 3px solid var(--neon-green); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(0, 255, 148, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-piggy-bank kpi-icon"
+                    style="color: var(--neon-green); filter: drop-shadow(var(--glow-green)); font-size: 2rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label" style="letter-spacing: 1px;">Grid Cost Reduction</div>
+                <div class="kpi-value text-neon-green" style="font-size: 2.5rem; text-shadow: var(--glow-green);">15-20%
+                </div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Estimated drop in monthly
+                    bill</div>
+            </div>
+
+            <div class="kpi-card"
+                style="border-top: 3px solid var(--neon-yellow); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(255, 176, 32, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-recycle kpi-icon"
+                    style="color: var(--neon-yellow); filter: drop-shadow(var(--glow-yellow)); font-size: 2rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label" style="letter-spacing: 1px;">Solar Utilization</div>
+                <div class="kpi-value text-neon-yellow" style="font-size: 2.5rem; text-shadow: var(--glow-yellow);">~95%
+                </div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Target efficiency for
+                    generated power</div>
+            </div>
+
+            <div class="kpi-card" style="border-top: 3px solid var(--neon-blue); position: relative; overflow: hidden;">
+                <div
+                    style="position: absolute; top: -30px; right: -30px; width: 100px; height: 100px; background: rgba(0, 229, 255, 0.1); filter: blur(30px); border-radius: 50%;">
+                </div>
+                <i class="fas fa-home kpi-icon"
+                    style="color: var(--neon-blue); filter: drop-shadow(var(--glow-blue)); font-size: 2rem; margin-bottom: 15px;"></i>
+                <div class="kpi-label" style="letter-spacing: 1px;">Self Sufficiency</div>
+                <div class="kpi-value text-neon-blue" style="font-size: 2.5rem; text-shadow: var(--glow-blue);">+12%
+                </div>
+                <div class="kpi-subtext" style="font-family: var(--font-mono); opacity: 0.7;">Improvement in total
+                    autonomy</div>
+            </div>
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="panel-container"
+            style="padding: 60px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50vh; border-style: dashed; border-width: 2px;">
+            <div style="position: relative; margin-bottom: 30px;">
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150px; height: 150px; background: rgba(124, 77, 255, 0.1); filter: blur(40px); border-radius: 50%;">
+                </div>
+                <div
+                    style="width: 120px; height: 120px; border-radius: 50%; background: rgba(124, 77, 255, 0.05); border: 1px solid rgba(124, 77, 255, 0.2); display: flex; justify-content: center; align-items: center; z-index: 2; position: relative; box-shadow: inset 0 0 20px rgba(124, 77, 255, 0.1);">
+                    <i class="fas fa-brain"
+                        style="font-size: 3.5rem; color: var(--neon-purple); filter: drop-shadow(var(--glow-purple));"></i>
+                </div>
+            </div>
+            <h2
+                style="color: var(--text-primary); margin-bottom: 15px; font-weight: 500; font-size: 1.8rem; letter-spacing: 1px;">
+                Awaiting Simulation Data
+            </h2>
+            <p
+                style="color: var(--text-secondary); max-width: 500px; line-height: 1.6; margin-bottom: 35px; font-size: 1.1rem;">
+                The AI Advisor needs data from a completed simulation run to analyze patterns and generate personalized
+                insights.
+            </p>
+            <a href="/dashboard" class="glass-btn btn-purple" style="font-size: 1.1rem; padding: 14px 30px;">
+                <i class="fas fa-satellite-dish"></i> INITIALIZE COMMAND CENTER
+            </a>
+        </div>
+
+        {% endif %}
+    </main>
+</div>
+
+<script>
+    async function handleLogout() {
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/';
+    }
+
+    function scrollInsights() {
+        const container = document.querySelector('.insights-scroll-container');
+        if (container) {
+            container.scrollBy({ top: 300, behavior: 'smooth' });
+        }
+    }
+</script>
+{% endblock %}

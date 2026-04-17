@@ -1,0 +1,717 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <h2>⚡ Microgrid OS</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-pie"></i> Overview
+            </a>
+            <a href="/energy_flow" class="menu-item active">
+                <i class="fas fa-project-diagram"></i> Energy Flow
+            </a>
+            <a href="/history" class="menu-item">
+                <i class="fas fa-history"></i> History Log
+            </a>
+            <a href="/suggestions" class="menu-item">
+                <i class="fas fa-lightbulb"></i> AI Insights
+            </a>
+            <a href="/visualization" class="menu-item">
+                <i class="fas fa-magic"></i> Visualization
+            </a>
+            <a href="/about" class="menu-item">
+                <i class="fas fa-info-circle"></i> Project Info
+            </a>
+            <a href="/settings" class="menu-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="alert-item success">
+                <i class="fas fa-check-circle"></i> Live Analytics
+            </div>
+            <button onclick="handleLogout()" class="glass-btn"
+                style="width: 100%; justify-content: center; margin-top: 15px;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-title">
+            <a href="/dashboard" class="header-back-btn">
+                <i class="fas fa-chevron-left"></i> BACK
+            </a>
+            <i class="fas fa-project-diagram"></i>
+            <span>ENERGY FLOW ANALYTICS &bull; LIVE TELEMETRY</span>
+        </div>
+
+        <div class="header-controls">
+            <div class="user-profile">
+                <span>{{ email }}</span>
+                <div class="user-avatar">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-content">
+
+        <!-- CINEMATIC BACKGROUND -->
+        <div class="cinematic-bg-container">
+            <div class="cinematic-bg-layer bg-solar"></div>
+        </div>
+        <div class="cinematic-overlay"></div>
+
+        <!-- TOP CONTROL BAR -->
+        <div class="panel-container"
+            style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 15px 15px; gap: 10px; margin-top: 10px; margin-bottom: 25px; border-top: 3px solid var(--neon-blue); position: relative; overflow: visible;">
+
+            <div style="display: flex; gap: 10px; align-items: center; z-index: 2;">
+                <button id="btn-run" class="glass-btn primary" onclick="startSimulation()" style="padding: 10px 15px;">
+                    <i class="fas fa-play"></i> RUN
+                </button>
+                <button id="btn-stop" onclick="stopSimulation()" class="glass-btn btn-red" style="padding: 10px 15px;">
+                    <i class="fas fa-stop"></i> STOP
+                </button>
+                <button id="btn-pause" onclick="pauseSimulation()" class="glass-btn btn-yellow"
+                    style="padding: 10px 15px; display: none;">
+                    <i class="fas fa-pause"></i> PAUSE
+                </button>
+                <button id="btn-resume" onclick="resumeSimulation()" class="glass-btn btn-green"
+                    style="padding: 10px 15px; display: none;">
+                    <i class="fas fa-play-circle"></i> RESUME
+                </button>
+                <button id="btn-reset" onclick="resetSimulation()" class="glass-btn btn-purple"
+                    style="padding: 10px 15px;">
+                    <i class="fas fa-redo"></i> RESET
+                </button>
+                <div style="border-left: 1px solid var(--border-color); height: 30px; margin: 0 5px;"></div>
+                <button id="btn-resilience" onclick="toggleResilience()" class="glass-btn btn-green"
+                    style="padding: 10px 15px;">
+                    <i class="fas fa-power-off"></i> GRID ONLINE
+                </button>
+            </div>
+
+            <div style="display: flex; gap: 15px; align-items: center; z-index: 2;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <label
+                        style="font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600; letter-spacing: 1px;">SIM
+                        SPEED</label>
+                    <input type="range" id="sim-speed" min="100" max="2000" value="700"
+                        style="width: 120px; accent-color: var(--neon-blue);">
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <div>
+                <h1
+                    style="color: var(--text-primary); font-size: 2.2rem; margin: 0 0 8px 0; font-weight: 500; display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-project-diagram"
+                        style="color: var(--neon-blue); filter: drop-shadow(var(--glow-blue));"></i> System Telemetry
+                </h1>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 1.1rem; font-family: var(--font-mono);">
+                    Live view of system physics, power distribution, and
+                    battery analytics.</p>
+            </div>
+            <div
+                style="background: rgba(0, 229, 255, 0.05); border: 1px solid rgba(0, 229, 255, 0.2); padding: 10px 18px; border-radius: 8px; color: var(--neon-blue); display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 0.9rem; letter-spacing: 1px; box-shadow: inset 0 0 15px rgba(0,229,255,0.05);">
+                <div
+                    style="width: 8px; height: 8px; background: var(--neon-blue); border-radius: 50%; box-shadow: var(--glow-blue); animation: pulse 2s infinite;">
+                </div>
+                <span id="sync-status">SYNCING...</span>
+            </div>
+        </div>
+
+        <!-- VISUAL ROW -->
+        <div class="visual-row" id="energy-flow-panel">
+            <!-- ENERGY FLOW DIAGRAM -->
+            <div class="panel-container"
+                style="position: relative; overflow: hidden; display: flex; flex-direction: column;">
+                <!-- Subtle background glow -->
+                <div
+                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; background: rgba(0, 229, 255, 0.03); filter: blur(60px); border-radius: 50%; pointer-events: none;">
+                </div>
+
+                <div class="panel-header" style="z-index: 2; position: relative;">
+                    <div class="panel-title" style="color: var(--neon-blue); text-shadow: var(--glow-blue);">
+                        <i class="fas fa-exchange-alt"></i> REAL-TIME ENERGY FLOW
+                    </div>
+                    <div
+                        style="font-size: 0.75rem; color: var(--neon-blue); padding: 4px 10px; background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.2); border-radius: 4px; font-family: var(--font-mono); letter-spacing: 1px;">
+                        LIVE SYSTEM STATE
+                    </div>
+                </div>
+
+                <div class="energy-flow-wrapper"
+                    style="z-index: 2; position: relative; flex: 1; display: flex; align-items: center; min-height: 250px;">
+                    <div class="flow-line" style="width: 100%;">
+                        <div class="flow-particles"></div>
+                    </div>
+
+                    <!-- SOLAR NODE -->
+                    <div class="flow-node" id="node-solar">
+                        <i class="fas fa-sun"
+                            style="color: var(--neon-yellow); filter: drop-shadow(var(--glow-yellow));"></i>
+                        <span><span id="ef-solar">0.0</span> kW</span>
+                    </div>
+
+                    <!-- BATTERY NODE -->
+                    <div class="flow-node" id="node-battery">
+                        <i class="fas fa-battery-three-quarters"
+                            style="color: var(--neon-green); filter: drop-shadow(var(--glow-green));"></i>
+                        <span><span id="ef-battery">0.0</span> kW</span>
+                    </div>
+
+                    <!-- HOME/LOAD NODE -->
+                    <div class="flow-node active" id="node-load"
+                        style="border-color: var(--neon-blue); box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.1), 0 0 20px rgba(0, 229, 255, 0.2);">
+                        <i class="fas fa-building"
+                            style="color: var(--neon-blue); filter: drop-shadow(var(--glow-blue));"></i>
+                        <span><span id="ef-load">0.0</span> kW</span>
+                    </div>
+
+                    <!-- GRID NODE -->
+                    <div class="flow-node" id="node-grid">
+                        <i class="fas fa-network-wired" style="color: var(--text-primary);"></i>
+                        <span><span id="ef-grid">0.0</span> kW</span>
+                    </div>
+                </div>
+
+                <div
+                    style="text-align: center; margin-top: auto; padding-top: 20px; font-family: var(--font-mono); color: var(--text-secondary); font-size: 0.9rem; z-index: 2; position: relative;">
+                    AI DECISION: <span id="action-display"
+                        style="color: var(--neon-purple); padding: 6px 16px; background: rgba(124, 77, 255, 0.15); border: 1px solid rgba(124, 77, 255, 0.3); border-radius: 6px; font-weight: bold; letter-spacing: 2px; box-shadow: var(--glow-purple);">IDLE</span>
+                </div>
+            </div>
+
+            <!-- BATTERY SOC CHART -->
+            <div class="panel-container">
+                <div class="panel-header">
+                    <div class="panel-title" style="color: var(--neon-green); text-shadow: var(--glow-green);">
+                        <i class="fas fa-car-battery"></i> Battery Life Cycle
+                    </div>
+                </div>
+                <div class="chart-wrapper" style="position: relative; height: calc(100% - 60px);">
+                    <canvas id="chartBattery"></canvas>
+
+                    <div
+                        style="position: absolute; top: 15px; right: 15px; display: flex; gap: 20px; background: rgba(11, 15, 20, 0.8); padding: 12px 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+                        <div style="text-align: right;">
+                            <div
+                                style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+                                Current SOC</div>
+                            <div id="bat-soc-val"
+                                style="color: var(--neon-green); font-weight: bold; font-family: var(--font-mono); font-size: 1.3rem; text-shadow: var(--glow-green);">
+                                --%</div>
+                        </div>
+                        <div style="border-left: 1px solid rgba(255,255,255,0.1); margin: 0 5px;"></div>
+                        <div style="text-align: right;">
+                            <div
+                                style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+                                Health (SOH)</div>
+                            <div id="bat-soh-val"
+                                style="color: var(--neon-yellow); font-weight: bold; font-family: var(--font-mono); font-size: 1.3rem; text-shadow: var(--glow-yellow);">
+                                --%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="charts-row" style="grid-template-columns: 2fr 1fr; margin-top: 30px; gap: 25px;">
+            <!-- COMBINED TREND CHART -->
+            <div class="panel-container" style="position: relative; overflow: hidden;">
+                <!-- Decorative background elements -->
+                <div
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);">
+                </div>
+
+                <div class="panel-header" style="z-index: 2; position: relative; justify-content: space-between;">
+                    <div class="panel-title"
+                        style="display: flex; align-items: center; gap: 10px; color: var(--neon-blue); text-shadow: var(--glow-blue);">
+                        <i class="fas fa-chart-line"></i> System Trends (Live Analytics)
+                    </div>
+                    <div class="panel-controls"
+                        style="background: rgba(0,0,0,0.5); padding: 8px 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; display: flex; gap: 15px; font-family: var(--font-mono);">
+                        <span
+                            style="color: var(--neon-yellow); text-shadow: var(--glow-yellow); display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--neon-yellow);">
+                            </div> Solar
+                        </span>
+                        <span
+                            style="color: var(--neon-green); text-shadow: var(--glow-green); display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--neon-green);">
+                            </div> Battery
+                        </span>
+                        <span
+                            style="color: var(--neon-red); text-shadow: var(--glow-red); display: flex; align-items: center; gap: 6px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--neon-red);">
+                            </div> Grid
+                        </span>
+                    </div>
+                </div>
+                <div class="chart-wrapper" style="z-index: 2; position: relative; padding: 15px; height: 350px;">
+                    <canvas id="chartCombined"></canvas>
+                </div>
+            </div>
+
+            <!-- ENERGY MIX BAR CHART -->
+            <div class="panel-container" style="position: relative; overflow: hidden;">
+                <!-- Decorative background elements -->
+                <div
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);">
+                </div>
+
+                <div class="panel-header" style="z-index: 2; position: relative;">
+                    <div class="panel-title"
+                        style="display: flex; align-items: center; gap: 10px; color: var(--neon-purple); text-shadow: var(--glow-purple);">
+                        <i class="fas fa-chart-bar"></i> Power Source Mix
+                    </div>
+                </div>
+                <div class="chart-wrapper" style="z-index: 2; position: relative; padding: 15px; height: 350px;">
+                    <canvas id="chartMix"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Fetch Core Theme Colors
+    const style = getComputedStyle(document.body);
+    const CSRF_TOKEN = '{{ csrf_token }}';
+    const colorNeonBlue = '#00E5FF';
+    const colorNeonPurple = '#7C4DFF';
+    const colorNeonYellow = '#FFB020';
+    const colorNeonGreen = '#00FF94';
+    const colorNeonRed = '#FF3366';
+    const colorTextMuted = '#475569';
+    const colorGridLine = 'rgba(255, 255, 255, 0.05)';
+
+    // --- CHART CONFIG ---
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 0 }, // Disable animation for live updates
+        plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+        },
+        scales: {
+            x: {
+                grid: { color: colorGridLine, drawBorder: false },
+                ticks: { display: false }
+            },
+            y: {
+                grid: { color: colorGridLine, drawBorder: false },
+                ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 } }
+            }
+        },
+        elements: {
+            line: { tension: 0.4, borderWidth: 2 },
+            point: { radius: 0 }
+        }
+    };
+
+    // 1. DYNAMIC POWER SOURCE CHART (Single Continuous Line with Color Segments)
+    const ctxCombined = document.getElementById('chartCombined').getContext('2d');
+    const powerColors = {
+        'Solar': colorNeonYellow,
+        'Battery': colorNeonGreen,
+        'Grid': colorNeonRed
+    };
+
+    let chartSources = [];
+
+    const chartCombined = new Chart(ctxCombined, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'System Load',
+                    data: [],
+                    borderColor: '#FFFFFF',
+                    backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    segment: {
+                        borderColor: ctx => {
+                            const index = ctx.p0DataIndex;
+                            if (index !== undefined && chartSources[index]) {
+                                return powerColors[chartSources[index]] || colorNeonBlue;
+                            }
+                            return colorNeonBlue;
+                        },
+                        backgroundColor: ctx => {
+                            const index = ctx.p0DataIndex;
+                            if (index !== undefined && chartSources[index]) {
+                                return (powerColors[chartSources[index]] || colorNeonBlue) + '22'; // slight transparency
+                            }
+                            return 'rgba(0, 229, 255, 0.1)';
+                        }
+                    }
+                }
+            ]
+        },
+        options: {
+            ...commonOptions,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                    callbacks: {
+                        label: function (context) {
+                            const val = context.parsed.y;
+                            const index = context.dataIndex;
+                            const source = chartSources[index] || 'Unknown';
+                            return `${source}: ${val.toFixed(2)} kW`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: commonOptions.scales.x,
+                y: { ...commonOptions.scales.y, title: { display: true, text: 'Power (kW)', color: colorTextMuted, font: { family: 'Outfit', size: 12 } }, suggestedMin: 0 }
+            }
+        }
+    });
+
+    // 2. BATTERY SOC
+    const chartBattery = new Chart(document.getElementById('chartBattery').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                { label: 'SOC %', data: [], borderColor: colorNeonGreen, backgroundColor: 'rgba(0, 255, 148, 0.1)', fill: true, tension: 0.4, borderWidth: 2 },
+                { label: 'SOH %', data: [], borderColor: colorNeonYellow, borderDash: [5, 5], fill: false, tension: 0.4, borderWidth: 2 }
+            ]
+        },
+        options: {
+            ...commonOptions,
+            plugins: {
+                legend: { display: true, labels: { color: '#94A3B8', usePointStyle: true, boxWidth: 8, font: { family: 'Outfit', size: 12 } } },
+                tooltip: { backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+            },
+            scales: {
+                x: { display: false, grid: { drawBorder: false } },
+                y: { min: 0, max: 100, grid: { color: colorGridLine, drawBorder: false }, ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 } } }
+            }
+        }
+    });
+
+    // 3. ENERGY MIX BAR CHART
+    const ctxMix = document.getElementById('chartMix').getContext('2d');
+    const chartMix = new Chart(ctxMix, {
+        type: 'bar',
+        data: {
+            labels: ['Power Mix'],
+            datasets: [
+                { label: 'Solar', backgroundColor: colorNeonYellow, data: [0], borderWidth: 0, borderRadius: 4 },
+                { label: 'Battery', backgroundColor: colorNeonGreen, data: [0], borderWidth: 0, borderRadius: 4 },
+                { label: 'Grid', backgroundColor: colorNeonRed, data: [0], borderWidth: 0, borderRadius: 4 }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 0 },
+            scales: {
+                x: { display: false, stacked: true, grid: { drawBorder: false } },
+                y: { display: true, stacked: true, grid: { color: colorGridLine, drawBorder: false }, ticks: { color: colorTextMuted, font: { family: 'JetBrains Mono', size: 11 } } }
+            },
+            plugins: {
+                legend: { display: true, position: 'bottom', labels: { color: '#94A3B8', usePointStyle: true, boxWidth: 10, font: { family: 'Outfit', size: 12 } } },
+                tooltip: { backgroundColor: 'rgba(11, 15, 20, 0.9)', titleColor: '#fff', bodyColor: '#94A3B8', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }
+            }
+        }
+    });
+
+    // POLLING LOGIC
+    let lastStep = -1;
+
+    async function syncData() {
+        try {
+            const res = await fetch('/api/simulation/results');
+            const data = await res.json();
+
+            if (data.results && data.results.length > 0) {
+                document.getElementById('sync-status').innerText = 'SYNCED';
+                document.getElementById('sync-status').style.color = 'var(--neon-green)';
+                document.getElementById('sync-status').parentElement.style.borderColor = 'rgba(0, 255, 148, 0.3)';
+                document.getElementById('sync-status').previousElementSibling.style.background = 'var(--neon-green)';
+                document.getElementById('sync-status').previousElementSibling.style.boxShadow = '0 0 15px var(--neon-green)';
+                document.getElementById('sync-status').previousElementSibling.style.animation = 'none';
+
+                const latest = data.results[data.results.length - 1]; // current step relative to total
+
+                // If it's a new step, process it
+                if (data.results.length !== lastStep) {
+                    lastStep = data.results.length;
+
+                    // Fully repopulate charts to avoid drift when switching sub-pages
+                    chartCombined.data.labels = data.results.map((_, i) => i);
+                    chartCombined.data.datasets[0].data = data.results.map(r => r.load);
+                    chartSources = data.results.map(r => {
+                        let primarySource = 'Grid';
+                        if (r.solar > r.load * 0.8) primarySource = 'Solar';
+                        else if (r.battery_used > 0) primarySource = 'Battery';
+                        return primarySource;
+                    });
+
+                    chartBattery.data.labels = data.results.map((_, i) => i);
+                    chartBattery.data.datasets[0].data = data.results.map(r => r.battery_soc);
+                    chartBattery.data.datasets[1].data = data.results.map(r => r.battery_soh !== undefined ? r.battery_soh : 100);
+
+                    chartCombined.update();
+                    chartBattery.update();
+                }
+
+                // ... keep existing text update logic intact ...
+                document.getElementById('ef-solar').innerText = (latest.solar || 0).toFixed(2);
+                document.getElementById('ef-load').innerText = (latest.load || 0).toFixed(2);
+
+                // Battery - Handle Missing keys gracefully
+                const batUsed = latest.battery_used || 0;
+                const batDisplay = batUsed > 0 ? batUsed : 0;
+
+                if (batDisplay > 0) {
+                    document.getElementById('ef-battery').innerText = batDisplay.toFixed(2) + " (Discharging)";
+                } else {
+                    document.getElementById('ef-battery').innerText = "0.0";
+                }
+
+                // Grid
+                const gridImportVal = parseFloat(latest.grid_used) || 0;
+                const gridExportVal = parseFloat(latest.grid_export) || 0;
+                if (gridImportVal > 0.1) {
+                    document.getElementById('ef-grid').innerText = gridImportVal.toFixed(2) + " (Import)";
+                    document.getElementById('node-grid').className = "flow-node active-red";
+                } else if (gridExportVal > 0.1) {
+                    document.getElementById('ef-grid').innerText = gridExportVal.toFixed(2) + " (Export)";
+                    document.getElementById('node-grid').className = "flow-node active-green";
+                } else {
+                    document.getElementById('ef-grid').innerText = "0.0";
+                    document.getElementById('node-grid').className = "flow-node";
+                }
+
+                // Animations logic exactly like dashboard
+                document.querySelectorAll('.flow-node').forEach(node => {
+                    if (node.id !== 'node-grid') node.classList.remove('active', 'active-red', 'active-green');
+                });
+                document.getElementById('node-load').classList.add('active');
+
+                // Determine Flow State
+                let action = "IDLE";
+                if (batDisplay > 0.1) {
+                    action = "DISCHARGE BATTERY";
+                    document.getElementById('node-battery').classList.add('active');
+                } else if (gridImportVal > 0.1) {
+                    action = "IMPORT FROM GRID";
+                    document.getElementById('node-grid').classList.add('active-red');
+                } else if (gridExportVal > 0.1) {
+                    action = "EXPORT TO GRID";
+                    document.getElementById('node-solar').classList.add('active');
+                    document.getElementById('node-grid').classList.add('active-green');
+                } else if ((latest.solar || 0) > 0.1) {
+                    action = "USE SOLAR DIRECTLY";
+                    document.getElementById('node-solar').classList.add('active');
+                }
+
+                document.getElementById('action-display').innerText = action;
+
+                // Sync UI Button States
+                if (data.running) {
+                    document.getElementById('btn-run').style.display = 'none';
+                    document.getElementById('btn-stop').style.display = 'inline-flex';
+                    if (pausedState) {
+                        // If it's running but we think it's paused, it's not actually paused
+                        pausedState = false;
+                        document.getElementById('btn-pause').style.display = 'inline-flex';
+                        document.getElementById('btn-resume').style.display = 'none';
+                    }
+                } else if (lastStep > 0) {
+                    // Not running but we have data -> could be paused or finished
+                    // For now, let the manual buttons handle visibility, but we can nudge it
+                }
+
+                // Update Mini Texts
+                document.getElementById('bat-soc-val').innerText = (latest.battery_soc || 0).toFixed(1) + "%";
+                document.getElementById('bat-soh-val').innerText = (latest.battery_soh !== undefined ? latest.battery_soh.toFixed(1) : "100.0") + "%";
+
+                // Update Mix Chart
+                chartMix.data.datasets[0].data = [latest.solar || 0];
+                chartMix.data.datasets[1].data = [batDisplay];
+                chartMix.data.datasets[2].data = [gridImportVal];
+                chartMix.update();
+
+            } else {
+                // Not running or no data yet
+                document.getElementById('sync-status').innerText = 'Waiting...';
+                document.getElementById('sync-status').style.color = 'var(--text-secondary)';
+                document.getElementById('sync-status').parentElement.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                document.getElementById('sync-status').previousElementSibling.style.background = 'var(--text-secondary)';
+                document.getElementById('sync-status').previousElementSibling.style.boxShadow = 'none';
+            }
+        } catch (error) {
+            console.error(error);
+            document.getElementById('sync-status').innerText = 'Offline';
+            document.getElementById('sync-status').style.color = 'var(--neon-red)';
+            document.getElementById('sync-status').parentElement.style.borderColor = 'rgba(255, 0, 85, 0.3)';
+            document.getElementById('sync-status').previousElementSibling.style.background = 'var(--neon-red)';
+            document.getElementById('sync-status').previousElementSibling.style.boxShadow = '0 0 10px var(--neon-red)';
+        }
+    }
+
+    // --- SIMULATION CONTROLS ---
+    let intervalId = null;
+    let pausedState = false;
+
+    async function startSimulation() {
+        if (intervalId) return;
+        const speed = document.getElementById('sim-speed').value || 700;
+
+        // UI Updates
+        document.getElementById('btn-run').style.display = 'none';
+        document.getElementById('btn-stop').style.display = 'inline-flex';
+        document.getElementById('btn-pause').style.display = 'inline-flex';
+        document.getElementById('btn-resume').style.display = 'none';
+
+        try {
+            const res = await fetch('/api/simulation/start', {
+                method: 'POST',
+                headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN
+            },
+                body: JSON.stringify({ mode: 'AI', speed: parseInt(speed) })
+            });
+            const data = await res.json();
+            if (data.success) {
+                console.log("Simulation Started from Flow Page");
+            }
+        } catch (e) {
+            console.error(e);
+            resetSimulation();
+        }
+    }
+
+    async function resumeSimulation() {
+        if (intervalId || !pausedState) return;
+        const speed = document.getElementById('sim-speed').value || 700;
+        pausedState = false;
+        document.getElementById('btn-pause').style.display = 'inline-flex';
+        document.getElementById('btn-resume').style.display = 'none';
+        await fetch('/api/simulation/resume', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN
+            },
+            body: JSON.stringify({ speed: parseInt(speed) })
+        });
+    }
+
+    async function stopSimulation() {
+        pausedState = false;
+        document.getElementById('btn-run').style.display = 'inline-flex';
+        document.getElementById('btn-pause').style.display = 'none';
+        document.getElementById('btn-resume').style.display = 'none';
+        await fetch('/api/simulation/pause', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+    }
+
+    async function pauseSimulation() {
+        pausedState = true;
+        document.getElementById('btn-pause').style.display = 'none';
+        document.getElementById('btn-resume').style.display = 'inline-flex';
+        await fetch('/api/simulation/pause', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+    }
+
+    async function resetSimulation() {
+        pausedState = false;
+        document.getElementById('btn-run').style.display = 'inline-flex';
+        document.getElementById('btn-pause').style.display = 'none';
+        document.getElementById('btn-resume').style.display = 'none';
+        await fetch('/api/simulation/pause', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+    }
+
+    async function toggleResilience() {
+        try {
+            const res = await fetch('/api/simulation/toggle_grid', { 
+                method: 'POST',
+                headers: { 'X-CSRFToken': CSRF_TOKEN }
+            });
+            const data = await res.json();
+            if (data.success) {
+                const btn = document.getElementById('btn-resilience');
+                if (data.grid_online) {
+                    btn.innerHTML = '<i class="fas fa-power-off"></i> GRID ONLINE';
+                    btn.className = "glass-btn btn-green";
+                } else {
+                    btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ISLAND MODE';
+                    btn.className = "glass-btn btn-red";
+                }
+            }
+        } catch (e) {
+            console.error("Resilience Toggle Failed", e);
+        }
+    }
+
+    async function handleLogout() {
+        await fetch('/api/logout', { 
+            method: 'POST',
+            headers: { 'X-CSRFToken': CSRF_TOKEN }
+        });
+        window.location.href = '/';
+    }
+
+    // Poll every 500ms
+    setInterval(syncData, 500);
+    syncData();
+
+    // Sim Speed Listener
+    document.getElementById('sim-speed').addEventListener('change', async function () {
+        const speed = parseInt(this.value) || 700;
+        if (!pausedState && document.getElementById('btn-run').style.display === 'none') {
+            // If running, tell server to update speed (via resume endpoint or similar)
+            await fetch('/api/simulation/resume', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': CSRF_TOKEN
+                },
+                body: JSON.stringify({ speed: speed })
+            });
+        }
+    });
+
+</script>
+{% endblock %}

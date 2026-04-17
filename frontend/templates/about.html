@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="app-container">
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="sidebar-brand">
+            <h2>⚡ Microgrid OS</h2>
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="/dashboard" class="menu-item">
+                <i class="fas fa-chart-pie"></i> Overview
+            </a>
+            <a href="/energy_flow" class="menu-item">
+                <i class="fas fa-project-diagram"></i> Energy Flow
+            </a>
+            <a href="/history" class="menu-item">
+                <i class="fas fa-history"></i> History Log
+            </a>
+            <a href="/suggestions" class="menu-item">
+                <i class="fas fa-lightbulb"></i> AI Insights
+            </a>
+            <a href="/visualization" class="menu-item">
+                <i class="fas fa-magic"></i> Visualization
+            </a>
+            <a href="/about" class="menu-item active">
+                <i class="fas fa-info-circle"></i> Project Info
+            </a>
+            <a href="/settings" class="menu-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="alert-item" style="border-left-color: var(--neon-blue); background: rgba(0, 229, 255, 0.05); color: var(--neon-blue);">
+                <i class="fas fa-info-circle"></i> Project Documentation
+            </div>
+        </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-title">
+            <a href="/dashboard" class="header-back-btn">
+                <i class="fas fa-chevron-left"></i> BACK
+            </a>
+            <i class="fas fa-book-open"></i>
+            <span>PROJECT DOCUMENTATION &bull; SYSTEM OVERVIEW</span>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="app-content" style="overflow-y: auto; padding-bottom: 20px;">
+        <div class="panel-container project-info-scroll"
+            style="padding: 40px; max-width: 1000px; margin: 0 auto; max-height: calc(100vh - 120px); overflow-y: auto;">
+
+            <!-- SECTION 1: GOAL -->
+            <section style="margin-bottom: 40px;">
+                <h1 style="color: var(--neon-blue); font-size: 2.5rem; margin-bottom: 20px;">Microgrid Energy Management
+                    using DRL</h1>
+
+                <div class="about-glass-card about-card-blue">
+                    <h2 style="color: white; margin-bottom: 15px;"><i class="fas fa-bullseye"></i> 1. Project Goal</h2>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        The objective of this project is to <strong style="color: var(--neon-blue);">optimise energy
+                            usage in a microgrid</strong>
+                        (a home or small community with solar panels and a battery).
+                        The goal is effectively to <strong style="color: var(--neon-green);">minimise electricity
+                            bills</strong> and
+                        <strong style="color: var(--neon-yellow);">reduce energy wastage</strong> by intelligently
+                        deciding when to:
+                    </p>
+                    <ul style="margin-top: 15px; color: var(--text-primary); list-style: none; padding-left: 10px;">
+                        <li style="margin-bottom: 10px;"><i class="fas fa-battery-charging"
+                                style="color: var(--neon-green); width: 25px;"></i> <strong>Store</strong> excess solar
+                            energy (Charge).</li>
+                        <li style="margin-bottom: 10px;"><i class="fas fa-bolt"
+                                style="color: var(--neon-blue); width: 25px;"></i> <strong>Use</strong> stored energy to
+                            avoid high grid prices (Discharge).</li>
+                        <li><i class="fas fa-hand-holding-usd" style="color: var(--neon-yellow); width: 25px;"></i>
+                            <strong>Sell</strong> energy back to the grid (Export).
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SECTION 2: AI MODEL -->
+            <section style="margin-bottom: 40px;">
+                <div class="about-glass-card about-card-purple">
+                    <h2 style="color: white; margin-bottom: 15px;"><i class="fas fa-brain"></i> 2. The AI Model: Deep
+                        Q-Network (DQN)</h2>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        We chose a <strong>Deep Q-Network (DQN)</strong>, a type of <strong>Reinforcement Learning
+                            (RL)</strong> algorithm.
+                    </p>
+
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h3 style="color: var(--neon-purple); font-size: 1.1rem; margin-bottom: 10px;">How it works
+                            (Simply put)</h3>
+                        <p style="color: var(--text-secondary);">Instead of just "predicting" the future, the DQN
+                            <strong>learns to play a game</strong>.
+                        </p>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                            <div
+                                style="text-align: center; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+                                <div style="color: var(--neon-blue); font-weight: bold;">The "Game"</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">Lowering the electric bill
+                                </div>
+                            </div>
+                            <div
+                                style="text-align: center; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+                                <div style="color: var(--neon-green); font-weight: bold;">The "Player"</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">The AI Agent</div>
+                            </div>
+                            <div
+                                style="text-align: center; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;">
+                                <div style="color: var(--neon-yellow); font-weight: bold;">The "Score"</div>
+                                <div style="font-size: 0.9rem; color: var(--text-muted);">The Reward (Savings)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: WHY -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: white; margin-bottom: 20px;">3. Why did we use this model?</h2>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+
+                    <div class="about-glass-card">
+                        <h3 style="color: var(--neon-blue);"><i class="fas fa-clock"></i> A. Sequential Decision Making
+                        </h3>
+                        <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">
+                            Energy management is a sequence problem. If you discharge now, you won't have energy later.
+                            DQN assumes future consequences, unlike standard regression models.
+                        </p>
+                    </div>
+
+                    <div class="about-glass-card">
+                        <h3 style="color: var(--neon-green);"><i class="fas fa-hourglass-half"></i> B. Delayed Rewards
+                        </h3>
+                        <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">
+                            Sometimes the best action pays off later (e.g., charging at 2 PM for a 7 PM peak).
+                            DQN uses a "discount factor" to value future rewards.
+                        </p>
+                    </div>
+
+                    <div class="about-glass-card">
+                        <h3 style="color: var(--neon-purple);"><i class="fas fa-random"></i> C. Complex, Non-Linear
+                            Patterns</h3>
+                        <p style="color: var(--text-secondary); margin-top: 10px; font-size: 0.9rem;">
+                            Simple "If/Then" rules fail in complex scenarios. The Neural Network learns subtle
+                            strategies
+                            that are hard to program manually.
+                        </p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 4: I/O -->
+            <section>
+                <div class="about-glass-card about-card-blue">
+                    <h2 style="color: white; margin-bottom: 20px; text-align: center;">4. System Inputs & Outputs</h2>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;">
+
+                        <!-- INPUTS -->
+                        <div style="flex: 1; min-width: 300px;">
+                            <h3
+                                style="color: var(--neon-blue); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                                <i class="fas fa-arrow-right"></i> Inputs (What it sees)
+                            </h3>
+                            <ul style="list-style: none; padding: 0; color: var(--text-secondary);">
+                                <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                    <span
+                                        style="background: rgba(0, 212, 255, 0.1); padding: 5px 10px; border-radius: 5px; color: var(--neon-blue); font-weight: bold;">LOAD</span>
+                                    Current power demand
+                                </li>
+                                <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                    <span
+                                        style="background: rgba(250, 255, 0, 0.1); padding: 5px 10px; border-radius: 5px; color: var(--neon-yellow); font-weight: bold;">SOLAR</span>
+                                    Current solar generation
+                                </li>
+                                <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                    <span
+                                        style="background: rgba(255, 0, 85, 0.1); padding: 5px 10px; border-radius: 5px; color: var(--neon-red); font-weight: bold;">PRICE</span>
+                                    Current grid price
+                                </li>
+                                <li style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                                    <span
+                                        style="background: rgba(0, 255, 157, 0.1); padding: 5px 10px; border-radius: 5px; color: var(--neon-green); font-weight: bold;">SOC</span>
+                                    Battery State of Charge
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- OUTPUTS -->
+                        <div style="flex: 1; min-width: 300px;">
+                            <h3
+                                style="color: var(--neon-green); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px;">
+                                <i class="fas fa-arrow-left"></i> Outputs (What it does)
+                            </h3>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <div
+                                    style="background: rgba(0, 255, 157, 0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--neon-green);">
+                                    <strong style="color: var(--neon-green);">CHARGE</strong> <span
+                                        style="font-size: 0.8rem; color: var(--text-muted);">(Store Energy)</span>
+                                </div>
+                                <div
+                                    style="background: rgba(250, 255, 0, 0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--neon-yellow);">
+                                    <strong style="color: var(--neon-yellow);">DISCHARGE</strong> <span
+                                        style="font-size: 0.8rem; color: var(--text-muted);">(Use/Sell Energy)</span>
+                                </div>
+                                <div
+                                    style="background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 8px; border: 1px solid var(--text-muted);">
+                                    <strong style="color: white;">IDLE</strong> <span
+                                        style="font-size: 0.8rem; color: var(--text-muted);">(Do Nothing)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: TECH STACK & ARCHITECTURE -->
+            <section style="margin-top: 40px;">
+                <div class="about-glass-card about-card-yellow">
+                    <h2 style="color: white; margin-bottom: 20px;"><i class="fas fa-microchip"></i> 5. Technology Stack
+                        & System Architecture</h2>
+                    <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+                        The Microgrid OS is built upon a modern, highly scalable architecture seamlessly integrating AI
+                        and web technologies.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                        <!-- Backend -->
+                        <div class="about-tech-stack-card tech-blue">
+                            <h3 style="color: var(--neon-blue); font-size: 1.1rem; margin-bottom: 10px;"><i
+                                    class="fas fa-server"></i> Backend & Simulation Logics</h3>
+                            <ul
+                                style="color: var(--text-secondary); font-size: 0.9rem; list-style-type: disc; margin-left: 20px;">
+                                <li><strong>Python & Flask:</strong> Provides the highly concurrent API endpoints and
+                                    web server mapping.</li>
+                                <li><strong>Pandas & NumPy:</strong> Handles robust data processing and forecasting
+                                    analysis.</li>
+                                <li><strong>Custom Simulation Engine:</strong> Emulates physical constraints of the load
+                                    dynamics, battery, and grid.</li>
+                            </ul>
+                        </div>
+
+                        <!-- AI & ML -->
+                        <div class="about-tech-stack-card tech-purple">
+                            <h3 style="color: var(--neon-purple); font-size: 1.1rem; margin-bottom: 10px;"><i
+                                    class="fas fa-brain"></i> Artificial Intelligence</h3>
+                            <ul
+                                style="color: var(--text-secondary); font-size: 0.9rem; list-style-type: disc; margin-left: 20px;">
+                                <li><strong>PyTorch:</strong> Implements the underlying Deep Q-Network for sequential
+                                    decision making.</li>
+                                <li><strong>Reward Function:</strong> Optimizes long-term financial benefits while
+                                    preserving battery health boundaries.</li>
+                                <li><strong>Fallback Rules:</strong> Rule-based edge case handling for critical
+                                    operating modes (e.g., Island Mode).</li>
+                            </ul>
+                        </div>
+
+                        <!-- Frontend -->
+                        <div class="about-tech-stack-card tech-green">
+                            <h3 style="color: var(--neon-green); font-size: 1.1rem; margin-bottom: 10px;"><i
+                                    class="fas fa-desktop"></i> Frontend & UI</h3>
+                            <ul
+                                style="color: var(--text-secondary); font-size: 0.9rem; list-style-type: disc; margin-left: 20px;">
+                                <li><strong>Vanilla HTML/CSS/JS:</strong> Highly performant dynamic interfaces without
+                                    bloating framework dependencies.</li>
+                                <li><strong>Chart.js:</strong> Powers the beautiful real-time data visualizations in the
+                                    Energy Flow analytics.</li>
+                                <li><strong>Glassmorphism UI:</strong> Incorporates neon highlights and modern dashboard
+                                    aesthetics.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+    </main>
+</div>
+{% endblock %}

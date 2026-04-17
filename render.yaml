@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: microgrid-os
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/flask_app.py
+    envVars:
+      - key: MONGODB_URI
+        placeholder: "Paste your MongoDB Atlas connection string here"
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: DATABASE_NAME
+        value: microgrid_drl
